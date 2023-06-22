@@ -11,6 +11,7 @@ import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+
 const SignUpScreen = () => {
     const [Username, setUsername] = useState('');
     const [Email, setEmail] = useState('');
@@ -19,30 +20,35 @@ const SignUpScreen = () => {
     const [StudID, setStudID] = useState('');
     const navigation = useNavigation();
     //BTN Function
-    const onSignInPressed = () =>{
-      if(password !== Cpassword){
-        console.warn('Password not same');
-    }
-    else{
-      axios.post('http://192.168.1.83:5000/register/app', {
-        username: Username,
-        email: Email,
-        password: password,
-      })
-        .then((response) => {
-          console.log(response);
-          // Check the response for the status code indicating username already exists
-          if (response.data.message === 'Username already exists') {
-           console.warn('User Already Exist');
-          }else if(response.data.message === 'User registered successfully'){
-            navigation.navigate('SignIn');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          // Handle other error scenarios if needed
-        });
-    }
+    const onSignInPressed = () => {
+      if (Username.trim() === '' || Email.trim() === '' || password.trim() === '') {
+        console.warn('User input must not be empty');
+        return;
+      }
+    
+      if (password !== Cpassword) {
+        console.warn('Password not the same');
+      } else {
+        axios
+          .post('http://192.168.1.83:5000/register/app', {
+            username: Username,
+            email: Email,
+            password: password,
+          })
+          .then((response) => {
+            console.log(response.data.message);
+            // Check the response for the status code indicating username already exists
+            if (response.data.message === 'Username already exists') {
+              console.warn('User Already Exists');
+            } else if (response.data.message === 'User registered successfully') {
+              navigation.navigate('SignIn');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            // Handle other error scenarios if needed
+          });
+      }
     };
     const onCreate = () =>{
       navigation.navigate('SignIn');
@@ -50,8 +56,10 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-         <View style={styles.root}>
-    <Text style={styles.title}>Create an account</Text>
+    <View style={styles.root}>
+    <View style={styles.circle} />
+    <View style={styles.circle2} />
+    <Text style={styles.title}>Sign Up</Text>
     <CustomInputs 
     onChangeText={(e) => setUsername(e)}
      mode="outlined"
@@ -91,7 +99,6 @@ const SignUpScreen = () => {
       text="Register"
       labelStyle={{ color: 'white' ,fontWeight:'bold',fontSize:20}}
       />
-
       <Text style={styles.text}>Already have an account?<Text style={{color:'#59C4CB'}} onPress={onCreate}> Sign In</Text></Text>
   </View>
     </ScrollView>
@@ -105,6 +112,24 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical:60,
     },
+    circle: {
+      position: 'absolute',
+      top: -150,
+      right: -50,
+      width: 224,
+      height: 216,
+      borderRadius: 110,
+      backgroundColor: 'rgba(241, 204, 74, 0.45)',  // Adjust the color of the circle as desired
+    },
+    circle2: {
+      position: 'absolute',
+      top: -50,
+      right: -100,
+      width: 224,
+      height: 216,
+      borderRadius: 110,
+      backgroundColor: 'rgba(241, 204, 74, 0.45)',  // Adjust the color of the circle as desired
+    },
     forgot:{
         fontSize:16,
         color:'#EF5757',
@@ -113,7 +138,7 @@ const styles = StyleSheet.create({
     text:{
     fontFamily:'poppins',
     fontSize:14,
-    marginVertical:'10%',
+    marginVertical:0,
     letterSpacing:1.5,
     },
     title:{

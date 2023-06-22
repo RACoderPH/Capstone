@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, Text ,StyleSheet} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Image } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
+
 
 const Tab = createBottomTabNavigator();
 
 const SettingsScreen = () => (
   <View>
-    <Text>Settings Screen</Text>
-
+    <View style={styles.UserContainer}>
+      <Text style={styles.txtUser}>Hello User</Text>
+      <Text>User Image</Text>
+    </View>
   </View>
 );
 
@@ -18,25 +20,27 @@ const HomeScreen = () => (
     <Text>Home Screen</Text>
   </View>
 );
+
 const ChatScreen = () => (
   <View>
     <Text>Chat Screen</Text>
   </View>
 );
+
 const NotificationScreen = () => (
   <View>
     <Text>Notification Screen</Text>
   </View>
 );
+
 const ProfileScreen = () => (
   <View>
     <Text>Profile Screen</Text>
   </View>
 );
-
-const App = () => {
+const Apps = () => {
   return (
- 
+
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -57,17 +61,8 @@ const App = () => {
             return <Icon name={iconName} color={color} size={size} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'blue',
-          inactiveTintColor: 'gray',
-        }}
       >
-    <Tab.Screen
-  name="Settings"
-  options={{ headerShown: false }}
-  component={SettingsScreen}
-/>
-
+        <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Chats" component={ChatScreen} options={{ headerShown: false }} />
         <Tab.Screen name="Notification" component={NotificationScreen} options={{ headerShown: false }} />
@@ -77,4 +72,20 @@ const App = () => {
   );
 };
 
-export default App;
+const styles = StyleSheet.create({
+  UserContainer: {
+    flexDirection: 'row',
+    margin: 10,
+    borderColor: 'black',
+    borderWidth: 1,
+    backgroundColor: '#F2F2F2',
+    padding: 5,
+  },
+      txtUser:{
+        color:'black',
+        fontSize:16,
+        textAlign:'right',
+      }
+})
+
+export default Apps;

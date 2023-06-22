@@ -6,6 +6,7 @@ import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
+
 const SignInScreen = () => {
     const {height} = useWindowDimensions();
     const [username, setUsername] = useState('');
@@ -20,16 +21,14 @@ const SignInScreen = () => {
             username:username,
             password:password,
           }).then((response) => {
-            console.log(response);
-
+            console.log(response.data.message);
           if(response.data.message === 'User found'){
-            const userId = response.data.id
-            AsyncStorage.setItem('username', username);
-            AsyncStorage.setItem('id', userId);
-
-            navigation.navigate('Homes');
             
-            console.log(AsyncStorage.getItem('username'))
+            AsyncStorage.setItem('username', username);
+            AsyncStorage.setItem('id', response.data.id.toString());
+
+            navigation.navigate('Started');
+            
           }
           else
           {
@@ -50,6 +49,8 @@ const SignInScreen = () => {
 
   return (
     <View style={styles.root}>
+       <View style={styles.circle} />
+          <View style={styles.circle2} />
       <Image source={Logo} style={[styles.logo, {height:height * 0.3}]}  resizeMode='contain'/>
       <CustomInputs 
        
@@ -80,6 +81,24 @@ const styles = StyleSheet.create({
         root:{
             alignItems:'center',
             padding: 20,
+        },
+        circle: {
+          position: 'absolute',
+          top: -110,
+          left: -15,
+          width: 224,
+          height: 216,
+          borderRadius: 110,
+          backgroundColor: 'rgba(241, 204, 74, 0.45)',  // Adjust the color of the circle as desired
+        },
+        circle2: {
+          position: 'absolute',
+          top: -30,
+          left: -100,
+          width: 224,
+          height: 216,
+          borderRadius: 110,
+          backgroundColor: 'rgba(241, 204, 74, 0.45)',  // Adjust the color of the circle as desired
         },
         logo:{
             maxWidth:500,
