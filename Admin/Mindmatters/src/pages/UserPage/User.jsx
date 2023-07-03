@@ -41,9 +41,9 @@ const User = () => {
                   <td>
                     <img src={user.profileImage} alt="" />
                   </td>
-                  <td>{user.studentId}</td>
                   <td>{user.user_name}</td>
                   <td>{user.Email}</td>
+                  <td>{user.stud_no}</td>
                   <td>{user.position}</td>
                   <td>{user.status}</td>
                   <td className="btn">

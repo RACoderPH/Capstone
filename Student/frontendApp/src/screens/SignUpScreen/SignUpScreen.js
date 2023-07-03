@@ -4,6 +4,7 @@ import { View,
    StyleSheet,
   useWindowDimensions,
   ScrollView,
+  ToastAndroid
 } from 'react-native'
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -22,7 +23,7 @@ const SignUpScreen = () => {
     //BTN Function
     const onSignInPressed = () => {
       if (Username.trim() === '' || Email.trim() === '' || password.trim() === '') {
-        console.warn('User input must not be empty');
+        ToastAndroid.show('Field must not be empty',ToastAndroid.SHORT);
         return;
       }
     
@@ -34,13 +35,15 @@ const SignUpScreen = () => {
             username: Username,
             email: Email,
             password: password,
+            stud_no: StudID,
           })
           .then((response) => {
             console.log(response.data.message);
             // Check the response for the status code indicating username already exists
             if (response.data.message === 'Username already exists') {
-              console.warn('User Already Exists');
+              ToastAndroid.show('User Already Exists',ToastAndroid.SHORT);
             } else if (response.data.message === 'User registered successfully') {
+              ToastAndroid.show('Registered Successfully',ToastAndroid.SHORT);
               navigation.navigate('SignIn');
             }
           })
@@ -73,6 +76,7 @@ const SignUpScreen = () => {
      placeholder="Enter Email"
    />
    <CustomInputs 
+      onChangeText={(e) => setStudID(e)}
      mode="outlined"
      label="Student ID"
      placeholder="Enter Student ID"
@@ -137,9 +141,10 @@ const styles = StyleSheet.create({
     },
     text:{
     fontFamily:'poppins',
+    color:'black',
     fontSize:14,
     marginVertical:0,
-    letterSpacing:1.5,
+    letterSpacing:1.2,
     },
     title:{
         fontFamily:'poppins',

@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(express.json());
@@ -35,7 +36,7 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const checkUsernameQuery = 'SELECT * FROM user_tb WHERE user_name = ?';
+  const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
   db.query(checkUsernameQuery, [username], (err, result) => {
     if (err) {
       console.error('Failed to check username:', err);
@@ -53,9 +54,10 @@ app.post('/register', (req, res) => {
           } else {
             const position = 'Admin';
             const status = 'Offline';
+            const emp_id = "";
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_tb (user_name, Email, Password, created_at,position,status) VALUES (?, ?, ?, ?,?,?)';
-            db.query(insertUserQuery, [username, email, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
+            const insertUserQuery = 'INSERT INTO user_info (user_name, Email,stud_no, Password, created_at,position,status) VALUES (?, ?,?, ?, ?,?,?)';
+            db.query(insertUserQuery, [username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
                 res.send({ message: 'Server error' });
@@ -76,8 +78,9 @@ app.post('/register/app', (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
+  const stud_no = req.body.stud_no;
 
-  const checkUsernameQuery = 'SELECT * FROM user_tb WHERE user_name = ?';
+  const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
   db.query(checkUsernameQuery, [username], (err, result) => {
     if (err) {
       console.error('Failed to check username:', err);
@@ -96,12 +99,17 @@ app.post('/register/app', (req, res) => {
             const position = 'Student';
             const status = 'Offline';
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_tb (user_name, Email, Password, created_at,position,status) VALUES (?, ?, ?, ?,?,?)';
-            db.query(insertUserQuery, [username, email, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
+            const insertUserQuery = 'INSERT INTO user_info (user_name, Email, stud_no, Password, created_at, position, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            db.query(insertUserQuery, [username, email, stud_no, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
                 res.send({ message: 'Server error' });
               } else {
+                // Send verification email
+                const verificationToken = generateVerificationToken(); // Generate a verification token
+                const verificationLink = `http://yourwebsite.com/verify/${verificationToken}`; // Replace with your verification link
+                sendVerificationEmail(email, verificationLink); // Send verification email
+
                 res.send({ message: 'User registered successfully' });
               }
             });
@@ -113,13 +121,55 @@ app.post('/register/app', (req, res) => {
 });
 
 
+function generateVerificationToken() {
+  // Generate a random token
+  const token = Math.random().toString(36).substr(2);
+  return token;
+}
+
+// Function to send a verification email
+function sendVerificationEmail(email, verificationLink) {
+  // Create a transporter for sending emails (replace with your email service provider details)
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'mindmattersstdominic@gmail.com',
+      pass: 'swutnhnnzxmdjytp',
+    },
+  });
+
+  // Setup email data
+  const mailOptions = {
+    from: 'mindmattersstdominic@gmail.com',
+    to: email,
+    subject: 'Email Verification',
+    html: `<p>Thank you for registering. Please click the following link to verify your email:</p>
+           <a href="${verificationLink}">${verificationLink}</a>`,
+  };
+
+  // Send the email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Failed to send verification email:', error);
+    } else {
+      console.log('Verification email sent:', info.response);
+    }
+  });
+}
+
+
+
+
+
+
+
 
 //For login user query
 app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT id, Password,position FROM user_tb WHERE user_name = ?";
+  const query = "SELECT id, Password,position FROM user_info WHERE user_name = ?";
   db.query(query, [username], (err, result) => {
     if (err) {
       console.error('Failed to fetch user:', err);
@@ -138,7 +188,7 @@ app.post('/login', (req, res) => {
               res.send({ message: 'Server error' });
             } else if (isMatch) {
                 const online = 'online';
-                const updateStatus = "UPDATE user_tb SET status = ? WHERE id = ?";
+                const updateStatus = "UPDATE user_info SET status = ? WHERE id = ?";
                 db.query(updateStatus, [online,userId], (error,result) =>{
                   if (error) {
                     console.error('Failed to update status:', error);
@@ -163,11 +213,12 @@ app.post('/login', (req, res) => {
   });
 });
 
+//Login for App user
 app.post('/login/app', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const query = "SELECT id, Password,position FROM user_tb WHERE user_name = ?";
+  const query = "SELECT id, Password,position FROM user_info WHERE user_name = ?";
   db.query(query, [username], (err, result) => {
     if (err) {
       console.error('Failed to fetch user:', err);
@@ -186,7 +237,7 @@ app.post('/login/app', (req, res) => {
               res.send({ message: 'Server error' });
             } else if (isMatch) {
                 const online = 'online';
-                const updateStatus = "UPDATE user_tb SET status = ? WHERE id = ?";
+                const updateStatus = "UPDATE user_info SET status = ? WHERE id = ?";
                 db.query(updateStatus, [online,userId], (error,result) =>{
                   if (error) {
                     console.error('Failed to update status:', error);
@@ -211,11 +262,13 @@ app.post('/login/app', (req, res) => {
   });
 });
 
+
+//Logout 
 app.post('/logout', (req,res) => {
 
   const userId = req.body.userId;
   const offline = 'offline';
-  const updateStatus = "UPDATE user_tb SET status = ? WHERE id = ?";
+  const updateStatus = "UPDATE user_info SET status = ? WHERE id = ?";
 
   db.query(updateStatus, [offline,userId], (error,result) =>{
     if (error) {
@@ -228,9 +281,10 @@ app.post('/logout', (req,res) => {
   });
 });
 
+//Get user from Database
 app.get('/api/getuser', (req, res) => {
   
-  const query = 'SELECT * FROM user_tb';
+  const query = 'SELECT * FROM user_info';
   db.query(query, (error, result) => {
     if (error) {
       console.error('Failed to fetch data:', error);
@@ -240,6 +294,10 @@ app.get('/api/getuser', (req, res) => {
     }
   });
 });
+
+//Get One user Info
+
+
 
 
 //GEt user information when login
