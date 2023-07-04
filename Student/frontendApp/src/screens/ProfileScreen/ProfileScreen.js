@@ -1,37 +1,45 @@
 import { View, Text,StyleSheet,Image,ScrollView ,Dimensions} from 'react-native'
 import React, { useEffect, useState } from 'react';
-import Logo from '../../../assets/images/getStarted.png';
+import Logo from '../../../assets/images/User.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-const { width, height } = Dimensions.get('window');
+
 
 const ProfileScreen = () => {
     //Retrieving Usernmae from Async
-    const [id, setId] = useState('');
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [stud_no, setStud] = useState('');
+    const [userData, setUserData] = useState(null);
+    const [userId, setUserId] = useState(null);
     const navigation = useNavigation();
-    useEffect(() => {
-      retrieveData();
-    }, []);
-    
+
+     useEffect(() => {
+    const fetchUserData = async (userId) => {
+      try {
+        const response = await axios.get(`http://192.168.1.83:5000/user/${userId}`);
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+
     const retrieveData = async () => {
       try {
         const storedId = await AsyncStorage.getItem('id');
         const storedUser = await AsyncStorage.getItem('username');
-          setUsername(storedUser)
-          setId(storedId);
-          fetchUserInfo(storedId);
+        setUserId(storedId);
+        fetchUserData(storedId);
       } catch (error) {
         console.log(error);
       }
     };
 
-    //Logout Btn
+    retrieveData();
+  }, []);
+    //Logout Btn with database
     const logout = async () => {
         try {
           const userId = await AsyncStorage.getItem('id'); // Get the user ID from AsyncStorage
@@ -60,17 +68,17 @@ const ProfileScreen = () => {
     <View style={styles.Image}>
       <Text style={styles.txt}>Account Setting</Text>
       <Image source={Logo} resizeMode="contain" style={styles.image} />
-      <Text style={styles.username}>{username}</Text>
+      <Text style={styles.username}>{userData ? userData.user_name : 'Loading...'}</Text>
     </View>
     <View style={styles.textcontainer}>
       <Text style={styles.info}>Personal Information</Text>
       <Text style={styles.value}>Value</Text>
       <View style={styles.line} />
       <Text style={styles.info}>Student Number</Text>
-      <Text style={styles.value}>Value</Text>
+      <Text style={styles.value}>{userData ? userData.stud_no : 'Loading...'}</Text>
       <View style={styles.line} />
       <Text style={styles.info}>Email Address</Text>
-      <Text style={styles.value}>Value</Text>
+      <Text style={styles.value}>{userData ? userData.Email : 'Loading...'}</Text>
       <View style={styles.line} />
       <Text style={styles.info}>Contact Number</Text>
       <Text style={styles.value}>Value</Text>
@@ -119,10 +127,9 @@ const styles = StyleSheet.create({
         color:'black'
     },
     image: {
-        backgroundColor: 'gray',
-        width: 128,
+        width: 118,
         height: 118,
-        borderRadius: 59,
+        borderRadius: 60,
         padding: 5,
         margin: 5,
     },
@@ -133,7 +140,8 @@ const styles = StyleSheet.create({
   },
   username:{
     fontSize:20,
-    fontWeight:'700',
+    fontWeight:'800',
+    color:'black',
   },
   textcontainer:{
         marginTop:30,

@@ -1,6 +1,6 @@
-import { View, Text ,StyleSheet,Image,ScrollView,Dimensions} from 'react-native'
+import { View, Text ,StyleSheet,Image,ScrollView,Dimensions,ImageBackground} from 'react-native'
 import React, { useEffect, useState } from 'react';
-import Logo from '../../../assets/images/getStarted.png';
+import bg from '../../../assets/images/exercise.jpg';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('window');
@@ -26,7 +26,7 @@ const DashBoardScreen = () => {
       <View style={styles.Topnav}>
     <View style={{ flexDirection: 'row', width: '100%', alignItems:'center'}}>
       <Text style={{ marginLeft:'4%',fontSize:16,color:'black',fontWeight:'600' }}>Hello {username}</Text>
-      <Image source={Logo} resizeMode="contain" style={styles.image} />
+      <Image source={bg} resizeMode="contain" style={styles.image} />
     </View>
   </View>
         <View style={styles.Container}>
@@ -48,7 +48,10 @@ const DashBoardScreen = () => {
         <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: '2%',marginTop:'4%'}}>Tools</Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Release your Tension</Text>
         <View style={styles.Container2}>
-            
+        <ImageBackground source={bg} style={styles.backgroundImage}>
+          <Text style={{color:'#574848',fontSize:20,fontWeight:'700',margin:15}}>Breathe</Text>
+          <Text style={{color:'white',fontSize:18, marginLeft:10}}>A breathing exercise for reducing stress {'\n'}& anxiety</Text>
+      </ImageBackground>
 
         </View>
     </ScrollView>
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:'65%',
+            marginLeft:'60%',
             backgroundColor: 'gray',
             width: 40,
             height: 40,
@@ -80,16 +83,20 @@ const styles = StyleSheet.create({
             padding:2,
             alignSelf:'center',
         },
-        Container2:{
-          marginBottom:15,
-          marginTop:5,
-          backgroundColor: 'rgba(255, 159, 6, 0.8)',
+        Container2: {
+          marginBottom: 15,
+          marginTop: 5,
           width: width * 0.95,
           height: height * 0.22,
-          borderRadius:5,
-          padding:2,
-          alignSelf:'center',
-      },
+          borderRadius: 15,
+          padding: 2,
+          alignSelf: 'center',
+        },
+        backgroundImage: {
+          flex: 1,
+          resizeMode: 'cover',
+          borderRadius: 15,
+        },
       box: {
         width: '45%',
         height: '100%',

@@ -159,11 +159,6 @@ function sendVerificationEmail(email, verificationLink) {
 
 
 
-
-
-
-
-
 //For login user query
 app.post('/login', (req, res) => {
   const username = req.body.username;
@@ -283,21 +278,35 @@ app.post('/logout', (req,res) => {
 
 //Get user from Database
 app.get('/api/getuser', (req, res) => {
-  
   const query = 'SELECT * FROM user_info';
   db.query(query, (error, result) => {
     if (error) {
       console.error('Failed to fetch data:', error);
       res.sendStatus(500);
     } else {
-      res.json(result); // Return the result in JSON format
+      res.send(result); // Send the JSON data as the response
     }
   });
 });
 
+
 //Get One user Info
-
-
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id; // Get the user ID from the request parameters
+  const query = 'SELECT * FROM user_info WHERE id = ?'; // Query modified to include the WHERE clause
+  db.query(query, [userId], (error, result) => { // Pass the user ID as a parameter to the query
+    if (error) {
+      console.error('Failed to fetch data:', error);
+      res.sendStatus(500);
+    } else {
+      if (result.length > 0) {
+        res.send(result[0]); // Send the first user data found (assuming the ID is unique)
+      } else {
+        res.sendStatus(404); // User with the specified ID not found
+      }
+    }
+  });
+});
 
 
 //GEt user information when login
