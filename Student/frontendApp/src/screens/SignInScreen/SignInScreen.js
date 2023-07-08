@@ -1,4 +1,4 @@
-import { View, Text ,Image, StyleSheet, useWindowDimensions} from 'react-native'
+import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -16,25 +16,33 @@ const SignInScreen = () => {
 
     const navigation = useNavigation();
     //BTN Function
-    const onSignInPressed = () =>{
-          axios.post ('http://192.168.1.83:5000/login/app',{
-            username:username,
-            password:password,
-          }).then((response) => {
-            console.log(response.data.message);
-          if(response.data.message === 'User found'){
-            
-            AsyncStorage.setItem('username', username);
-            AsyncStorage.setItem('id', response.data.id.toString());
 
-            navigation.navigate('Started');
-            
-          }
-          else
-          {
-            console.error('User not Exist');
-          }
-          });
+
+    const onSignInPressed = () =>{
+      if(username.trim() === '' || password.trim() === ''){
+        ToastAndroid.show('Please Enter Username and Password',ToastAndroid.SHORT);
+        return;
+      }else{
+        axios.post ('http://192.168.1.83:5000/login/app',{
+          username:username,
+          password:password,
+        }).then((response) => {
+          console.log(response.data.message);
+        if(response.data.message === 'User found'){
+          
+          AsyncStorage.setItem('username', username);
+          AsyncStorage.setItem('id', response.data.id.toString());
+          setUsername(''); // Clear the username input
+          setPassword(''); // Clear the password input
+          navigation.navigate('Started');
+          
+        }
+        else
+        {
+          ToastAndroid.show('User not Exist',ToastAndroid.SHORT);
+        }
+        });
+      }  
     };
 
     const onForgot = () =>{
@@ -46,7 +54,6 @@ const SignInScreen = () => {
 
       navigation.navigate('SignUp');
     };
-
   return (
     <View style={styles.root}>
        <View style={styles.circle} />
@@ -80,7 +87,9 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
         root:{
             alignItems:'center',
-            padding: 20,
+            backgroundColor:'white',
+            width:'100%',
+            height:'100%',
         },
         circle: {
           position: 'absolute',
@@ -114,7 +123,8 @@ const styles = StyleSheet.create({
         text:{
         fontFamily:'poppins',
         fontSize:14,
-        marginVertical:'30%',
+        color:'black',
+        marginVertical:'20%',
         letterSpacing:1.5,
         }
 });
