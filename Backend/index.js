@@ -1,9 +1,9 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
 const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -11,10 +11,10 @@ app.use(cors());
 
 // Connection to the database
 const db = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'root',
-  password: '12345',
-  database: 'mindmattersdb',
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
 });
 
 // Establish the database connection
@@ -313,7 +313,7 @@ app.get('/user/:id', (req, res) => {
 
 
 // Start the server
-const port = 5000;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
