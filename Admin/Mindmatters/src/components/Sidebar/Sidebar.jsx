@@ -24,7 +24,7 @@ function Sidebar() {
            console.log(userId);
           // Clear localStorage and redirect
           localStorage.clear();
-          window.location.href = 'http://localhost:5173/';
+          window.location.href = '/';
         } else {
           console.error('Failed to update status:', response.status);
           // Handle the error case accordingly

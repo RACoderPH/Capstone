@@ -11,7 +11,7 @@ app.use(cors());
 
 // Connection to the database
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
   password: '12345',
   database: 'mindmattersdb',

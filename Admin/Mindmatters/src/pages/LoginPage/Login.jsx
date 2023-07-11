@@ -38,7 +38,7 @@ const userexist = () => toast.warn('User Already Exist', {
         if (response.data.message === 'Username already exists') {
          userexist();
         }else if(response.data.message === 'User registered successfully'){
-          window.location.href = 'http://localhost:5173/';
+          window.location.href = '/';
         }
       })
       .catch((error) => {
@@ -78,7 +78,7 @@ const login = () =>{
       localStorage.setItem('Username', username);
 
       // Redirect to the homepage or desired page
-      window.location.href = 'http://localhost:5173/home';
+      window.location.href = '/home';
     }else{
       toast.warn('Check Username and Password', {
         position: "top-center",
