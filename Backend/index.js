@@ -3,11 +3,16 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const multer = require('multer');
+const path = require('path');
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+
 
 // Connection to the database
 const db = mysql.createConnection({
@@ -26,12 +31,15 @@ db.connect((err) => {
   }
 });
 
+//For Useer Server
+
+
 //For register user query
 const bcrypt = require('bcrypt');
-
 // ...
 
 app.post('/register', (req, res) => {
+  const fullname = req.body.fullname;
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
@@ -50,14 +58,14 @@ app.post('/register', (req, res) => {
         bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
           if (hashErr) {
             console.error('Failed to hash password:', hashErr);
-            res.send({ message: 'Server error' });
+            res.send({ message: 'Server errorr' });
           } else {
             const position = 'Admin';
             const status = 'Offline';
             const emp_id = "";
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_info (user_name, Email,stud_no, Password, created_at,position,status) VALUES (?, ?,?, ?, ?,?,?)';
-            db.query(insertUserQuery, [username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
+            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no, Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?,?,?)';
+            db.query(insertUserQuery, [fullname,username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
                 res.send({ message: 'Server error' });
@@ -99,7 +107,7 @@ app.post('/register/app', (req, res) => {
             const position = 'Student';
             const status = 'Offline';
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_info (user_name, Email, stud_no, Password, created_at, position, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             db.query(insertUserQuery, [username, email, stud_no, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
@@ -278,7 +286,7 @@ app.post('/logout', (req,res) => {
 
 //Get user from Database
 app.get('/api/getuser', (req, res) => {
-  const query = 'SELECT * FROM user_info';
+  const query = 'SELECT * FROM user_info WHERE status = "Online"';
   db.query(query, (error, result) => {
     if (error) {
       console.error('Failed to fetch data:', error);
@@ -308,7 +316,24 @@ app.get('/user/:id', (req, res) => {
   });
 });
 
+//End User Server
 
+//Annoucement Server 
+app.post('/announce', (req,res) =>{
+  const title = req.body.title;
+  const message = req.body.message;
+
+  const insertAnnouncement = 'INSERT into announce_tb (title,message) VALUES (?, ?)' ; 
+
+  db.query(insertAnnouncement, [title,message], (insertErr, insertResult) => {
+    if (insertErr) {
+      console.error('Failed to insert announcement:', insertErr);
+      res.send({ message: 'Server error' });
+    } else {
+      res.send({ message: 'Inserted' });
+    }
+  });
+});
 //GEt user information when login
 
 

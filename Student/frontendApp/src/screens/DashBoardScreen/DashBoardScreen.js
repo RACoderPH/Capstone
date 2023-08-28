@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:'60%',
+            marginLeft:'50%',
             backgroundColor: 'gray',
             width: 40,
             height: 40,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 0.5,
         borderColor: '#ffff',
-        elevation: 2,
+        elevation: 1,
       },
       
         boxImage:{

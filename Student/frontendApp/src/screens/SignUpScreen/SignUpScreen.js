@@ -63,6 +63,14 @@ const SignUpScreen = () => {
     <View style={styles.circle} />
     <View style={styles.circle2} />
     <Text style={styles.title}>Sign Up</Text>
+    
+    <CustomInputs 
+    onChangeText={(e) => setUsername(e)}
+     mode="outlined"
+     label="Fullname"
+     placeholder="Enter Fullname"
+   />
+
     <CustomInputs 
     onChangeText={(e) => setUsername(e)}
      mode="outlined"

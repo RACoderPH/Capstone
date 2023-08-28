@@ -16,7 +16,7 @@ export const SampleApi = () => {
   //Button function to save the data to the MYSqL database
   const save = () => {
     const data = { title: title, body: body };
-    axios.post("http://localhost:5000/comments/save", data).then((response) => {
+    axios.post("https://mindmatters-ejmd.onrender.com/save", data).then((response) => {
       setTitle("");//To change the value to null
       setBody("");
       getData();
@@ -25,7 +25,7 @@ export const SampleApi = () => {
 
 //View or get the Data to display it
   const getData = () => {
-    axios.get("http://localhost:5000/comments/list").then((response) => {
+    axios.get("https://mindmatters-ejmd.onrender.com/list").then((response) => {
       setComments(response.data);
       // console.log(response.data)
       //to print the data in the inspect element

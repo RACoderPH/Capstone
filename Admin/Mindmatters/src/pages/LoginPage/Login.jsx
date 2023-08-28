@@ -13,7 +13,7 @@ const warning = () => toast.warn('Password not the same', {
 const userexist = () => toast.warn('User Already Exist', {
     });
 
-
+ const [fullnameReg,setfullnameReg] = useState("")
  const [usernameReg,setUsernameReg] = useState("")
  const [emailReg,setEmailReg] = useState("")
  const [passwordReg,setPasswordReg] = useState("")
@@ -28,6 +28,7 @@ const userexist = () => toast.warn('User Already Exist', {
   }
   else{
     Axios.post('http://localhost:5000/register', {
+      fullname: fullnameReg,
       username: usernameReg,
       email: emailReg,
       password: passwordReg,
@@ -156,7 +157,11 @@ theme="light"
             <div className='form'>
               <h1>Create Account</h1>
               <span>or use your email for registration</span>
-              <input type="text" placeholder="Name" 
+              <input type="text" placeholder="Fullname" 
+              onChange={(e) => {
+                setfullnameReg(e.target.value)
+                }}/>
+                 <input type="text" placeholder="Username" 
               onChange={(e) => {
                 setUsernameReg(e.target.value)
                 }}/>
