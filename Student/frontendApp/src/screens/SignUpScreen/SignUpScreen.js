@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 
 const SignUpScreen = () => {
+  const [Fullname, setFullname] = useState('');
     const [Username, setUsername] = useState('');
     const [Email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,6 +33,7 @@ const SignUpScreen = () => {
       } else {
         axios
           .post('http://192.168.1.83:5000/register/app', {
+            fullname: Fullname,
             username: Username,
             email: Email,
             password: password,
@@ -65,7 +67,7 @@ const SignUpScreen = () => {
     <Text style={styles.title}>Sign Up</Text>
     
     <CustomInputs 
-    onChangeText={(e) => setUsername(e)}
+    onChangeText={(e) => setFullname(e)}
      mode="outlined"
      label="Fullname"
      placeholder="Enter Fullname"

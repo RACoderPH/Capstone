@@ -83,6 +83,7 @@ app.post('/register', (req, res) => {
 
 //For app Register
 app.post('/register/app', (req, res) => {
+  const fullname = req.body.fullname;
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
@@ -108,7 +109,7 @@ app.post('/register/app', (req, res) => {
             const status = 'Offline';
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
             const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-            db.query(insertUserQuery, [username, email, stud_no, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
+            db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
                 res.send({ message: 'Server error' });
@@ -286,7 +287,7 @@ app.post('/logout', (req,res) => {
 
 //Get user from Database
 app.get('/api/getuser', (req, res) => {
-  const query = 'SELECT * FROM user_info WHERE status = "Online"';
+  const query = 'SELECT * FROM user_info WHERE status = "Online" AND position = "Student"';
   db.query(query, (error, result) => {
     if (error) {
       console.error('Failed to fetch data:', error);
