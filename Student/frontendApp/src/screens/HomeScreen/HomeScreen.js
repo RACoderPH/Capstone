@@ -74,6 +74,10 @@ const Apps = () => {
 };
 
 const styles = StyleSheet.create({
+  container:{
+    width:"100%",
+    alignSelf:'center'
+  }
 });
 
 export default Apps;

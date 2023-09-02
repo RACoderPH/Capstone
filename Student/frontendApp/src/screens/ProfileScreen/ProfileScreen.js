@@ -64,38 +64,28 @@ const ProfileScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.main} 
     showsVerticalScrollIndicator={false}
-  showsHorizontalScrollIndicator={false}>
-    <View style={styles.Image}>
-      <Text style={styles.txt}>Account Setting</Text>
-      <Image source={Logo} resizeMode="contain" style={styles.image} />
-      <Text style={styles.username}>{userData ? userData.user_name : 'Loading...'}</Text>
-    </View>
-    <View style={styles.textcontainer}>
-      <Text style={styles.info}>Personal Information</Text>
-      <Text style={styles.value}>Value</Text>
+    showsHorizontalScrollIndicator={false}>
+      
+        <View style={styles.Image}>
+          <Text style={{fontSize:21,textAlign:'center',fontWeight:'300',color:'black',margin:5}}>Profile</Text>
+          <Image source={{ uri: 'https://picsum.photos/700' }} resizeMode="contain" style={styles.image} />
+          <Text style={styles.username}>{userData ? userData.Fullname : 'Loading...'}</Text>
+          <Text style={styles.stud_no}>{userData ? userData.stud_no : 'Loading...'}</Text>
+      </View>
+      <CustomButton text="Edit Profile" style={styles.btn} />
       <View style={styles.line} />
-      <Text style={styles.info}>Student Number</Text>
-      <Text style={styles.value}>{userData ? userData.stud_no : 'Loading...'}</Text>
+      <View style={styles.information}> 
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="person-circle-outline" style={styles.icons}></Icon>  User Management </Text>
       <View style={styles.line} />
-      <Text style={styles.info}>Email Address</Text>
-      <Text style={styles.value}>{userData ? userData.Email : 'Loading...'}</Text>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="help-outline" style={styles.icons}></Icon>  How to use</Text>
       <View style={styles.line} />
-      <Text style={styles.info}>Contact Number</Text>
-      <Text style={styles.value}>Value</Text>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="information-circle-outline" style={styles.icons}></Icon>  Help Support</Text>
       <View style={styles.line} />
-      <Text style={styles.info}>Guardian Name</Text>
-      <Text style={styles.value}>Value</Text>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="settings-outline" style={styles.icons}></Icon>  Setting</Text>
       <View style={styles.line} />
-      <Text style={styles.info}>Guardian Contact</Text>
-      <Text style={styles.value}>Value</Text>
-      <View style={styles.line} />
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center',width:"100%"}}>
-      <CustomButton text="Update" style={styles.btnInfo} />
-      <CustomButton text="Change Password" style={styles.btnInfo} />
-    </View>
-    <CustomButton text="Logout" style={styles.btn} onPress={logout} />
-  </ScrollView>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="log-out-outline" style={styles.icons} onPress={logout}></Icon>  Logout</Text>
+      </View>
+    </ScrollView>
   
   )
 }
@@ -103,10 +93,16 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
     main:{
       width:"100%",
+      height:"100%",
       backgroundColor:'white',
     },
+    
+    icons:{
+      fontSize:25,
+    },
     btn:{
-        backgroundColor:'#EF5757',
+        width:"45%",
+        backgroundColor:'#F7D060',
         alignSelf:'center',
     },
     btnInfo:{
@@ -139,17 +135,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
   },
   username:{
-    fontSize:20,
-    fontWeight:'800',
+    margin:5,
+    fontSize:22,
+    fontWeight:'400',
+    color:'black',
+  },
+  stud_no:{
+    margin:5,
+    fontSize:21,
+    fontWeight:'500',
     color:'black',
   },
   textcontainer:{
         marginTop:30,
   },    
   line: {
-    width: '100%',
-    height: 1,
-    backgroundColor: 'black',
+    marginLeft:20,
+    marginRight:20,
+    height: 0.5,
+    fontWeight:'100',
+    backgroundColor: 'gray',
     marginTop: 2,
     alignItems: 'center',
   },
@@ -159,7 +164,11 @@ info:{
     margin:5,
     padding:3,
     color:'black'
-} 
+} ,
+information:{
+  margin:25,
+
+}
 })
 
 export default ProfileScreen

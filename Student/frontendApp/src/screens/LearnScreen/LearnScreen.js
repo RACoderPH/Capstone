@@ -16,9 +16,7 @@ const LearnScreen = () => {
       />
     <ScrollView style={{margin:10,marginBottom:150,heigh:'100%'}} >
         <MyComponent/>
-        <MyComponent/>
-        <MyComponent/>
-        <MyComponent/>
+        
     </ScrollView>
     
 
@@ -50,8 +48,9 @@ const styles = StyleSheet.create({
             margin:1,
         },
         search:{
+            
             marginBottom:5,
-            marginTop:5,
+            marginTop:15,
         },
         content:{
             padding:10,

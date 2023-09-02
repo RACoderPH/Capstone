@@ -1,8 +1,9 @@
-import { View, Text ,StyleSheet,Image,ScrollView,Dimensions,ImageBackground} from 'react-native'
+import { View ,StyleSheet,Image,ScrollView,Dimensions,ImageBackground} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import bg from '../../../assets/images/exercise.jpg';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Searchbar, Card, Text, Avatar, Button } from 'react-native-paper';
 const { width, height } = Dimensions.get('window');
 
 const DashBoardScreen = () => {
@@ -20,30 +21,63 @@ const DashBoardScreen = () => {
         console.log(error);
       }
     };
+    const MyComponent = () => {
+      return (
+        <Card style={styles.content}>
+          <Card.Title title="Journal"/>
+          <Card.Cover source={{ uri:'https://picsum.photos/200'}}  style={styles.cover}/>
+          <Card.Content>
+            <Text style={{fontSize:12}}>Write your thoughts/{'\n'}feeling</Text>
+          </Card.Content>
+        </Card>
+    
+        
+      );
+    };
 
+    const MyComponent2 = () => {
+      return (
+        <Card style={styles.content}>
+          <Card.Title title="Assessment"/>
+          <Card.Cover source={{ uri:'https://picsum.photos/300'}}  style={styles.cover}/>
+          <Card.Content>
+            <Text style={{fontSize:13}}>Let test your Mind</Text>
+          </Card.Content>
+        </Card>
+    
+        
+      );
+    };
+
+    
+    const Dash = () => {
+      return (
+        <Card style={styles.firstbox}>
+     
+        </Card>
+    
+        
+      );
+    };
+
+    
   return (
     <ScrollView style={styles.main}>
       <View style={styles.Topnav}>
     <View style={{ flexDirection: 'row', width: '100%', alignItems:'center'}}>
-      <Text style={{ marginLeft:'4%',fontSize:16,color:'black',fontWeight:'600' }}>Hello {username}</Text>
+      <Text style={{ marginLeft:'4%',fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold' }}>{username}</Text>
+      </Text>
       <Image source={bg} resizeMode="contain" style={styles.image} />
     </View>
   </View>
-        <View style={styles.Container}>
-        </View>
+        <Dash />
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Let me help you to reduce your stress</Text>
-        <View style={{ flexDirection: 'row',alignSelf:'center',width:'100%',justifyContent:'center'}}>
-                <View style={styles.box}>
-                <Icon name="newspaper" color={"#555555"} size={150}  style={{alignSelf:'center'}}/>
-                <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: 10,marginTop:20,}}>Journal</Text>
-                <Text style={{marginLeft: '5%',color:'black'}}>Write your thoughts/feelings</Text>
-                </View>
-                <View style={styles.box}>
-                <Icon name="journal" color={"#555555"} size={150}  style={{alignSelf:'center'}}/>
-                <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: 10,marginTop:20,}}>Assessment</Text>
-                <Text style={{marginLeft: '5%',color:'black'}}>Take Assessment</Text>
-               </View>
+        <View style={{ flexDirection: 'row',alignSelf:'center'}}>
+          
+                <MyComponent/>
+                <MyComponent2/>
+                
         </View>
         <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: '2%',marginTop:'4%'}}>Tools</Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Release your Tension</Text>
@@ -63,26 +97,33 @@ const styles = StyleSheet.create({
       backgroundColor:'white',
       height:'100%',
     },
+    cover:{
+      width:150,
+      height:150,
+    },
+    content:{
+      padding:10,
+      marginBottom:1,
+      margin:4
+  },
+  firstbox:{
+    height:200,
+    width:"90%",
+    alignSelf:'center'
+  },
     Topnav:{
         width:'100%',
         padding:2,
     },
         image: {
-            marginLeft:'70%',
+            marginLeft:'50%',
             backgroundColor: 'gray',
             width: 40,
             height: 40,
             borderRadius:20,
             margin: 5,
         },
-        Container:{
-            backgroundColor: 'rgba(255, 159, 6, 0.8)',
-            width: width * 0.9,
-            height: height * 0.22,
-            borderRadius:15,
-            padding:2,
-            alignSelf:'center',
-        },
+
         Container2: {
           marginBottom: 15,
           marginTop: 5,
