@@ -1,63 +1,58 @@
 import React, { useState } from 'react';
 import { View, StyleSheet,ScrollView } from 'react-native';
-import { Searchbar, Card, Text, Avatar, Button } from 'react-native-paper';
+import { Searchbar} from 'react-native-paper';
+import axios from 'axios';
+import CardBook from '../../components/CardBook/CardBook';
 
 const LearnScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const [bookData, setBookData] = useState([]);
+
+  const searchBook = async () => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&filter=free-ebooks&key=AIzaSyBZUsdBLW72GDSxTuCYcsWatyRl2GWPGHM`
+      );
+      const { items } = response.data;
+      setBookData(items || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <View style = {styles.container}>
+    <View style={styles.container}>
       <Searchbar
-        style= {styles.search}
+        style={styles.search}
         placeholder="Search"
-        onChangeText={onChangeSearch}
+        onChangeText={(query) => setSearchQuery(query)}
         value={searchQuery}
+        onIconPress={searchBook}
       />
-    <ScrollView style={{margin:10,marginBottom:150,heigh:'100%'}} >
-        <MyComponent/>
-        
-    </ScrollView>
-    
-
+      <ScrollView style={styles.scrollView}>
+        <CardBook book={bookData}/>
+      </ScrollView>
     </View>
   );
 };
 
-const MyComponent = () => {
-  const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
-
-  return (
-    <Card style={styles.content}>
-      <Card.Title title="Book Title" subtitle="Book Subtitle" left={LeftContent} />
-      <Card.Content>
-        <Text>Book content</Text>
-      </Card.Content>
-      <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-      <Card.Actions>
-        <Button>Read</Button>
-      </Card.Actions>
-    </Card>
-
-    
-  );
-};
-
 const styles = StyleSheet.create({
-        container:{
-            margin:1,
-        },
-        search:{
-            
-            marginBottom:5,
-            marginTop:15,
-        },
-        content:{
-            padding:10,
-            marginBottom:10
-        }
+  scrollView:{
+    marginBottom:50,
+  },
+  container:{
+      height:"100%",
+      margin:14,
+  },
+  search:{
+      marginBottom:5,
+      marginTop:5,
+  },
+  content:{
+      padding:10,
+      marginBottom:10
+  }
 
 
 });
-
 export default LearnScreen;

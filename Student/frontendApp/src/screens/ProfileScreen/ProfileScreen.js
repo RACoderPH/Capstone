@@ -166,8 +166,7 @@ info:{
     color:'black'
 } ,
 information:{
-  margin:25,
-
+  margin:20,
 }
 })
 

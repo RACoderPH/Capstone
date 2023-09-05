@@ -1,4 +1,5 @@
 import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid} from 'react-native'
+import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -46,7 +47,7 @@ const SignInScreen = () => {
     };
 
     const onForgot = () =>{
-      console.warn('Forgot');
+      navigation.navigate('Forgot');
     };
 
     const onCreate = () =>{
@@ -60,7 +61,6 @@ const SignInScreen = () => {
           <View style={styles.circle2} />
       <Image source={Logo} style={[styles.logo, {height:height * 0.3}]}  resizeMode='contain'/>
       <CustomInputs 
-       
        mode="outlined"
        label="Username"
        placeholder="Enter Username"
@@ -72,7 +72,7 @@ const SignInScreen = () => {
        placeholder="Enter Password"
        onChangeText={(e) => setPassword(e)}
        secureTextEntry={true}/>
-        <Text style={styles.forgot} onPress={onForgot}>Forgot Password</Text>
+      <Text style={styles.forgot} onPress={onForgot}>Forgot Password</Text>
         
         <CustomButton 
         onPress={onSignInPressed}

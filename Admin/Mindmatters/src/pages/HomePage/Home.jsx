@@ -58,8 +58,7 @@ function Home() {
                   <td>{user.status}</td>
                   <td>{user.position}</td>
             <td className="btn">
-              <button>Edit</button>
-              <button>Delete</button>
+              <button>View</button>
             </td>
           </tr>
   ))}

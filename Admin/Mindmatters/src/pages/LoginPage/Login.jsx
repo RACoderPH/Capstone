@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { colors } from '@mui/material';
 function Login() {
 
+const input = () => toast.warn('Please Fill-out the Field', {
+  });
 const warning = () => toast.warn('Password not the same', {
   });
 
@@ -21,39 +23,45 @@ const userexist = () => toast.warn('User Already Exist', {
 
  const [username,setUsername] = useState("")
  const [password,setPassword] = useState("")
- const register = () => {
 
-  if(passwordReg !== ConfirmpasswordReg){
-      warning();
-  }
-  else{
-    Axios.post('http://localhost:5000/register', {
-      fullname: fullnameReg,
-      username: usernameReg,
-      email: emailReg,
-      password: passwordReg,
-    })
-      .then((response) => {
-        console.log(response);
-        // Check the response for the status code indicating username already exists
-        if (response.data.message === 'Username already exists') {
-         userexist();
-        }else if(response.data.message === 'User registered successfully'){
-          window.location.href = '/';
-        }
+
+ const register = () => {
+    if(fullnameReg === "" || usernameReg === "" || emailReg === "" || passwordReg ==="" || ConfirmpasswordReg === ""){
+      input();
+    }else{
+      if(passwordReg !== ConfirmpasswordReg){
+        warning();
+    }else{
+      Axios.post('http://localhost:5000/register', {
+        fullname: fullnameReg,
+        username: usernameReg,
+        email: emailReg,
+        password: passwordReg,
       })
-      .catch((error) => {
-        console.error(error);
-        // Handle other error scenarios if needed
-      });
-  }
+        .then((response) => {
+          console.log(response);
+          // Check the response for the status code indicating username already exists
+          if (response.data.message === 'Username already exists') {
+           userexist();
+          }else if(response.data.message === 'User registered successfully'){
+            window.location.href = '/';
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          // Handle other error scenarios if needed
+        });
+    }
+    }
 };
 
 
 
 const login = () =>{
- 
-  Axios.post('http://localhost:5000/login', 
+  if(username === "" || password === ""){
+      input();
+  }else{
+    Axios.post('http://localhost:5000/login', 
   {
     username:username,
     password:password,
@@ -94,6 +102,8 @@ const login = () =>{
       }
       }
   });
+  }
+  
 };
 
 //ANimation Slider in login

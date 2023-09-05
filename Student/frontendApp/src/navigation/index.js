@@ -6,7 +6,9 @@ import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import GetStarted from '../screens/GetStarted/GetStarted';
 import SplashScreens from '../screens/SplashScreen/SplashScreen';
-
+import ForgotScreens from '../screens/ForgotScreen/ForgotScreen';
+import JournalScreens from '../screens/JournalScreen/JournalScreen';
+import ProfileScreens from '../screens/ProfileScreen/ProfileScreen';
 
 
 const Navigation = () => {
@@ -28,9 +30,12 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Started" component={GetStarted} />
         <Stack.Screen name="Homes" component={HomeScreen} />
+        <Stack.Screen name="Journal" component={JournalScreens} />
+        <Stack.Screen name="Profile" component={ProfileScreens} />
       </Stack.Navigator>
     </NavigationContainer>
   );
