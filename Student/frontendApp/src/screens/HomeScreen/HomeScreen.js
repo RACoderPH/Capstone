@@ -7,6 +7,7 @@ import NotificationScreen from '../NotificationScreen/NotificationScreen';
 import DashBoardScreen from '../DashBoardScreen/DashBoardScreen';
 import LearnScreen from '../LearnScreen/LearnScreen';
 
+
 const Tab = createBottomTabNavigator();
 
 const SettingsScreens = () => (
