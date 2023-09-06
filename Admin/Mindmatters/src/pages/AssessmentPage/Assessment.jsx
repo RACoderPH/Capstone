@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import './assessment.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+import { IconButton } from '@mui/material';
+import blank from '../../images/blank.png';
+import ass1 from '../../images/assessment1.png';
+import ass2 from '../../images/assessment2.png';
+
 
 const Assessment = () => {
   const [questions, setQuestions] = useState([]);
@@ -44,79 +51,74 @@ const Assessment = () => {
     <div className="assessment">
       <Sidebar />
       <div className="assessmentContainer">
-        <Navbar />
-
-        <div className="form">
-          <h1>Assessment Form</h1>
-
-          <div className="new-question">
-            <input
-              type="text"
-              placeholder="New Question"
-              value={newQuestion}
-              onChange={(e) => setNewQuestion(e.target.value)}
-            />
-            <button onClick={handleAddQuestion}>Add Question</button>
-          </div>
-
-          {questions.map((question, questionIndex) => (
-            <div className="question" key={questionIndex}>
-              <div className="question-header">
-                <input
-                  type="text"
-                  placeholder="Question"
-                  value={question.question}
-                  onChange={(e) => {
-                    const updatedQuestions = [...questions];
-                    updatedQuestions[questionIndex].question = e.target.value;
-                    setQuestions(updatedQuestions);
-                  }}
-                />
-                <button onClick={() => handleDeleteQuestion(questionIndex)}>
-                  Delete
-                </button>
-              </div>
-              {question.type === 'multiple-choice' && (
-                <div className="choices">
-                  {question.choices.map((choice, choiceIndex) => (
-                    <div className="choice" key={choiceIndex}>
-                      <input
-                        type="text"
-                        placeholder="Choice"
-                        value={choice}
-                        onChange={(e) => {
-                          const updatedQuestions = [...questions];
-                          updatedQuestions[questionIndex].choices[
-                            choiceIndex
-                          ] = e.target.value;
-                          setQuestions(updatedQuestions);
-                        }}
-                      />
-                      <button
-                        onClick={() =>
-                          handleDeleteChoice(questionIndex, choiceIndex)
-                        }
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  ))}
-                  <div className="add-choice">
-                    <input
-                      type="text"
-                      placeholder="Add Choice"
-                      value={newChoice}
-                      onChange={(e) => setNewChoice(e.target.value)}
-                    />
-                    <button onClick={handleAddChoice}>Add Choice</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+        <Navbar />     
+        
+     <div className="templateTop">
+      <div className="templateLeft">
+        <p className="topTitle">Create New Form</p>
+      </div>
+      <div className="templateRight">
+        <div className="galleryButton">
+          Template gallery 
+          <UnfoldMoreIcon/>
         </div>
+        <IconButton>
+          <MoreVertIcon/>
+        </IconButton>
+
+
       </div>
     </div>
+
+
+    <div className="templateBody">
+      <div className="card">
+        <img src={blank} alt="no image"  className="cardImg"/>
+        <p className="cardTitle">Blank Form</p>
+      </div>
+
+      <div className="card">
+        <img src={ass1} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment June 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+
+      <div className="card">
+        <img src={ass2} alt="no image" className="cardImg"/>
+        <p className="cardTitle">Assessment August 2023</p>
+      </div>
+      
+    </div>
+
+      </div>
+    </div>
+
+
+
   );
 };
 

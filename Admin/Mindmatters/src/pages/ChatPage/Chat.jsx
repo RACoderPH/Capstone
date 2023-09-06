@@ -13,7 +13,8 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     if (inputMessage.trim() !== '') {
-      setMessages([...messages, { content: inputMessage, sender: 'user' }]);
+      const newMessage = { content: inputMessage, sender: 'user' };
+      setMessages([...messages, newMessage]);
       setInputMessage('');
     }
   };
@@ -24,21 +25,26 @@ const Chat = () => {
 
       <div className="chatContainer">
         <Navbar />
-        <div className="messageContainer">
-          {messages.map((message, index) => (
-            <div key={index} className={`message ${message.sender}`}>
-              {message.content}
-            </div>
-          ))}
-        </div>
-        <div className="inputContainer">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={inputMessage}
-            onChange={handleInputChange}
-          />
-          <button onClick={handleSendMessage}>Send</button>
+        <div className="chatBox">
+          <div className="messageContainer">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`message ${message.sender === 'user' ? 'userMessage' : 'otherMessage'}`}
+              >
+                {message.content}
+              </div>
+            ))}
+          </div>
+          <div className="messageInputContainer">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={inputMessage}
+              onChange={handleInputChange}
+            />
+            <button onClick={handleSendMessage}>Send</button>
+          </div>
         </div>
       </div>
     </div>
