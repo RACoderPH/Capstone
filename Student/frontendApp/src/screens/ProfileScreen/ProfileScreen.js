@@ -6,7 +6,7 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-
+const { width, height } = Dimensions.get('window');
 
 
 const ProfileScreen = () => {
@@ -92,8 +92,8 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
     main:{
-      width:"100%",
-      height:"100%",
+      width:width * 1,
+      height:height * 1,
       backgroundColor:'white',
     },
     

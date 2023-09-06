@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
 import Logo from '../../../assets/images/getStarted.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -34,6 +34,9 @@ const GetStarted = () => {
   );
 };
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   root: {
     flex: 1,
@@ -43,65 +46,67 @@ const styles = StyleSheet.create({
   },
   circle: {
     position: 'absolute',
-    top: -110,
-    left: -15,
-    width: 224,
-    height: 216,
-    borderRadius: 110,
+    top: -windowHeight * 0.1,
+    left: -windowWidth * 0.01,
+    width: windowWidth * 0.5, // Increase the size of the circle
+    height: windowWidth * 0.5, // Increase the size of the circle
+    borderRadius: windowWidth * 0.25, // Adjust the border radius accordingly
     backgroundColor: 'rgba(241, 204, 74, 0.45)', // Adjust the color of the circle as desired
   },
   circle2: {
     position: 'absolute',
-    top: -30,
-    left: -100,
-    width: 224,
-    height: 216,
-    borderRadius: 110,
+    top: -windowHeight * 0.03,
+    left: -windowWidth * 0.15,
+    width: windowWidth * 0.5, // Increase the size of the circle
+    height: windowWidth * 0.5, // Increase the size of the circle
+    borderRadius: windowWidth * 0.25, // Adjust the border radius accordingly
     backgroundColor: 'rgba(241, 204, 74, 0.45)', // Adjust the color of the circle as desired
   },
   imageContainer: {
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: -10,
+    marginTop: -windowHeight * 0.01,
   },
   image: {
-    width: 400,
-    height: 261,
+    width: windowWidth * 0.9,
+    height: windowWidth * 0.60,
   },
   textContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
+    paddingHorizontal: windowWidth * 0.03,
   },
   welcome: {
     color: 'black',
     fontFamily: 'Poppins',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: windowWidth * 0.06,
+    marginTop: windowHeight * 0.02,
   },
   content: {
-    fontSize: 12,
+    fontSize: windowWidth * 0.03,
     color: '#454545',
     fontFamily: 'Poppins',
-    padding: 20,
+    padding: windowHeight * 0.01,
     textAlign: 'center',
   },
   bottomContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    paddingHorizontal: 30,
-    paddingBottom: 60,
+    paddingHorizontal: windowWidth * 0.1,
+    paddingBottom: windowHeight * 0.10,
   },
   btn: {
-    borderRadius: 10,
-    fontSize: 16,
+    borderRadius: windowWidth * 0.05,
+    fontSize: windowWidth * 0.04,
   },
   line: {
     width: '100%',
     height: 1,
     backgroundColor: '#F1CC4A',
-    marginTop: 10,
+    marginTop: windowHeight * 0.01,
     alignItems: 'center',
   },
 });

@@ -1,7 +1,8 @@
-import { View ,StyleSheet,Image,ScrollView,Dimensions,ToastAndroid,ImageBackground} from 'react-native'
+import { View ,StyleSheet,Image,ScrollView,Dimensions,ToastAndroid,ImageBackground,TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import bg from '../../../assets/images/exercise.jpg';
-import Icon from 'react-native-vector-icons/Ionicons';
+import journal from '../../../assets/images/journal.jpg';
+import test from '../../../assets/images/test.jpg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Searchbar, Card, Text, Avatar, Button } from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
@@ -29,6 +30,12 @@ const DashBoardScreen = () => {
 
       navigation.navigate('Journal');
     };
+
+    const Breathe = () =>{
+      //console.warn('Sign Up');
+
+      navigation.navigate('Breathe');
+    };
    
     const Assessment = () =>{
       //console.warn('Sign Up');
@@ -37,26 +44,29 @@ const DashBoardScreen = () => {
 
     const MyComponent = () => {
       return (
-        <Card style={styles.content} onPress={Journal}>
+        <TouchableOpacity>
+        <Card style={styles.content}  onPress={Journal} >
           <Card.Title title="Journal"/>
-          <Card.Cover source={{ uri:'https://picsum.photos/200'}}  style={styles.cover}/>
+          <Card.Cover source={journal}  style={styles.cover}/>
           <Card.Content>
-            <Text style={{fontSize:12}}>Write your thoughts/{'\n'}feeling</Text>
+            <Text style={{fontSize:width * 0.03}}>Write your thoughts\{'\n'}feeling</Text>
           </Card.Content>
         </Card>
+        </TouchableOpacity>
       );
     };
 
     const MyComponent2 = () => {
       return (
+        <TouchableOpacity>
         <Card style={styles.content} onPress={Assessment}>
           <Card.Title title="Assessment"/>
-          <Card.Cover source={{ uri:'https://picsum.photos/300'}}  style={styles.cover}/>
+          <Card.Cover source={test}  style={styles.cover}/>
           <Card.Content>
-            <Text style={{fontSize:13}}>Let test your Mind</Text>
+            <Text style={{fontSize:width * 0.03}}>Check your Mental{'\n'} Health</Text>
           </Card.Content>
         </Card>
-    
+    </TouchableOpacity>
         
       );
     };
@@ -65,10 +75,8 @@ const DashBoardScreen = () => {
     const Dash = () => {
       return (
         <Card style={styles.firstbox}>
-     
-        </Card>
-    
-        
+        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{height:"100%"}} />
+      </Card>
       );
     };
 
@@ -76,8 +84,8 @@ const DashBoardScreen = () => {
   return (
     <ScrollView style={styles.main}>
       <View style={styles.Topnav}>
-    <View style={{ flexDirection: 'row', width: '100%', alignItems:'center'}}>
-      <Text style={{ marginLeft:'4%',fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold' }}>{username}</Text>
+    <View style={{ flexDirection: 'row', width: width * 1, alignItems:'center'}}>
+      <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold' }}>{username}</Text>
       </Text>
       <Image source={bg} resizeMode="contain" style={styles.image}/>
     </View>
@@ -93,13 +101,14 @@ const DashBoardScreen = () => {
         </View>
         <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: '2%',marginTop:'4%'}}>Tools</Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Release your Tension</Text>
+      <TouchableOpacity onPress={Breathe}  activeOpacity={0.9}>
         <View style={styles.Container2}>
-        <ImageBackground source={bg} style={styles.backgroundImage}>
-          <Text style={{color:'#574848',fontSize:20,fontWeight:'700',margin:15}}>Breathe</Text>
+        <ImageBackground source={bg} style={styles.backgroundImage} onPress={Breathe}>
+          <Text style={{color:'#574848',fontSize:20,fontWeight:'700',margin:15}} >Breathe</Text>
           <Text style={{color:'white',fontSize:18, marginLeft:10}}>A breathing exercise for reducing stress {'\n'}& anxiety</Text>
       </ImageBackground>
-
         </View>
+        </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -114,9 +123,9 @@ const styles = StyleSheet.create({
       height:150,
     },
     content:{
-      padding:10,
+      padding:5,
       marginBottom:1,
-      margin:4
+      margin:5
   },
   firstbox:{
     height:200,
@@ -128,7 +137,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:'55%',
+            marginLeft:width * 0.5,
             backgroundColor: 'gray',
             width: 40,
             height: 40,
