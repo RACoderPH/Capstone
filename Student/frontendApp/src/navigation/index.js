@@ -11,6 +11,7 @@ import JournalScreens from '../screens/JournalScreen/JournalScreen';
 import ProfileScreens from '../screens/ProfileScreen/ProfileScreen';
 import BreathingScreens from '../screens/BreathingScreen/BreathingScreen';
 import Breathe1 from '../screens/BreathingScreen/BreatheTechniques/Breathe1';
+import TestScreen from '../screens/TestScreen/TestScreen';
 
 
 const Navigation = () => {
@@ -31,15 +32,16 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Started" component={GetStarted} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Started" component={GetStarted} />
         <Stack.Screen name="Homes" component={HomeScreen} />
         <Stack.Screen name="Journal" component={JournalScreens} />
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
         <Stack.Screen name="Breathe1" component={Breathe1} />
+        <Stack.Screen name="Test" component={TestScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -6,6 +6,9 @@ import {useNavigation} from '@react-navigation/native';
 
 
 const BreathingScreen = () => {
+
+
+  
   const navigation = useNavigation();
 
 
@@ -20,6 +23,7 @@ const BreathingScreen = () => {
   const onPress = () => {
     setIsPlaying(!isPlaying);
   };
+
   return (
     <ScrollView>
     <Card style={styles.SoundContainer} onPress={Breathe1} >
@@ -35,63 +39,6 @@ const BreathingScreen = () => {
             <Icon name="play-forward" style={{fontSize:30,margin:20}}></Icon>
         </View>
       <Text variant="titleLarge">Breathing Exercise</Text>
-      <Text variant="bodyMedium">Description</Text>
-    </Card.Content>
-    <Card.Actions>
-    </Card.Actions>
-    </Card>
-
-    <Card style={styles.SoundContainer}>
-    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-    <Card.Content>
-        <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <Icon name="play-back" style={{fontSize:30,margin:20}}></Icon>
-            <Icon
-        name={isPlaying ? "pause" : "play"}
-        style={{ fontSize: 30, margin: 20 }}
-        onPress={onPress}
-      />
-            <Icon name="play-forward" style={{fontSize:30,margin:20}}></Icon>
-        </View>
-        <Text variant="titleLarge">Breathing Exercise</Text>
-      <Text variant="bodyMedium">Description</Text>
-    </Card.Content>
-    <Card.Actions>
-    </Card.Actions>
-    </Card>
-
-    <Card style={styles.SoundContainer}>
-    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-    <Card.Content>
-    <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <Icon name="play-back" style={{fontSize:30,margin:20}}></Icon>
-            <Icon
-        name={isPlaying ? "pause" : "play"}
-        style={{ fontSize: 30, margin: 20 }}
-        onPress={onPress}
-      />
-            <Icon name="play-forward" style={{fontSize:30,margin:20}}></Icon>
-        </View>
-        <Text variant="titleLarge">Breathing Exercise</Text>
-      <Text variant="bodyMedium">Description</Text>
-    </Card.Content>
-    <Card.Actions>
-    </Card.Actions>
-    </Card>
-
-    <Card style={styles.SoundContainer}>
-    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-    <Card.Content>
-    <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-            <Icon name="play-back" style={{fontSize:30,margin:20}}></Icon>
-            <Icon
-        name={isPlaying ? "pause" : "play"}
-        style={{ fontSize: 30, margin: 20 }}
-        onPress={onPress}
-      />
-            <Icon name="play-forward" style={{fontSize:30,margin:20}}></Icon>
-        </View>
-        <Text variant="titleLarge">Breathing Exercise</Text>
       <Text variant="bodyMedium">Description</Text>
     </Card.Content>
     <Card.Actions>
