@@ -51,6 +51,7 @@
     margin-left: 20px;
 }
 
+
 .userShowTop{
     display: flex;
     align-items: center;
@@ -111,12 +112,25 @@
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+
+.single-row{
+    width:100%;
+}
+.single-column{
+    width:50%;
+    float:left;
+    margin-right: 50px;
+}
+
 }
 
 .userUpdateItem{
     display: flex;
     flex-direction: column;
     margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .userUpdateItem>label{
@@ -124,12 +138,7 @@
     font-size: 14px;
 }
 
-.userUpdateInput{
-    border: none;
-    width: 250px;
-    height: 30px;
-    border-bottom: 1px solid gray;
-}
+
 
 .userUpadateRight{
     display: flex;
@@ -159,7 +168,11 @@
     border: none;
     padding: 5px;
     cursor: pointer;
-    background-color: teal;
     color: white;
     font-weight: 600;
+    margin-top: 300px;
+   
+    
+
+
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React,  { useEffect, useState } from "react";
 import './profile.scss'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Navbar from '../../components/Navbar/Navbar'
@@ -8,10 +8,14 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PublishIcon from '@mui/icons-material/Publish';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 const Profile = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userData, setUserData] = useState({});
-  const [file, setFIle] = useState('');
+  
 
   useEffect(() => {
     const storedValue = localStorage.getItem('Username');
@@ -28,9 +32,7 @@ const Profile = () => {
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
-  const handlefile = (e) => {
-    setFile(e.targer,files[0])
-}
+
   return (
     <div className="profile">
         <Sidebar/>
@@ -43,7 +45,11 @@ const Profile = () => {
       <div className="UserContainer">
         <div className="userShow">
           <div className="userShowTop">
-            <img src="https://www.famousbirthdays.com/faces/haerin-image.jpg" alt="" className="userShowImg" />
+          <div className="userUpdateUpload">
+          <img className="userUpdateImg" src="https://www.famousbirthdays.com/faces/haerin-image.jpg" alt="" />
+          <label htmlFor="file"><PublishIcon></PublishIcon></label>
+          <input type="file" id="file" style={{ display: "none"}}></input>
+        </div>
             <div className="userShowTopTitle">
               <span className="userShowUsername">{localStorageValue}</span>
               <span className="userShowUserTitle">Guidance Counselor</span>
@@ -78,34 +84,50 @@ const Profile = () => {
           <span className="userUpdateTitle">Edit</span>
           <form  className="userUpdateForm">
             <div className="userUpdateLeft">
+          
+            <div className="single-row">
+
+              <div className="single-column">
               <div className="userUpdateItem">
-                <label >Username</label>
-                <input type="text" value={userData.user_name} className="userUpdateInput"></input>
+              <TextField id="standard-basic" label="Username" variant="standard" 
+               value={userData.user_name}  margin="dense"/>
               </div>
+              </div>
+              <div className="single-column">
               <div className="userUpdateItem">
-                <label >Full Name</label>
-                <input type="text" value={userData.user_name} className="userUpdateInput"></input>
+              <TextField id="standard-basic" label="Fullname" variant="standard" 
+              value={userData.user_name}  margin="dense"/>
               </div>
+              </div>
+              </div>
+
               <div className="userUpdateItem">
-                <label >Email</label>
-                <input type="text" value={userData.Email} className="userUpdateInput"></input>
+              <TextField id="standard-basic" label="Email" variant="standard" 
+               value={userData.Email} margin="dense"/>
               </div>
+      
               <div className="userUpdateItem">
-                <label >Phone</label>
-                <input type="text" placeholder="+639-432-5235" className="userUpdateInput"></input>
+              <TextField id="standard-basic" label="Phone" variant="standard" margin="dense" />
               </div>
+
               <div className="userUpdateItem">
-                <label >Location</label>
-                <input type="text" placeholder="Pulilan, Bulacan" className="userUpdateInput"></input>
-              </div>
+              <TextField id="standard-basic" label="Pulilan, Bulacan" margin="dense" variant="standard" disabled
+              size="small" defaultvalue="Small"/>
+   
+            </div>
             </div>
             <div className="userUpadateRight">
-              <div className="userUpdateUpload">
-                <img className="userUpdateImg" src="https://www.famousbirthdays.com/faces/haerin-image.jpg" alt="" />
-                <label htmlFor="file"><PublishIcon></PublishIcon></label>
-                <input type="file" id="file" style={{ display: "none"}} onChange={handlefile}></input>
-              </div>
-              <button className="userUpdateButton">Update</button>
+            <div className="userUpdateButton">
+            <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            href="#file-upload" type="submit">
+
+            Update
+           
+          </Button>
+          </div>
             </div>
           </form>
         </div>
