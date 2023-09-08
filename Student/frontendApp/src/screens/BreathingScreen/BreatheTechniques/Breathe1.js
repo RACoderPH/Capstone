@@ -1,6 +1,8 @@
 import { View, Text,StyleSheet,Dimensions, Animated } from 'react-native'
 import React, { useRef } from 'react'
 import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Sound from 'react-native-sound';
 
 
 

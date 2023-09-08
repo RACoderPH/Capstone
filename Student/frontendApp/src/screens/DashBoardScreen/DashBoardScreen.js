@@ -36,10 +36,11 @@ const DashBoardScreen = () => {
 
       navigation.navigate('Breathe');
     };
-   
+
+
     const Assessment = () =>{
       //console.warn('Sign Up');
-      ToastAndroid.show('Test',ToastAndroid.SHORT);
+      navigation.navigate('Test');
     };
 
     const MyComponent = () => {
