@@ -8,8 +8,15 @@ import { IconButton } from '@mui/material';
 import blank from '../../images/blank.png';
 import ass1 from '../../images/assessment1.png';
 import ass2 from '../../images/assessment2.png';
+import uuid from 'react-uuid';
 
 
+
+  const createForm = ()=>{
+    const id_ = uuid();
+    console.log(id_)
+  
+}
 const Assessment = () => {
   const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
@@ -47,6 +54,8 @@ const Assessment = () => {
     setQuestions(updatedQuestions);
   };
 
+  
+
   return (
     <div className="assessment">
       <Sidebar />
@@ -72,7 +81,7 @@ const Assessment = () => {
 
 
     <div className="templateBody">
-      <div className="card">
+      <div className="card" onClick={createForm}>
         <img src={blank} alt="no image"  className="cardImg"/>
         <p className="cardTitle">Blank Form</p>
       </div>
