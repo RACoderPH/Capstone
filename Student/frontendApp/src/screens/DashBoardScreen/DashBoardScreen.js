@@ -4,11 +4,15 @@ import bg from '../../../assets/images/exercise.jpg';
 import journal from '../../../assets/images/journal.jpg';
 import test from '../../../assets/images/test.jpg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Searchbar, Card, Text, Avatar, Button } from 'react-native-paper';
+import {
+   Card,
+    Text,
+    FAB,
+     Portal, 
+     Provider } from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 //Screen route
 const { width, height } = Dimensions.get('window');
-
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
@@ -22,7 +26,7 @@ const DashBoardScreen = () => {
         const storedUser = await AsyncStorage.getItem('username');
           setUsername(storedUser)
       } catch (error) {
-        console.log(error);
+        console.log("Axios Error");
       }
     };
     const Journal = () =>{
@@ -37,7 +41,6 @@ const DashBoardScreen = () => {
       navigation.navigate('Breathe');
     };
 
-
     const Assessment = () =>{
       //console.warn('Sign Up');
       navigation.navigate('Test');
@@ -47,7 +50,7 @@ const DashBoardScreen = () => {
       return (
         <TouchableOpacity>
         <Card style={styles.content}  onPress={Journal} >
-          <Card.Title title="Journal"/>
+          <Card.Title title="Diary"/>
           <Card.Cover source={journal}  style={styles.cover}/>
           <Card.Content>
             <Text style={{fontSize:width * 0.03}}>Write your thoughts\{'\n'}feeling</Text>
@@ -72,7 +75,6 @@ const DashBoardScreen = () => {
       );
     };
 
-    
     const Dash = () => {
       return (
         <Card style={styles.firstbox}>
@@ -81,20 +83,26 @@ const DashBoardScreen = () => {
       );
     };
 
-    
+    const [state, setState] = React.useState({ open: false });
+
+  const onStateChange = ({ open }) => setState({ open });
+
+  const { open } = state;
+
   return (
     <ScrollView style={styles.main}>
+       <Provider>
       <View style={styles.Topnav}>
     <View style={{ flexDirection: 'row', width: width * 1, alignItems:'center'}}>
       <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold' }}>{username}</Text>
       </Text>
       <Image source={bg} resizeMode="contain" style={styles.image}/>
     </View>
-  </View>
+      </View>
         <Dash />
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Let me help you to reduce your stress</Text>
-        <View style={{ flexDirection: 'row',alignSelf:'center'}}>
+        <View style={{ flexDirection: 'row',alignSelf:'center',width:width * 0.95,alignSelf:'center'}}>
           
                 <MyComponent/>
                 <MyComponent2/>
@@ -110,14 +118,33 @@ const DashBoardScreen = () => {
       </ImageBackground>
         </View>
         </TouchableOpacity>
+       
+      <View style={{marginBottom:20}}>
+        <Portal>
+          <FAB.Group
+            open={open}
+            visible
+            icon={open ? 'minus' : 'plus'}
+            actions={[
+              { icon: 'chat', onPress: () =>  navigation.navigate('ChatBot') },
+            ]}
+            onStateChange={onStateChange}
+            onPress={() => {
+              if (open) {
+                // Handle FAB group actions here
+              }
+            }}
+          />
+        </Portal>
+      </View>
+    </Provider>
     </ScrollView>
   )
 }
 const styles = StyleSheet.create({
     main:{
-      width:'100%',
+      width:width * 1,
       backgroundColor:'white',
-      height:'100%',
     },
     cover:{
       width:150,
@@ -130,7 +157,7 @@ const styles = StyleSheet.create({
   },
   firstbox:{
     height:200,
-    width:"90%",
+    width:width*0.90,
     alignSelf:'center'
   },
     Topnav:{
@@ -138,7 +165,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:width * 0.5,
+            marginLeft:width * 0.7,
             backgroundColor: 'gray',
             width: 40,
             height: 40,

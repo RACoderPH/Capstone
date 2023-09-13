@@ -7,78 +7,37 @@
         background-color: #f4f4f9;
         padding-bottom: 40px;
         padding-top: 7px;
+
+
+        .TopContainer{
+            width: 50%;
+            padding: 5px;
+            font-size: 50px;
+            border-radius: 10px;
+            text-align: right;
+            margin: 0 auto; /* Center horizontally */
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+        }
+        .TopContainer h2{
+            text-align: center;
+            font-size: 30px;
+        }
+        .questionContainer{
+            padding: 15px;
+            width: 50%;
+            font-size: 50px;
+            border-radius: 10px;
+            margin: 0 auto; /* Center horizontally */
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+        }
+        .list{
+          list-style: circle;
+        }
+     
     }
 
 }
 
-.templateTop{
-    margin-left: 30px;
-    margin-right: 50px;
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding:20px;
-}
 
-.templateRight{
-    display:flex;
-
-}
-
-.galleryButton{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    background: transparent;
-}
-
-.templateBody {
-    margin-left: 50px;
-    margin-right: 100px;
-    display: flex;
-    flex-wrap: wrap; /* Allow cards to wrap to a new row */
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 20px;
-    max-width: 90%; /* Set a maximum width for the container */
-  }
-  
-
-.card{
-    margin-left: 10px;
-    margin-top: 15px;
-
-}
-
-.cardImg{
-    box-sizing: border-box;
-    height: 130px;
-    width: 170px;
-    cursor: pointer;
-    border-radius: 2px;
-    border: 0.5px solid #c5c3c0;
-    border-radius: 3px;
-}
-
-.cardImg:hover{
-    border: 1px solid #6E2594;
-
-}
-
-.cardTitle{
-    font-size: 14px;
-    margin-top: 2px;
-    color: #202124;
-    font-weight: 500;
-}
-
-.topTitle{
-    font-size: 20px;
-    color: #202124;
-    font-weight: 500;
-    padding:25px;
-}
 
 

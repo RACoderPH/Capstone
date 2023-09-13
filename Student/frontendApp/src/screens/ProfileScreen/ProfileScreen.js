@@ -1,6 +1,5 @@
-import { View, Text,StyleSheet,Image,ScrollView ,Dimensions} from 'react-native'
+import { View, Text,StyleSheet,Image,ScrollView ,Dimensions,TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react';
-import Logo from '../../../assets/images/User.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +21,7 @@ const ProfileScreen = () => {
         const response = await axios.get(`http://192.168.1.83:5000/user/${userId}`);
         setUserData(response.data);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.log('Failed to fetch user data:', error);
       }
     };
 
@@ -36,7 +35,6 @@ const ProfileScreen = () => {
         console.log(error);
       }
     };
-
     retrieveData();
   }, []);
     //Logout Btn with database
@@ -52,14 +50,18 @@ const ProfileScreen = () => {
             navigation.navigate('SignIn');
             console.log("Logout Properly");
           } else {
-            console.error('Failed to update status:', response.status);
+            console.log('Failed to update status:', response.status);
             // Handle the error case accordingly
           }
         } catch (error) {
-          console.error('Failed to update status:', error);
+          console.log('Failed to update status:', error);
           // Handle the error case accordingly
         }
       };
+
+      const edit = () =>{
+        navigation.navigate('Edit');
+      }
 
   return (
     <ScrollView contentContainerStyle={styles.main} 
@@ -72,7 +74,7 @@ const ProfileScreen = () => {
           <Text style={styles.username}>{userData ? userData.Fullname : 'Loading...'}</Text>
           <Text style={styles.stud_no}>{userData ? userData.stud_no : 'Loading...'}</Text>
       </View>
-      <CustomButton text="Edit Profile" style={styles.btn} />
+     <TouchableOpacity onPress={edit} ><CustomButton text="Edit Profile" style={styles.btn}/></TouchableOpacity> 
       <View style={styles.line} />
       <View style={styles.information}> 
       <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="person-circle-outline" style={styles.icons}></Icon>  User Management </Text>

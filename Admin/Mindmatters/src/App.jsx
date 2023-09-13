@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SampleApi } from './pages/SampleApiConsuming'
+
 import Login from './pages/LoginPage/Login'
 import Home from './pages/HomePage/Home'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -26,6 +26,7 @@ function App() {
               <Route path="chat"  element={<Chat />} />
               <Route path="notification"  element={<Notify />} />
               <Route path="profile"  element={<Profile />} />
+
           </Routes>
         </BrowserRouter>
       //</div>

@@ -23,7 +23,8 @@ function Sidebar() {
         if (response.status === 200) {
            console.log(userId);
           // Clear localStorage and redirect
-          localStorage.clear();
+          localStorage.removeItem('ID');
+          localStorage.removeItem('Username');
           window.location.href = '/';
         } else {
           console.error('Failed to update status:', response.status);
@@ -83,14 +84,14 @@ function Sidebar() {
             <span>Chat</span>
           </li>
           </Link>
-
+            {/*
           <Link to="/notification" style={{ textDecoration: "none" }}> 
           <li>
             <NotificationsActiveIcon className="icon" />
             <span>Notification</span>
           </li>
           </Link>
-
+*/}
           <p className="title">USER</p>
 
           <Link to="/profile" style={{ textDecoration: "none" }}>

@@ -6,6 +6,8 @@ import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import NotificationScreen from '../NotificationScreen/NotificationScreen';
 import DashBoardScreen from '../DashBoardScreen/DashBoardScreen';
 import LearnScreen from '../LearnScreen/LearnScreen';
+import Chat from '../ChatScreens/ChatBot';
+
 
 const { width, height } = Dimensions.get('window');
 const Tab = createBottomTabNavigator();
@@ -22,15 +24,6 @@ const SettingsScreens = () => (
     <LearnScreen/>
   </View>
 );
-
-
-
-const ChatScreens = () => (
-  <View style={styles.container}>
-    <Text>Chat Screen</Text>
-  </View>
-);
-
 const NotificationScreens = () => (
   <View style={styles.container}>
     <NotificationScreen/>
@@ -56,10 +49,8 @@ const Apps = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Learn') {
             iconName = focused ? 'book' : 'book-outline';
-          } else if (route.name === 'Chats') {
-            iconName = focused ? 'chatbubble' : 'chatbubble-outline';
-          } else if (route.name === 'Notification') {
-            iconName = focused ? 'notifications' : 'notifications-outline';
+          } else if (route.name === 'Announcement') {
+            iconName = focused ? 'reader' : 'reader-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
@@ -70,8 +61,7 @@ const Apps = () => {
     >
       <Tab.Screen name="Home" component={HomeScreens}/>
       <Tab.Screen name="Learn" component={SettingsScreens} />
-      <Tab.Screen name="Chats" component={ChatScreens} />
-      <Tab.Screen name="Notification" component={NotificationScreens} />
+      <Tab.Screen name="Announcement" component={NotificationScreens} />
       <Tab.Screen name="Profile" component={ProfileScreens} />
     </Tab.Navigator>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Logo from '../../../assets/images/getStarted.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,7 @@ const GetStarted = () => {
   const navigation = useNavigation();
 
   const onGetStartedPressed = () => {
-    navigation.navigate('Homes');
+      navigation.navigate('Homes');
   };
 
   return (
@@ -27,7 +27,9 @@ const GetStarted = () => {
         </Text>
       </View>
       <View style={styles.bottomContainer}>
-        <CustomButton text="Get Started" style={styles.btn} onPress={onGetStartedPressed} />
+        <TouchableOpacity onPress={onGetStartedPressed}>
+        <CustomButton text="Get Started" style={styles.btn} />
+        </TouchableOpacity>
         <View style={styles.line} />
       </View>
     </View>

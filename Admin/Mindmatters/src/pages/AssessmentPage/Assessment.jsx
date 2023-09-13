@@ -1,134 +1,138 @@
 import React, { useState } from 'react';
 import './assessment.scss';
+import Axios from "axios";
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import { IconButton } from '@mui/material';
-import blank from '../../images/blank.png';
-import ass1 from '../../images/assessment1.png';
-import ass2 from '../../images/assessment2.png';
-import uuid from 'react-uuid';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 
-
-
-  const createForm = ()=>{
-    const id_ = uuid();
-    console.log(id_)
-  
-}
 const Assessment = () => {
-  const [questions, setQuestions] = useState([]);
-  const [newQuestion, setNewQuestion] = useState('');
-  const [newChoice, setNewChoice] = useState('');
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  const handleAddQuestion = () => {
-    if (newQuestion.trim() !== '') {
-      setQuestions([
-        ...questions,
-        { type: 'multiple-choice', question: newQuestion, choices: [] },
-      ]);
-      setNewQuestion('');
-    }
+  const [option1, setOption1] = useState(' ');
+  const [option2, setOption2] = useState(' ');
+  const [option3, setOption3] = useState(' ');
+  const [option4, setOption4] = useState(' ');
+  const [question, setQuestion] = useState(' ');
+  const [category, setCategory] = useState(' ');
+
+  const handleSubmit = () => {
+    Axios.post('http://localhost:5000/AddQuestion', {
+      question: question,
+      category: category,
+      option1: option1,
+      option2: option2,
+      option3: option3,
+      option4: option4,
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.data.message === 'Server Error') {
+        console.log("Server Error")
+      }else if(response.data.message === 'Inserted'){
+        console.log("Inserted")
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      // Handle other error scenarios if needed
+    });
+
+    handleClose(); // Close the modal after submitting
   };
-
-  const handleAddChoice = () => {
-    if (newChoice.trim() !== '') {
-      const updatedQuestions = [...questions];
-      const currentQuestionIndex = updatedQuestions.length - 1; // Get the index of the last added question
-      updatedQuestions[currentQuestionIndex].choices.push(newChoice);
-      setQuestions(updatedQuestions);
-      setNewChoice('');
-    }
-  };
-
-  const handleDeleteQuestion = (questionIndex) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions.splice(questionIndex, 1);
-    setQuestions(updatedQuestions);
-  };
-
-  const handleDeleteChoice = (questionIndex, choiceIndex) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].choices.splice(choiceIndex, 1);
-    setQuestions(updatedQuestions);
-  };
-
-  
 
   return (
     <div className="assessment">
       <Sidebar />
       <div className="assessmentContainer">
-        <Navbar />     
-        
-     <div className="templateTop">
-      <div className="templateLeft">
-        <p className="topTitle">Create New Form</p>
-      </div>
-      <div className="templateRight">
-        <div className="galleryButton">
-          Template gallery 
-          <UnfoldMoreIcon/>
+        <Navbar />
+        {/* Ending of nav */}
+        <br />
+        <br />
+        <br />
+        <br />
+        <div className='TopContainer'>
+          <h2>Mind Matters Assessment</h2>
+          <button onClick={handleOpen}>Add</button>
         </div>
-        <IconButton>
-          <MoreVertIcon/>
-        </IconButton>
+        <br />
+        <div className="questionContainer">
+          <h3>Question: </h3>
+          <h4>Category: </h4>
+          <ol className='list'>
+              <li></li>
+          </ol>
+        </div>
+        <div>
 
-
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <input
+                type="text"
+                name=""
+                id=""
+                placeholder="Question"
+                onChange={(e) => {
+                  setQuestion(e.target.value);
+                }}
+              />
+              <select
+                id="category"
+                name="category"
+                onChange={(e) => {
+                  setCategory(e.target.value);
+                }}
+              >
+                <option value="Depression">Depression</option>
+                <option value="Anxiety">Anxiety</option>
+                <option value="Stress">Stress</option>
+              </select>
+                <input
+                  type="text"
+                  placeholder={`Option 1`}
+                  onChange={(e) => setOption1(e.target.value)}
+                />
+                   <input
+                  type="text"
+                  placeholder={`Option 2`}
+                  onChange={(e) => setOption2(e.target.value)}
+                />
+                   <input
+                  type="text"
+                  placeholder={`Option 3`}
+                  onChange={(e) => setOption3(e.target.value)}
+                />
+                   <input
+                  type="text"
+                  placeholder={`Option 4`}
+                  onChange={(e) => setOption4(e.target.value)}
+                />
+              <button onClick={handleSubmit}>Submit</button>
+            </Box>
+          </Modal>
+        </div>
       </div>
     </div>
-
-
-    <div className="templateBody">
-      <div className="card" onClick={createForm}>
-        <img src={blank} alt="no image"  className="cardImg"/>
-        <p className="cardTitle">Blank Form</p>
-      </div>
-
-      <div className="card">
-        <img src={ass1} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment June 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-
-      <div className="card">
-        <img src={ass2} alt="no image" className="cardImg"/>
-        <p className="cardTitle">Assessment August 2023</p>
-      </div>
-      
-    </div>
-
-      </div>
-    </div>
-
-
-
   );
+};
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
 };
 
 export default Assessment;

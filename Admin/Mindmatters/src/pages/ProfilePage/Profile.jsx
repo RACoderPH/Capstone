@@ -32,6 +32,9 @@ const Profile = () => {
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
+  const Update = () =>{
+
+  }
 
   return (
     <div className="profile">
@@ -40,104 +43,61 @@ const Profile = () => {
                 <Navbar/>
 
       <div className="container">        
-      <h1 className="colTitle">Welcome Admin</h1>
+      <h1 className="colTitle">Account</h1>
 
       <div className="UserContainer">
         <div className="userShow">
-          <div className="userShowTop">
-          <div className="userUpdateUpload">
-          <img className="userUpdateImg" src="https://www.famousbirthdays.com/faces/haerin-image.jpg" alt="" />
-          <label htmlFor="file"><PublishIcon></PublishIcon></label>
-          <input type="file" id="file" style={{ display: "none"}}></input>
-        </div>
-            <div className="userShowTopTitle">
-              <span className="userShowUsername">{localStorageValue}</span>
-              <span className="userShowUserTitle">Guidance Counselor</span>
-            </div>
-          </div>
-          <div className="userShowBottom">
-            <span className="userShowTitle">Account Details</span>
-            <div className="userShowInfo">
-            <PermIdentityIcon className="userShowIcon"/>
-            <span className="showUserInfoTitle">{userData.user_name}</span>
-            </div>
-            <div className="userShowInfo">
-            <CalendarTodayIcon className="userShowIcon"/>
-            <span className="showUserInfoTitle">{userData.created_at}</span>
-            </div>
-            <span className="userShowTitle">Contact Details</span>
-            <div className="userShowInfo">
-            <PermContactCalendarIcon className="userShowIcon"/>
-            <span className="showUserInfoTitle">+639-432-5235</span>
-            </div>
-            <div className="userShowInfo">
-            <MailOutlineIcon className="userShowIcon"/>
-            <span className="showUserInfoTitle">{userData.Email}</span>
-            </div>
-            <div className="userShowInfo">
-            <LocationOnIcon className="userShowIcon"/>
-            <span className="showUserInfoTitle">Pulilan, Bulacan</span>
-            </div>
+        <div className="centerImage">
+                <img
+                  src="https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=100"
+                  alt=""
+                  className="userShowImg"
+                />
+              </div>
+            
+              <p className="DisplayInfo">{userData.Fullname}</p>
+              <p className="DisplayInfo">{userData.position}</p>
+              <p className="DisplayInfo">{userData.created_at}</p>
+               
+              <div className="centerButton">
+            <Button className="UploadPicture">Upload Picture</Button>
           </div>
         </div>
         <div className="userUpdate">
-          <span className="userUpdateTitle">Edit</span>
-          <form  className="userUpdateForm">
-            <div className="userUpdateLeft">
-          
-            <div className="single-row">
-
-              <div className="single-column">
-              <div className="userUpdateItem">
-              <TextField id="standard-basic" label="Username" variant="standard" 
-               value={userData.user_name}  margin="dense"/>
-              </div>
-              </div>
-              <div className="single-column">
-              <div className="userUpdateItem">
-              <TextField id="standard-basic" label="Fullname" variant="standard" 
-              value={userData.user_name}  margin="dense"/>
-              </div>
-              </div>
-              </div>
-
-              <div className="userUpdateItem">
-              <TextField id="standard-basic" label="Email" variant="standard" 
-               value={userData.Email} margin="dense"/>
-              </div>
-      
-              <div className="userUpdateItem">
-              <TextField id="standard-basic" label="Phone" variant="standard" margin="dense" />
-              </div>
-
-              <div className="userUpdateItem">
-              <TextField id="standard-basic" label="Pulilan, Bulacan" margin="dense" variant="standard" disabled
-              size="small" defaultvalue="Small"/>
-   
+          <span className="userUpdateTitle">Profile</span>
+          <span className="txt">The information can be edited</span>
+          <div className="FormInput">
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Fullname" variant="outlined"   margin="normal" value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
             </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Username" variant="outlined"   margin="normal"  value={userData.user_name} InputLabelProps={{shrink: true,}}/>
             </div>
-            <div className="userUpadateRight">
-            <div className="userUpdateButton">
-            <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            href="#file-upload" type="submit">
-
-            Update
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Email Address" variant="outlined"   margin="normal"  value={userData.Email} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            </div>
            
-          </Button>
           </div>
-            </div>
-          </form>
+          <Button onClick={console.log("Press")}>Submit</Button>
         </div>
       </div>
 
       </div>
-
-      
-
-
     </div>
     </div>
   )
