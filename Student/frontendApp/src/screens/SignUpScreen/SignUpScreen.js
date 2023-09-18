@@ -4,7 +4,9 @@ import { View,
    StyleSheet,
   useWindowDimensions,
   ScrollView,
-  ToastAndroid
+  ToastAndroid,
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -12,7 +14,7 @@ import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-
+  const {width,height} = Dimensions.get('window');
 const SignUpScreen = () => {
   const [Fullname, setFullname] = useState('');
     const [Username, setUsername] = useState('');
@@ -50,7 +52,7 @@ const SignUpScreen = () => {
             }
           })
           .catch((error) => {
-            console.error(error);
+            console.log(error);
             // Handle other error scenarios if needed
           });
       }
@@ -105,14 +107,14 @@ const SignUpScreen = () => {
      label="Confirm Password"
      placeholder="Enter Confirm Password"
      secureTextEntry={true}/>    
-
+<TouchableOpacity onPress={onSignInPressed}>
 <CustomButton 
-      onPress={onSignInPressed}
       style={styles.btn}
       mode="elevated" 
       text="Register"
       labelStyle={{ color: 'white' ,fontWeight:'bold',fontSize:20}}
       />
+      </TouchableOpacity>
       <Text style={styles.text}>Already have an account?<Text style={{color:'#59C4CB'}} onPress={onCreate}> Sign In</Text></Text>
   </View>
     </ScrollView>

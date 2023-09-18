@@ -1,6 +1,8 @@
-import { Text,StyleSheet} from 'react-native'
+import { Text,StyleSheet,Dimensions} from 'react-native'
 import React from 'react'
 import { Button } from 'react-native-paper';
+
+const {width,height} = Dimensions.get('window');
 
 const CustomButton = ({ mode, onPress, text, style, labelStyle }) => {
   return (
@@ -18,7 +20,7 @@ const styles = StyleSheet.create({
     btn:{
     backgroundColor: '#F1CC4A', 
     borderRadius: 50,  
-    width: '95%',
+    width: width * 0.95,
 
     padding:5,
     marginVertical:10,

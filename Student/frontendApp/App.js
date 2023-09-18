@@ -1,7 +1,7 @@
 
-import { Text, View,StyleSheet } from 'react-native';
+import { Text, View,StyleSheet,Dimensions } from 'react-native';
 import Navigation from './src/navigation';
-
+const { width ,height} = Dimensions.get('window');
 
 const App = () =>{
     return(
@@ -10,11 +10,11 @@ const App = () =>{
       </View>
     )
 }
-
 const styles = StyleSheet.create({
       parent:{
         backgroundColor:'white',
-        height:'100%',
+        width:width * 1,
+        height:height,
       }
 })
 export default App;

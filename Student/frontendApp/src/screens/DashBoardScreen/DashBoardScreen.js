@@ -1,5 +1,12 @@
-import { View ,StyleSheet,Image,ScrollView,Dimensions,ToastAndroid,ImageBackground,TouchableOpacity} from 'react-native'
-import React, { useEffect, useState } from 'react';
+import { View ,StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+  ImageBackground,
+  TouchableOpacity} from 'react-native'
+import React, 
+{ useEffect, 
+  useState } from 'react';
 import bg from '../../../assets/images/exercise.jpg';
 import journal from '../../../assets/images/journal.jpg';
 import test from '../../../assets/images/test.jpg';
@@ -43,7 +50,7 @@ const DashBoardScreen = () => {
 
     const Assessment = () =>{
       //console.warn('Sign Up');
-      navigation.navigate('Test');
+      navigation.navigate('Instruction');
     };
 
     const MyComponent = () => {
@@ -102,7 +109,7 @@ const DashBoardScreen = () => {
         <Dash />
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Let me help you to reduce your stress</Text>
-        <View style={{ flexDirection: 'row',alignSelf:'center',width:width * 0.95,alignSelf:'center'}}>
+        <View style={{ flexDirection: 'row',alignSelf:'center',width:width*0.95,alignSelf:'center'}}>
           
                 <MyComponent/>
                 <MyComponent2/>
@@ -165,7 +172,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:width * 0.7,
+            marginLeft:width * 0.6,
             backgroundColor: 'gray',
             width: 40,
             height: 40,

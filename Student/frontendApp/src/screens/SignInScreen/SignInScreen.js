@@ -1,4 +1,4 @@
-import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid} from 'react-native'
+import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid,TouchableOpacity} from 'react-native'
 import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/images/Mindmatters.png'
@@ -73,12 +73,11 @@ const SignInScreen = () => {
        onChangeText={(e) => setPassword(e)}
        secureTextEntry={true}/>
       <Text style={styles.forgot} onPress={onForgot}>Forgot Password</Text>
-        
+        <TouchableOpacity  onPress={onSignInPressed}>
         <CustomButton 
-        onPress={onSignInPressed}
         mode="elevated" 
         text="Sign in" />
-
+      </TouchableOpacity>
         <Text style={styles.text}>Don't have an Account?<Text style={{color:'#59C4CB'}} onPress={onCreate}> Create one</Text></Text>
     </View>
   )

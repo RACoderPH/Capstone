@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './assessment.scss';
 import Axios from "axios";
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -7,40 +7,53 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
 const Assessment = () => {
+  const [Question, setlist] = useState([]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [option1, setOption1] = useState(' ');
-  const [option2, setOption2] = useState(' ');
-  const [option3, setOption3] = useState(' ');
-  const [option4, setOption4] = useState(' ');
+  const [Option1, setOption1] = useState(' ');
+  const [Option2, setOption2] = useState(' ');
+  const [Option3, setOption3] = useState(' ');
+  const [Option4, setOption4] = useState(' ');
   const [question, setQuestion] = useState(' ');
-  const [category, setCategory] = useState(' ');
+  const [Category, setCategory] = useState(' ');
+
+  useEffect(() => {
+    // Fetch user data from the backend API
+    fetch('http://localhost:5000/Questions')
+      .then((response) => response.json())
+      .then((data) => setlist(data))
+      .catch((error) => console.error('Failed to fetch data:', error));
+  }, []);
 
   const handleSubmit = () => {
-    Axios.post('http://localhost:5000/AddQuestion', {
-      question: question,
-      category: category,
-      option1: option1,
-      option2: option2,
-      option3: option3,
-      option4: option4,
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.data.message === 'Server Error') {
-        console.log("Server Error")
-      }else if(response.data.message === 'Inserted'){
-        console.log("Inserted")
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      // Handle other error scenarios if needed
-    });
-
-    handleClose(); // Close the modal after submitting
+    if (question == " " || Category == " " || Option1 == " " || Option2 == " " || Option3 == " " || Option4 == " ") {
+      alert('Please fill in all input fields.');
+    } else {
+      Axios.post('http://localhost:5000/AddQuestion', {
+        question: question,
+        category: Category,
+        option1: Option1,
+        option2: Option2,
+        option3: Option3,
+        option4: Option4,
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.message === 'Server Error') {
+            console.log('Server Error');
+          } else if (response.data.message === 'Inserted') {
+            console.log('Inserted');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          // Handle other error scenarios if needed
+        });
+  
+      handleClose(); // Close the modal after submitting
+    }
   };
 
   return (
@@ -55,16 +68,28 @@ const Assessment = () => {
         <br />
         <div className='TopContainer'>
           <h2>Mind Matters Assessment</h2>
+          <h3>DASS - 42</h3>
           <button onClick={handleOpen}>Add</button>
         </div>
         <br />
-        <div className="questionContainer">
-          <h3>Question: </h3>
-          <h4>Category: </h4>
-          <ol className='list'>
-              <li></li>
-          </ol>
-        </div>
+        {Question.length === 0 ? (
+  <div className="questionContainer">No questions available.</div>
+) : (
+  Question.map((question_list) => (
+    <div className="questionContainer" key={question_list.id}>
+      <h3>Question: {question_list.Question} </h3>
+      <h4>Category: {question_list.category}</h4>
+      <ol className='list'>
+        <li>{question_list.option1}</li>
+        <li>{question_list.option2}</li>
+        <li>{question_list.option3}</li>
+        <li>{question_list.option4}</li>
+      </ol>
+      <input type="submit" value="Edit" />
+    </div>
+  ))
+)}
+       
         <div>
 
           <Modal
@@ -90,6 +115,7 @@ const Assessment = () => {
                   setCategory(e.target.value);
                 }}
               >
+                <option value="Null">Select</option>
                 <option value="Depression">Depression</option>
                 <option value="Anxiety">Anxiety</option>
                 <option value="Stress">Stress</option>

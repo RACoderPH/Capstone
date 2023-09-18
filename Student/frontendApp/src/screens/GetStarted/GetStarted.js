@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     paddingBottom: windowHeight * 0.10,
   },
   btn: {
+    width: windowWidth * 0.80,
     borderRadius: windowWidth * 0.05,
     fontSize: windowWidth * 0.04,
   },

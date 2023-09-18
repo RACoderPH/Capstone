@@ -1,6 +1,8 @@
 import { View, Text,StyleSheet ,Dimensions,Image} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 const { width, height } = Dimensions.get('window');
 
