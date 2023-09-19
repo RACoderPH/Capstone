@@ -1,4 +1,4 @@
-import './navbar.scss'
+import './Navbar.scss'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 //import { DarkModeContext } from "../../context/darkModeContext";
