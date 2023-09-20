@@ -229,6 +229,26 @@ router.post('/register/app', (req, res) => {
     });
   });
 
+//Update Profile 
+router.put('/updateProfile/:id', (req, res) => {
+  const userId = req.params.id; // Use req.params.id to match the parameter name in your route
+  const updateStatus =
+    "UPDATE user_info SET `Fullname` = ?, `user_name` = ?, `Email` = ? WHERE id = ?";
+
+  const fullname = req.body.Fullname;
+  const username = req.body.user_name;
+  const email = req.body.Email;
+
+  db.query(updateStatus, [fullname, username, email, userId], (error, result) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Error updating profile." }); // Return an error response
+    }
+
+    return res.json("Profile has been updated successfully.");
+  });
+});
+
 
   router.post('/logout', (req,res) => {
 

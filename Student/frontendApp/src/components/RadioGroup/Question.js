@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity,ToastAndroid } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Card, Text } from 'react-native-paper';
 import axios from 'axios';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import {useNavigation} from '@react-navigation/native';
 const { width } = Dimensions.get('window');
 
 const Question = () => {
+  const navigation = useNavigation();
   const [userData, setUserData] = useState([]);
   const [selectedValues, setSelectedValues] = useState({});
   const [userId, setUserId] = useState(""); // Set the user ID
@@ -16,7 +18,7 @@ const Question = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.1.83:5000/Questions');
+        const response = await axios.get('https://mindmatters-ejmd.onrender.com/Questions');
         setUserData(response.data);
       } catch (error) {
         console.log('Failed to fetch user data:', error);
@@ -75,6 +77,7 @@ const Question = () => {
       });
 
       console.log('Answers submitted successfully:', response.data);
+      navigation.navigate('Result');
     } catch (error) {
       console.error('Failed to submit answers:', error);
     }
@@ -120,7 +123,19 @@ const Question = () => {
       </View>
     );
   };
-
+  //Check para ma identify kung nag choice si user ng Answer per radiogroup
+  const checkAndSubmit = () => {
+     // Check if any radio option is selected
+  const isAnyOptionSelected = Object.values(selectedValues).some((value) => value !== undefined);
+  
+  if (isAnyOptionSelected && Object.keys(selectedValues).length === userData.length) {
+    // Check if all questions have been answered
+    submitAnswers();
+  } else {
+    // Show a toast message when not all questions are answered
+    ToastAndroid.show('Please answer all questions before submitting.', ToastAndroid.SHORT);
+  }
+  };
   return (
     <View>
       {userData.length > 0 ? (
@@ -137,9 +152,9 @@ const Question = () => {
           </Card>
         ))
       ) : (
-        <Text>No questions available.</Text>
+        <Text style={{textAlign:'center',justifyContent:'center',fontSize:30,marginTop:30}}>No questions available.</Text>
       )}
-      <TouchableOpacity onPress={submitAnswers}>
+      <TouchableOpacity  onPress={checkAndSubmit} >
         <CustomButton text="Submit" style={{ marginBottom:30,alignSelf:'center' }} />
       </TouchableOpacity>
     </View>

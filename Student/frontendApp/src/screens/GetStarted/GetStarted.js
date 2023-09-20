@@ -8,7 +8,7 @@ const GetStarted = () => {
   const navigation = useNavigation();
 
   const onGetStartedPressed = () => {
-      navigation.navigate('Homes');
+      navigation.navigate('Result');
   };
 
   return (

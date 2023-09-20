@@ -106,7 +106,33 @@
     line-height: 1.2;
   }
 
+  .box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 400px;
+    transform: translate(-50%, -50%);
+    background: #fff; /* White background */
+    border: 2px solid #ccc; /* Gray border */
+    margin: 10px;
+    padding: 90px;
+  }
 
+  .textBox{
+    display: flex;
+    flex-wrap: wrap; /* Allow two boxes per row */
+    flex-direction: row;
+    justify-content: space-between; /* Spacing between boxes */
+    padding: 16px; /* Add padding inside the modal */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+
+  .modalBtn{
+    align-items: center;
+  }
 
 
 

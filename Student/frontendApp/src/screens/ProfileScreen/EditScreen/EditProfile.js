@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet ,Dimensions,Image} from 'react-native'
+import { View, Text,StyleSheet ,Dimensions,Image, ScrollView} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
 import axios from 'axios';
@@ -39,7 +39,8 @@ const EditProfile = () => {
 const [text, setText] = React.useState('');
 
   return (
-    <View style={styles.main}>
+
+    <ScrollView style={styles.main}>
          <View style={styles.container}>
       <Text style={{color:'black', fontSize:20,textAlign:'center',fontWeight:'500'}}>Edit Profile</Text>
       <Image source={{ uri: 'https://picsum.photos/700' }} resizeMode="contain" style={styles.image} />
@@ -70,7 +71,7 @@ const [text, setText] = React.useState('');
       left={<TextInput.Icon icon="eye" />}
     />
     <CustomButton text={"Submit"} style={{margin:8,borderRadius:5}}/>
-    </View>
+    </ScrollView>
   )
 }
 const styles = StyleSheet.create({
