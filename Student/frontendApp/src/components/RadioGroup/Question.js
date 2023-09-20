@@ -70,7 +70,7 @@ const Question = () => {
     try {
       const answers = constructAnswers();
 
-      const response = await axios.post('http://192.168.1.83:5000/submit_answer', {
+      const response = await axios.post('https://mindmatters-ejmd.onrender.com/submit_answer', {
         answers,
       });
 

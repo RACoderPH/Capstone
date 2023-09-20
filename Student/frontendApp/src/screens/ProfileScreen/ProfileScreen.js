@@ -18,7 +18,7 @@ const ProfileScreen = () => {
      useEffect(() => {
     const fetchUserData = async (userId) => {
       try {
-        const response = await axios.get(`http://192.168.1.83:5000/user/${userId}`);
+        const response = await axios.get(`https://mindmatters-ejmd.onrender.com/user/${userId}`);
         setUserData(response.data);
       } catch (error) {
         console.log('Failed to fetch user data:', error);
@@ -43,7 +43,7 @@ const ProfileScreen = () => {
           const userId = await AsyncStorage.getItem('id'); // Get the user ID from AsyncStorage
       
           // Make a request to the backend to update the status
-          const response = await axios.post('http://192.168.1.83:5000/logout', { userId });
+          const response = await axios.post('https://mindmatters-ejmd.onrender.com/logout', { userId });
       
           if (response.status === 200) {
             await AsyncStorage.clear();
@@ -85,7 +85,9 @@ const ProfileScreen = () => {
       <View style={styles.line} />
       <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="settings-outline" style={styles.icons}></Icon>  Setting</Text>
       <View style={styles.line} />
-      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="log-out-outline" style={styles.icons} onPress={logout}></Icon>  Logout</Text>
+      <TouchableOpacity onPress={logout}>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="log-out-outline" style={styles.icons} ></Icon>  Logout</Text>
+      </TouchableOpacity>
       </View>
     </ScrollView>
   

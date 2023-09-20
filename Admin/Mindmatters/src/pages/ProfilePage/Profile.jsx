@@ -26,7 +26,7 @@ const Profile = () => {
     
 
     const userId = localStorage.getItem('ID');
-    fetch(`http://localhost:5000/user/${userId}`)
+    fetch(`https://mindmatters-ejmd.onrender.com/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));

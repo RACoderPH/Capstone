@@ -32,7 +32,7 @@ const userexist = () => toast.warn('User Already Exist', {
       if(passwordReg !== ConfirmpasswordReg){
         warning();
     }else{
-      Axios.post('http://localhost:5000/register', {
+      Axios.post('https://mindmatters-ejmd.onrender.com/register', {
         fullname: fullnameReg,
         username: usernameReg,
         email: emailReg,
@@ -61,7 +61,7 @@ const login = () =>{
   if(username === "" || password === ""){
       input();
   }else{
-    Axios.post('http://localhost:5000/login', 
+    Axios.post('https://mindmatters-ejmd.onrender.com/login', 
   {
     username:username,
     password:password,

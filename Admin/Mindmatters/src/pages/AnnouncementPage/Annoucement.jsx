@@ -13,7 +13,7 @@ const Annoucement = () => {
         if(Title === "" && Message == ""){
             alert("Fill field");
         }else{
-          Axios.post('http://localhost:5000/announce', {
+          Axios.post('https://mindmatters-ejmd.onrender.com/announce', {
             title: Title,
             message: Message,
           })
