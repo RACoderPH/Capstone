@@ -31,40 +31,53 @@ router.post('/submit_answer', (req, res) => {
     }
   });
 //For Stress Computation
-router.get('/stress/:id', (req,res) => {
-        const getStress = 'SELECT SUM(answer_value) AS total_stress_value FROM answer WHERE category = "Stress" AND user_id = ?';
-        db.query(getStress, (error, result) => {
-          if (error) {
-            console.error('Failed to fetch data:', error);
-            res.sendStatus(500);
-          } else {
-            res.send(result); // Send the JSON data as the response
-          }
-        });
-    });
+router.get('/stress/:id', (req, res) => {
+  const userId = req.params.id;
 
-    //For Anxiety Computation
-router.get('/anxiety/:id', (req,res) => {
-  const getStress = 'SELECT SUM(answer_value) AS total_anxiety_value FROM answer WHERE category = "Anxiety" AND user_id = ?';
-  db.query(getStress, (error, result) => {
+  const getStress = 'SELECT SUM(answer_value) AS total_stress_value FROM answer WHERE category = "Stress" AND user_id = ?';
+
+  db.query(getStress, userId, (error, result) => {
     if (error) {
-      console.error('Failed to fetch data:', error);
-      res.sendStatus(500);
+      console.error('Failed to fetch stress data:', error);
+      res.status(500).json({ error: 'Failed to fetch stress data' });
     } else {
-      res.send(result); // Send the JSON data as the response
+      
+        res.json(result); // Send the JSON data as the response
     }
   });
 });
 
+
+    //For Anxiety Computation
+    router.get('/anxiety/:id', (req, res) => {
+      const userId = req.params.id;
+
+      const getAnxiety = 'SELECT SUM(answer_value) AS total_anxiety_value FROM answer WHERE category = "Anxiety" AND user_id = ?';
+    
+      db.query(getAnxiety, userId, (error, result) => {
+        if (error) {
+          console.error('Failed to fetch anxiety data:', error);
+          res.status(500).json({ error: 'Failed to fetch anxiety data' });
+        } else {
+          
+            res.json(result); // Send the JSON data as the response
+        }
+      });
+    });
+
 //For Depression Computation
-router.get('/depression/:id', (req,res) => {
-  const getStress = 'SELECT SUM(answer_value) AS total_depression_value FROM answer WHERE category = "Depression" AND user_id = ?';
-  db.query(getStress, (error, result) => {
+router.get('/depression/:id', (req, res) => {
+  const userId = req.params.id;
+
+  const getDepression = 'SELECT SUM(answer_value) AS total_depress_value FROM answer WHERE category = "Depression" AND user_id = ?';
+
+  db.query(getDepression, userId, (error, result) => {
     if (error) {
-      console.error('Failed to fetch data:', error);
-      res.sendStatus(500);
+      console.error('Failed to fetch depress data:', error);
+      res.status(500).json({ error: 'Failed to fetch depress data' });
     } else {
-      res.send(result); // Send the JSON data as the response
+      
+        res.json(result); // Send the JSON data as the response
     }
   });
 });

@@ -18,7 +18,7 @@ const Question = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://mindmatters-ejmd.onrender.com/Questions');
+        const response = await axios.get('http://192.168.1.83:5000/Questions');
         setUserData(response.data);
       } catch (error) {
         console.log('Failed to fetch user data:', error);
@@ -72,7 +72,7 @@ const Question = () => {
     try {
       const answers = constructAnswers();
 
-      const response = await axios.post('https://mindmatters-ejmd.onrender.com/submit_answer', {
+      const response = await axios.post('http://192.168.1.83:5000/submit_answer', {
         answers,
       });
 

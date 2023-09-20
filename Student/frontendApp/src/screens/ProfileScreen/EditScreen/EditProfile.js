@@ -15,7 +15,7 @@ const EditProfile = () => {
    useEffect(() => {
   const fetchUserData = async (userId) => {
     try {
-      const response = await axios.get(`https://mindmatters-ejmd.onrender.com/user/${userId}`);
+      const response = await axios.get(`http://192.168.1.83:5000/user/${userId}`);
       setUserData(response.data);
     } catch (error) {
       console.error('Failed to fetch user data:', error);

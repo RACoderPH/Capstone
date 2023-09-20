@@ -6,36 +6,50 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width } = Dimensions.get('window');
 
 const Result = () => {
-  const [userStress, setUserStress] = useState([]); // Initialize userStress with 0
-
-  useEffect(() => {
-    // Fetch the stress value from your backend API
-    const fetchStressValue = async () => {
-      try {
-        const userId = await AsyncStorage.getItem('userId'); // Get the user ID from AsyncStorage
-        const response = await fetch(`https://mindmatters-ejmd.onrender.com/stress/${userId}`);
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status: ${response.status}`);
+    const [userStress, setUserStress] = useState(0);
+    const [userAnxiety, setUserAnxiety] = useState(0);
+    const [userDepression, setUserDepression] = useState(0);
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const userId = await AsyncStorage.getItem('id');
+  
+          // Fetch Stress data
+          const stressResponse = await fetch(`http://192.168.1.83:5000/stress/${userId}`);
+          if (stressResponse.ok) {
+            const stressData = await stressResponse.json();
+            setUserStress(stressData[0]?.total_stress_value || 0);
+          }
+  
+          // Fetch Anxiety data
+          const anxietyResponse = await fetch(`http://192.168.1.83:5000/anxiety/${userId}`);
+          if (anxietyResponse.ok) {
+            const anxietyData = await anxietyResponse.json();
+            setUserAnxiety(anxietyData[0]?.total_anxiety_value || 0);
+          }
+  
+          // Fetch Depression data
+          const depressionResponse = await fetch(`http://192.168.1.83:5000/depression/${userId}`);
+          if (depressionResponse.ok) {
+            const depressionData = await depressionResponse.json();
+            setUserDepression(depressionData[0]?.total_depress_value || 0);
+          }
+        } catch (error) {
+          console.error('Failed to fetch data:', error);
         }
-
-        const data = await response.json();
-        const totalStressValue = data[0].total_stress_value;
-        setUserStress(totalStressValue);
-      } catch (error) {
-        console.error('Failed to fetch stress value:', error);
-      }
-    };
-
-    fetchStressValue(); // Call the function to fetch stress value when the component mounts
-  }, []);
-
-  // Data for the Pie Chart
-  const pieChartData = [
-    { name: "Depression", score: 42, color: "yellow" }, // You can set the score as needed
-    { name: "Anxiety", score: 42, color: "orange" }, // Example score, update as needed
-    { name: "Stress", score: userStress, color: "red" }, // Use the fetched stress value
-  ];
+      };
+  
+      fetchUserData();
+    }, []);
+  
+    // Data for the Pie Chart
+    const pieChartData = [
+      { name: "Depression", score: userDepression, color: "yellow" },
+      { name: "Anxiety", score: userAnxiety, color: "orange" },
+      { name: "Stress", score: userStress, color: "red" },
+    ];
+  
 
   return (
     <View style={styles.container}>

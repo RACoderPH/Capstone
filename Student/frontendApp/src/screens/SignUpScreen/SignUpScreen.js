@@ -34,7 +34,7 @@ const SignUpScreen = () => {
         console.warn('Password not the same');
       } else {
         axios
-          .post('https://mindmatters-ejmd.onrender.com/register/app', {
+          .post('http://192.168.1.83:5000/register/app', {
             fullname: Fullname,
             username: Username,
             email: Email,
