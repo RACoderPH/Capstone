@@ -18,7 +18,7 @@ function Sidebar() {
   
     // Make a request to the backend to update the status
     axios
-      .post(`http://localhost:5000/logout`, {userId: userId})
+      .post(`https://mindmatters-3so25bt9l-racoderph.vercel.app/logout`, {userId: userId})
       .then((response) => {
         if (response.status === 200) {
            console.log(userId);
