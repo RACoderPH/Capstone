@@ -11,11 +11,26 @@ import PublishIcon from '@mui/icons-material/Publish';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import axios from "axios";
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const Profile = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userData, setUserData] = useState({});
   
+  const [updatedUserData, setUpdatedUserData] = useState({
+    Fullname: userData.Fullname,
+    user_name: userData.user_name,
+    Email: userData.Email,
+    // Add other fields you want to update
+  });
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const storedValue = localStorage.getItem('Username');
@@ -32,15 +47,33 @@ const Profile = () => {
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
-  const Update = () =>{
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedUserData({
+      ...updatedUserData,
+      [name]: value,
+    });
+  };
 
-  }
+  const Update = async (e) => {
+    e.preventDefault();
+    console.log("Updated User Data:", updatedUserData); // Add this line
+    try {
+      const userId = userData.id;
+      await axios.put(`http://localhost:5000/Profile/${userId}`, updatedUserData);
+      console.log("Update successful"); // Add this line
+      // Display a success message or redirect the user
+    } catch (error) {
+      console.log("Update error:", error); // Add this line
+      // Display an error message to the user
+    }
+  };
+  
 
   return (
     <div className="profile">
         <Sidebar/>
             <div className="profileContainer">
-              
 
       <div className="container">        
       <h1 className="colTitle">Account</h1>
@@ -68,7 +101,7 @@ const Profile = () => {
           <span className="txt">The information can be edited</span>
           <div className="FormInput">
             <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Fullname" variant="outlined"   margin="normal" value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            <TextField id="outlined-basic" className="custom-width" label="Fullname" variant="outlined"   margin="normal" value={userData.Fullname} InputLabelProps={{shrink: true,}} />
             </div>
             <div className="txtfield">
             <TextField id="outlined-basic" className="custom-width" label="Username" variant="outlined"   margin="normal"  value={userData.user_name} InputLabelProps={{shrink: true,}}/>
@@ -93,14 +126,41 @@ const Profile = () => {
             </div>
            
           </div>
-          <Button onClick={console.log("Press")}>Submit</Button>
-        </div>
-      </div>
+          <Button onClick={handleOpen}>Edit Info</Button>         
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box className="box" >
+            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" onChange={handleInputChange}/>
+              
+            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name"/>
 
+            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"/>
+
+            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined" />
+
+            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" />
+            
+            <TextField className="textBox" id="outlined-basic" label="Password" variant="outlined" />
+
+            <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
+
+              </Box>
+              </Modal>
+              
+        </div>      
       </div>
+      
+      </div>
+      
     </div>
+  
     </div>
   )
 }
+
 
 export default Profile
