@@ -18,7 +18,7 @@ function Sidebar() {
   
     // Make a request to the backend to update the status
     axios
-      .post(`https://mindmatters-ejmd.onrender.com/logout`, {userId: userId})
+      .post(`http://localhost:5000/logout`, {userId: userId})
       .then((response) => {
         if (response.status === 200) {
            console.log(userId);

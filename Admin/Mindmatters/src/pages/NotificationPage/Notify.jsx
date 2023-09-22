@@ -10,7 +10,7 @@ const Notify = () => {
     <div className="notify">
         <Sidebar/>
                 <div className="notifyContainer">
-                    <Navbar/>
+                 
                     <p>Notify</p>
                 </div>
     </div>

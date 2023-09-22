@@ -26,7 +26,7 @@ const Profile = () => {
     
 
     const userId = localStorage.getItem('ID');
-    fetch(`https://mindmatters-ejmd.onrender.com/user/${userId}`)
+    fetch(`http://localhost:5000/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -40,7 +40,7 @@ const Profile = () => {
     <div className="profile">
         <Sidebar/>
             <div className="profileContainer">
-                <Navbar/>
+              
 
       <div className="container">        
       <h1 className="colTitle">Account</h1>

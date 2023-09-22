@@ -24,7 +24,6 @@ const Chat = () => {
       <Sidebar />
 
       <div className="chatContainer">
-        <Navbar />
         <div className="chatBox">
           <div className="messageContainer">
             {messages.map((message, index) => (

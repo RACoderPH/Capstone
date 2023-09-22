@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import Login from './pages/LoginPage/Login'
+import Login from './pages/LoginPage/AdminLogin'
 import Home from './pages/HomePage/Home'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import User from './pages/UserPage/User';

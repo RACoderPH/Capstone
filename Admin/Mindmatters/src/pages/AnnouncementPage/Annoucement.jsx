@@ -36,7 +36,7 @@ const Annoucement = () => {
    <div className="announce">
         <Sidebar/>
             <div className="announceContainer">
-          <Navbar/>
+       
     <h2>Announcement Form</h2><br></br>
     <form className="announcementForm">
       <div className="form-group">

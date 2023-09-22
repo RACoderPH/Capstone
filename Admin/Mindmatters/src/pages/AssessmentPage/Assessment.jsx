@@ -21,7 +21,7 @@ const Assessment = () => {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/Questions')
+    fetch('http://localhost:5000/Questions')
       .then((response) => response.json())
       .then((data) => setlist(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -31,7 +31,7 @@ const Assessment = () => {
     if (question == " " || Category == " " || Option1 == " " || Option2 == " " || Option3 == " " || Option4 == " ") {
       alert('Please fill in all input fields.');
     } else {
-      Axios.post('https://mindmatters-ejmd.onrender.com/AddQuestion', {
+      Axios.post('http://localhost:5000/AddQuestion', {
         question: question,
         category: Category,
         option1: Option1,
@@ -60,7 +60,7 @@ const Assessment = () => {
     <div className="assessment">
       <Sidebar />
       <div className="assessmentContainer">
-        <Navbar />
+      
         {/* Ending of nav */}
         <br />
         <br />
@@ -85,7 +85,7 @@ const Assessment = () => {
         <li>{question_list.option3}</li>
         <li>{question_list.option4}</li>
       </ol>
-      <input type="submit" value="Edit" />
+      <input type="submit" value="Edit" className='btn'/>
     </div>
   ))
 )}

@@ -8,7 +8,7 @@ const User = () => {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+    fetch('http://localhost:5000/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -18,7 +18,7 @@ const User = () => {
     <div className="user">
       <Sidebar />
       <div className="userContainer">
-        <Navbar />
+     
         <br />
         <br />
         <br />
@@ -26,7 +26,7 @@ const User = () => {
           <table style={{ flex: 1 }}>
             <thead>
               <tr>
-                <th>Profile</th>
+               
                 <th>Full name</th>
                 <th>User Name</th>
                 <th>Email</th>
@@ -39,16 +39,14 @@ const User = () => {
             <tbody>
               {userList.map((user) => (
                 <tr key={user.id}>
-                  <td>
-                    <img src={user.profileImage} alt="" />
-                  </td>
+                 
                   <td>{user.Fullname}</td>
                   <td>{user.user_name}</td>
                   <td>{user.Email}</td>
                   <td>{user.stud_no}</td>
                   <td>{user.staus}</td>
                   <td>{user.position}</td>
-                  <td className="btn">
+                  <td className="btns">
                     <button>Edit</button>
                     <button>Delete</button>
                   </td>

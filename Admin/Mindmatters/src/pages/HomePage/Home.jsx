@@ -12,7 +12,7 @@ function Home() {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+    fetch('http://localhost:5000/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -22,7 +22,7 @@ function Home() {
     <div className="home">
       <Sidebar />
       <div className="homeContainer">
-        <Navbar />
+   
         <div className="widgets">
           <Widget type="User" />
           <Widget type="Take" />
@@ -37,7 +37,7 @@ function Home() {
       <table style={{ flex: 1 }}>
       <thead>
         <tr>
-          <th>Profile</th>
+         
           <th>Fullname</th>
           <th>UserName</th>
           <th>Email</th>
@@ -50,14 +50,14 @@ function Home() {
       <tbody>
       {userList.map((user) => (
           <tr >
-            <td><img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="" /></td>
+           
                   <td>{user.Fullname}</td>
                   <td>{user.user_name}</td>
                   <td>{user.Email}</td>
                   <td>{user.stud_no}</td>
                   <td>{user.status}</td>
                   <td>{user.position}</td>
-            <td className="btn">
+            <td className="btns">
               <button>View</button>
             </td>
           </tr>

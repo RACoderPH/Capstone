@@ -19,21 +19,21 @@ const Result = () => {
           const stressResponse = await fetch(`http://192.168.1.83:5000/stress/${userId}`);
           if (stressResponse.ok) {
             const stressData = await stressResponse.json();
-            setUserStress(stressData[0]?.total_stress_value || 0);
+            setUserStress(parseInt(stressData[0]?.total_stress_value) || 0);
           }
   
           // Fetch Anxiety data
           const anxietyResponse = await fetch(`http://192.168.1.83:5000/anxiety/${userId}`);
           if (anxietyResponse.ok) {
             const anxietyData = await anxietyResponse.json();
-            setUserAnxiety(anxietyData[0]?.total_anxiety_value || 0);
+            setUserAnxiety(parseInt(anxietyData[0]?.total_anxiety_value) || 0);
           }
   
           // Fetch Depression data
           const depressionResponse = await fetch(`http://192.168.1.83:5000/depression/${userId}`);
           if (depressionResponse.ok) {
             const depressionData = await depressionResponse.json();
-            setUserDepression(depressionData[0]?.total_depress_value || 0);
+            setUserDepression(parseInt(depressionData[0]?.total_depress_value) || 0);
           }
         } catch (error) {
           console.error('Failed to fetch data:', error);
