@@ -21,11 +21,13 @@ const Profile = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userData, setUserData] = useState({});
   
-  const [updatedUserData, setUpdatedUserData] = useState({
-    Fullname: userData.Fullname,
-    user_name: userData.user_name,
-    Email: userData.Email,
-    // Add other fields you want to update
+  const [values, setValues] = useState({
+    fullname: null,
+    username: null,
+    email: null,
+    phone: null,
+    address: null,
+ 
   });
 
   const [open, setOpen] = React.useState(false);
@@ -34,40 +36,36 @@ const Profile = () => {
 
   useEffect(() => {
     const storedValue = localStorage.getItem('Username');
-     // Retrieve the value from localStorage
+    // Retrieve the value from localStorage
     if (storedValue) {
       setLocalStorageValue(storedValue); // Update the component state with the retrieved value
     }
-    
-
+  
     const userId = localStorage.getItem('ID');
     fetch(`http://localhost:5000/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedUserData({
-      ...updatedUserData,
-      [name]: value,
-    });
-  };
-
+  
   const Update = async (e) => {
+    const userId = localStorage.getItem('ID');
     e.preventDefault();
-    console.log("Updated User Data:", updatedUserData); // Add this line
-    try {
-      const userId = userData.id;
-      await axios.put(`http://localhost:5000/Profile/${userId}`, updatedUserData);
-      console.log("Update successful"); // Add this line
-      // Display a success message or redirect the user
-    } catch (error) {
-      console.log("Update error:", error); // Add this line
-      // Display an error message to the user
+    
+    // Show a confirmation dialog
+    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+  
+    if (confirmUpdate) {
+      axios
+        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
+        .then((res) => {
+          console.log(res);
+          alert('Success');
+        })
+        .catch((err) => console.log(err));
     }
   };
+  
   
 
   return (
@@ -134,22 +132,25 @@ const Profile = () => {
             aria-describedby="modal-modal-description"
           >
             <Box className="box" >
-            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" onChange={handleInputChange}/>
+            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
               
-            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name"/>
+            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
 
-            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"/>
+            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
 
-            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined" />
+            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
+              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
 
-            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" />
-            
-            <TextField className="textBox" id="outlined-basic" label="Password" variant="outlined" />
-
+            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
+              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
+          
+            <br/>
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
-
               </Box>
-              </Modal>
+          </Modal>
               
         </div>      
       </div>

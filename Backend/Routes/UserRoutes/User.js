@@ -33,7 +33,7 @@ router.post('/register', (req, res) => {
             const status = 'Offline';
             const emp_id = "";
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no, Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?,?,?)';
+            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no,phone_number,address Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?,?,?,?,?)';
             db.query(insertUserQuery, [fullname,username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
@@ -230,22 +230,21 @@ router.post('/register/app', (req, res) => {
   });
 
 //Update Profile 
-router.put('/updateProfile/:id', (req, res) => {
-  const userId = req.params.id; // Use req.params.id to match the parameter name in your route
-  const updateStatus =
-    "UPDATE user_info SET `Fullname` = ?, `user_name` = ?, `Email` = ? WHERE id = ?";
+router.put("/profileUpdate/:id", (req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `phone_number`= ?, `address`= ? WHERE id = ?";
 
-  const fullname = req.body.Fullname;
-  const username = req.body.user_name;
-  const email = req.body.Email;
+  const values = [
+    req.body.fullname,
+    req.body.username,
+    req.body.email,
+    req.body.phone,
+    req.body.address,
+  ];
 
-  db.query(updateStatus, [fullname, username, email, userId], (error, result) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Error updating profile." }); // Return an error response
-    }
-
-    return res.json("Profile has been updated successfully.");
+  db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
   });
 });
 
