@@ -84,7 +84,7 @@ function generateVerificationToken() {
       }
     });
   }
-  
+  //Registration for Application
 router.post('/register/app', (req, res) => {
     const fullname = req.body.fullname;
     const username = req.body.username;
@@ -132,7 +132,7 @@ router.post('/register/app', (req, res) => {
     });
   });
 
-
+//Login For Admin
   router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -180,7 +180,7 @@ router.post('/register/app', (req, res) => {
       }
     });
   });
-
+//Login for Mobile APP
   router.post('/login/app', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -247,8 +247,23 @@ router.put("/profileUpdate/:id", (req, res) => {
     return res.json(data);
   });
 });
+//Update User 
+router.put("/userUpdate/:id", (req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `stud_no`= ? WHERE id = ?";
 
+  const values = [
+    req.body.fullname,
+    req.body.username,
+    req.body.email,
+    req.body.stud_no,
+  ];
 
+  db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
   router.post('/logout', (req,res) => {
 
     const userId = req.body.userId;
@@ -265,7 +280,7 @@ router.put("/profileUpdate/:id", (req, res) => {
       }
     });
   });
-
+//Show all the Student AND ONLINE
   router.get('/api/getuser', (req, res) => {
     const query = 'SELECT * FROM user_info WHERE status = "Online" AND position = "Student"';
     db.query(query, (error, result) => {
@@ -278,6 +293,19 @@ router.put("/profileUpdate/:id", (req, res) => {
     });
   });
 
+  //Get Admin Info
+  router.get('/admin', (req, res) => {
+    const query = 'SELECT * FROM user_info WHERE position = "Admin"';
+    db.query(query, (error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
+      }
+    });
+  });
+//Get one user Info
   router.get('/user/:id', (req, res) => {
     const userId = req.params.id; // Get the user ID from the request parameters
     const query = 'SELECT * FROM user_info WHERE id = ?'; // Query modified to include the WHERE clause
@@ -291,6 +319,18 @@ router.put("/profileUpdate/:id", (req, res) => {
         } else {
           res.sendStatus(404); // User with the specified ID not found
         }
+      }
+    });
+  });
+  //Count the Student
+  router.get('/student_count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS student_count FROM user_info WHERE position = "student"';
+    db.query(query, (error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
       }
     });
   });

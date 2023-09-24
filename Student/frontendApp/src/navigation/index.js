@@ -13,7 +13,7 @@ import BreathingScreens from '../screens/BreathingScreen/BreathingScreen';
 import Breathe1 from '../screens/BreathingScreen/BreatheTechniques/Breathe1';
 import TestScreen from '../screens/TestScreen/TestScreen';
 import EditProfile from '../screens/ProfileScreen/EditScreen/EditProfile';
-import Chat from '../screens/ChatScreens/ChatBot';
+import Chat from '../screens/ChatScreens/ChatScreens';
 import TestingScreen from '../screens/TestingScreen';
 import Instruction from '../screens/TestScreen/Instruction/Instruction';
 import Result from '../screens/TestScreen/Result/Result';
@@ -38,8 +38,7 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        
+      <Stack.Navigator screenOptions={{ headerShown: false }}>  
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -55,6 +54,7 @@ const Navigation = () => {
         <Stack.Screen name="ChatBot" component={Chat} />
         <Stack.Screen name="Instruction" component={Instruction} />
         <Stack.Screen name="Result" component={Result} />  
+ 
       </Stack.Navigator>
     </NavigationContainer>
   );

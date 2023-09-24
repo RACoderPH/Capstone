@@ -1,21 +1,12 @@
 import React,  { useEffect, useState } from "react";
 import './profile.scss'
 import Sidebar from '../../components/Sidebar/Sidebar'
-import Navbar from '../../components/Navbar/Navbar'
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PublishIcon from '@mui/icons-material/Publish';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import axios from "axios";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+
 
 const Profile = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
@@ -51,7 +42,7 @@ const Profile = () => {
   const Update = async (e) => {
     const userId = localStorage.getItem('ID');
     e.preventDefault();
-    
+
     // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to update this user?');
   
@@ -108,20 +99,12 @@ const Profile = () => {
             <TextField id="outlined-basic" className="custom-width" label="Email Address" variant="outlined"   margin="normal"  value={userData.Email} InputLabelProps={{shrink: true,}}/>
             </div>
             <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal"  value={userData.phone_number} InputLabelProps={{shrink: true,}}/>
             </div>
             <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.address} InputLabelProps={{shrink: true,}}/>
             </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
+        
            
           </div>
           <Button onClick={handleOpen}>Edit Info</Button>         
@@ -132,21 +115,60 @@ const Profile = () => {
             aria-describedby="modal-modal-description"
           >
             <Box className="box" >
-            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
-              
-            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+            <TextField
+  id="outlined-basic"
+  className="custom-width"
+  label="Fullname"
+  variant="outlined"
+  margin="normal"
+  value={values.fullname || ''} // Use values.fullname as the controlled value
+  InputLabelProps={{ shrink: true }}
+  onChange={(e) => setValues({ ...values, fullname: e.target.value })}
+/>
 
-            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
-              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+<TextField
+  id="outlined-basic"
+  className="custom-width"
+  label="Username"
+  variant="outlined"
+  margin="normal"
+  value={values.username || ''} // Use values.username as the controlled value
+  InputLabelProps={{ shrink: true }}
+  onChange={(e) => setValues({ ...values, username: e.target.value })}
+/>
 
-            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
-              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
+<TextField
+  id="outlined-basic"
+  className="custom-width"
+  label="Email Address"
+  variant="outlined"
+  margin="normal"
+  value={values.email || ''} // Use values.email as the controlled value
+  InputLabelProps={{ shrink: true }}
+  onChange={(e) => setValues({ ...values, email: e.target.value })}
+/>
 
-            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
-              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
-          
+<TextField
+  id="outlined-basic"
+  className="custom-width"
+  label="Phone number"
+  variant="outlined"
+  margin="normal"
+  value={values.phone || ''} // Use values.phone as the controlled value
+  InputLabelProps={{ shrink: true }}
+  onChange={(e) => setValues({ ...values, phone: e.target.value })}
+/>
+
+<TextField
+  id="outlined-basic"
+  className="custom-width"
+  label="Address"
+  variant="outlined"
+  margin="normal"
+  value={values.address || ''} // Use values.address as the controlled value
+  InputLabelProps={{ shrink: true }}
+  onChange={(e) => setValues({ ...values, address: e.target.value })}
+/>
             <br/>
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
               </Box>

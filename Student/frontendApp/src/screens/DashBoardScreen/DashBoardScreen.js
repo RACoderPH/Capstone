@@ -84,8 +84,11 @@ const DashBoardScreen = () => {
 
     const Dash = () => {
       return (
-        <Card style={styles.firstbox}>
+      <Card style={styles.firstbox}>
         <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{height:"100%"}} />
+        <Card.Content>
+            <Text></Text>
+        </Card.Content>
       </Card>
       );
     };

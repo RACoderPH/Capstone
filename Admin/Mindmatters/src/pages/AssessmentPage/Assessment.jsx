@@ -140,7 +140,7 @@ const Assessment = () => {
                   placeholder={`Option 4`}
                   onChange={(e) => setOption4(e.target.value)}
                 />
-              <button onClick={handleSubmit}>Submit</button>
+              <button onClick={handleSubmit} className='btn'>Submit</button>
             </Box>
           </Modal>
         </div>

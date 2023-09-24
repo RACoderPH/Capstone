@@ -1,11 +1,12 @@
 .chat
 {
-    
     display: flex;
     .chatContainer{
-        flex: 6;
-        
-
+        flex: 5;
+    }
+    .userOnline{
+      flex: 2;
+      text-align: center;
     }
 }
 
