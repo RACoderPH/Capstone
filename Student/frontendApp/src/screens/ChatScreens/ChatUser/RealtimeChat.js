@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 
 const { width, height } = Dimensions.get('window');
-const socket = io.connect('http://192.168.1.83:5000');
+const socket = io.connect('https://mindmatters-ejmd.onrender.com/');
 
 const RealtimeChat = () => {
   const [currentMessage, setCurrentMessage] = useState('');

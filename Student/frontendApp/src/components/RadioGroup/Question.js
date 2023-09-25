@@ -19,7 +19,7 @@ const Question = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.1.83:5000/Questions');
+        const response = await axios.get('https://mindmatters-ejmd.onrender.com/Questions');
         setUserData(response.data);
         setIsLoading(false); // Set loading to false when data is fetched
       } catch (error) {
@@ -77,7 +77,7 @@ const Question = () => {
     try {
       const answers = constructAnswers();
 
-      const response = await axios.post('http://192.168.1.83:5000/submit_answer', {
+      const response = await axios.post('https://mindmatters-ejmd.onrender.com/submit_answer', {
         answers,
       });
 
@@ -158,10 +158,12 @@ const Question = () => {
               <Text variant="bodyMedium" style={{ display: 'none' }}>Selected Value: {selectedValues[questionData.Question_id]}</Text>
             </Card.Content>
           </Card>
+          
         ))
       ) : (
         <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 30, marginTop: 30 }}>No questions available.</Text>
       )
+      
     )}
     <TouchableOpacity onPress={checkAndSubmit}>
       <CustomButton text="Submit" style={{ marginBottom: 30, alignSelf: 'center' }} />

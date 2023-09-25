@@ -17,21 +17,21 @@ const Result = () => {
           const userId = await AsyncStorage.getItem('id');
   
           // Fetch Stress data
-          const stressResponse = await fetch(`http://192.168.1.83:5000/stress/${userId}`);
+          const stressResponse = await fetch(`https://mindmatters-ejmd.onrender.com/stress/${userId}`);
           if (stressResponse.ok) {
             const stressData = await stressResponse.json();
             setUserStress(parseInt(stressData[0]?.total_stress_value) || 0);
           }
   
           // Fetch Anxiety data
-          const anxietyResponse = await fetch(`http://192.168.1.83:5000/anxiety/${userId}`);
+          const anxietyResponse = await fetch(`https://mindmatters-ejmd.onrender.com/anxiety/${userId}`);
           if (anxietyResponse.ok) {
             const anxietyData = await anxietyResponse.json();
             setUserAnxiety(parseInt(anxietyData[0]?.total_anxiety_value) || 0);
           }
   
           // Fetch Depression data
-          const depressionResponse = await fetch(`http://192.168.1.83:5000/depression/${userId}`);
+          const depressionResponse = await fetch(`https://mindmatters-ejmd.onrender.com/depression/${userId}`);
           if (depressionResponse.ok) {
             const depressionData = await depressionResponse.json();
             setUserDepression(parseInt(depressionData[0]?.total_depress_value) || 0);

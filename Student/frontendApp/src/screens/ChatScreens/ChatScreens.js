@@ -11,7 +11,7 @@ const ChatScreens = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.1.83:5000/admin');
+        const response = await axios.get('https://mindmatters-ejmd.onrender.com/admin');
         setUserdata(response.data);
       } catch (error) {
         console.log('Failed to fetch user data:', error);
