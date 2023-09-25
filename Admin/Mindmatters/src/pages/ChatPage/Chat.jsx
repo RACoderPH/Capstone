@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect("https://mindmatters-ejmd.onrender.com/");
 
 const Chat = () => {
   const [currentMessage, setCurrentMessage] = useState('');
