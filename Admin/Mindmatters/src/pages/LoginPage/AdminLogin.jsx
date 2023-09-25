@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import Chat from '../ChatPage/Chat';
 import Axios from "axios";
+
 import {
   MDBContainer,
   MDBTabs,
@@ -41,7 +43,7 @@ function login() {
    const [emailReg,setEmailReg] = useState("")
    const [passwordReg,setPasswordReg] = useState("")
    const [ConfirmpasswordReg,setConfirmPasswordReg] = useState("")
-  
+   const [user,setUser] = useState(null)
    const [username,setUsername] = useState("")
    const [password,setPassword] = useState("")
 
@@ -74,7 +76,7 @@ function login() {
     }
     }
 };
-
+   
 const login = () =>{
     if(username === "" || password === ""){
         input();
@@ -152,8 +154,6 @@ draggable
 pauseOnHover
 theme="light"
 />
-
-
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
     <br/>
       <br/>

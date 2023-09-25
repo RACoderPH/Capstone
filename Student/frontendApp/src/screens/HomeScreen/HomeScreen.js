@@ -6,7 +6,7 @@ import ProfileScreen from '../ProfileScreen/ProfileScreen';
 import NotificationScreen from '../NotificationScreen/NotificationScreen';
 import DashBoardScreen from '../DashBoardScreen/DashBoardScreen';
 import LearnScreen from '../LearnScreen/LearnScreen';
-import Chat from '../ChatScreens/ChatBot';
+import Chat from '../ChatScreens/Chatbot/ChatBot';
 
 
 const { width, height } = Dimensions.get('window');

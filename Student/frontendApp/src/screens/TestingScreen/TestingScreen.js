@@ -28,7 +28,18 @@ const handleDone = () => {
           </View>
       ),
       title: 'Onboarding',
-      subtitle: 'Done with React Native Onboarding Swiper',
+      subtitle: (
+          <View>
+            <Text style={{ 
+    fontSize:width * 0.04,
+    color: '#454545',
+    fontFamily: 'Poppins',
+    padding: height * 0.01,
+    textAlign: 'justify',}}> Start your journey towards mental well-being by prioritizing self-care and mindfulness practices. Our app
+          provides a variety of guided meditation sessions, daily affirmations, and tools to track your emotional
+          well-being. Take the first step and invest in your mental health today!</Text>
+          </View>
+      ),
     },
 
     {

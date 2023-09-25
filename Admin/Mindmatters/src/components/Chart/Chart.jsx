@@ -4,23 +4,23 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const data = [
   {
-    name: 'Stable',
-    uv: 150,
-  
-  },
-  {
-    name: 'Stress',
+    name: 'Depression',
     uv: 50,
  
   },
   {
     name: 'Anxiety',
-    uv: 90,
+    uv: 60,
   
   },
   {
-    name: 'Depress',
+    name: 'Stress',
     uv: 10,
+    
+  },
+  {
+    name: 'Normal',
+    uv: 20,
     
   },
 ];

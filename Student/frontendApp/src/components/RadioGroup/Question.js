@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity,ToastAndroid } from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity,ToastAndroid,ActivityIndicator } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Card, Text } from 'react-native-paper';
 import axios from 'axios';
@@ -14,14 +14,17 @@ const Question = () => {
   const [selectedValues, setSelectedValues] = useState({});
   const [userId, setUserId] = useState(""); // Set the user ID
   const [category, setCategory] = useState(""); // Set the category
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://192.168.1.83:5000/Questions');
         setUserData(response.data);
+        setIsLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         console.log('Failed to fetch user data:', error);
+        setIsLoading(false); // Set loading to false even on error
       }
     };
 
@@ -43,6 +46,8 @@ const Question = () => {
 
     fetchUserId();
   }, []); // Make sure to run this effect only once when the component mounts
+
+
 
   const handleRadioChange = (questionId, value) => {
     setSelectedValues({
@@ -138,26 +143,30 @@ const Question = () => {
   };
   return (
     <View>
-      {userData.length > 0 ? (
+    {isLoading ? ( // Show loading indicator if isLoading is true
+      <ActivityIndicator size="large" color="#0084ff" style={styles.loadingIndicator} />
+    ) : (
+      userData.length > 0 ? (
         userData.map((questionData, index) => (
           <Card
             key={index}
             style={{ width: width * 0.97, alignSelf: 'center', marginTop: 20 }}
           >
             <Card.Content>
-              <Text variant="titleMedium" style={{textAlign:'justify'}}>{questionData.Question}</Text>
+              <Text variant="titleMedium" style={{ textAlign: 'justify' }}>{questionData.Question}</Text>
               {renderRadioButtons(questionData)}
-              <Text variant="bodyMedium" style={{display:'none'}}>Selected Value: {selectedValues[questionData.Question_id]}</Text>
+              <Text variant="bodyMedium" style={{ display: 'none' }}>Selected Value: {selectedValues[questionData.Question_id]}</Text>
             </Card.Content>
           </Card>
         ))
       ) : (
-        <Text style={{textAlign:'center',justifyContent:'center',fontSize:30,marginTop:30}}>No questions available.</Text>
-      )}
-      <TouchableOpacity  onPress={checkAndSubmit} >
-        <CustomButton text="Submit" style={{ marginBottom:30,alignSelf:'center' }} />
-      </TouchableOpacity>
-    </View>
+        <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 30, marginTop: 30 }}>No questions available.</Text>
+      )
+    )}
+    <TouchableOpacity onPress={checkAndSubmit}>
+      <CustomButton text="Submit" style={{ marginBottom: 30, alignSelf: 'center' }} />
+    </TouchableOpacity>
+  </View>
   );
 };
 
