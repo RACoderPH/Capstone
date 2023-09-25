@@ -33,7 +33,7 @@ const Profile = () => {
     }
   
     const userId = localStorage.getItem('ID');
-    fetch(`http://localhost:5000/user/${userId}`)
+    fetch(`https://mindmatters-ejmd.onrender.com/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -48,7 +48,7 @@ const Profile = () => {
   
     if (confirmUpdate) {
       axios
-        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
+        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
@@ -104,7 +104,7 @@ const Profile = () => {
             <div className="txtfield">
             <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.address} InputLabelProps={{shrink: true,}}/>
             </div>
-        
+            
            
           </div>
           <Button onClick={handleOpen}>Edit Info</Button>         
@@ -115,60 +115,30 @@ const Profile = () => {
             aria-describedby="modal-modal-description"
           >
             <Box className="box" >
-            <TextField
-  id="outlined-basic"
-  className="custom-width"
-  label="Fullname"
-  variant="outlined"
-  margin="normal"
-  value={values.fullname || ''} // Use values.fullname as the controlled value
-  InputLabelProps={{ shrink: true }}
-  onChange={(e) => setValues({ ...values, fullname: e.target.value })}
-/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+            </div>
 
-<TextField
-  id="outlined-basic"
-  className="custom-width"
-  label="Username"
-  variant="outlined"
-  margin="normal"
-  value={values.username || ''} // Use values.username as the controlled value
-  InputLabelProps={{ shrink: true }}
-  onChange={(e) => setValues({ ...values, username: e.target.value })}
-/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+            </div>
 
-<TextField
-  id="outlined-basic"
-  className="custom-width"
-  label="Email Address"
-  variant="outlined"
-  margin="normal"
-  value={values.email || ''} // Use values.email as the controlled value
-  InputLabelProps={{ shrink: true }}
-  onChange={(e) => setValues({ ...values, email: e.target.value })}
-/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+            </div>
 
-<TextField
-  id="outlined-basic"
-  className="custom-width"
-  label="Phone number"
-  variant="outlined"
-  margin="normal"
-  value={values.phone || ''} // Use values.phone as the controlled value
-  InputLabelProps={{ shrink: true }}
-  onChange={(e) => setValues({ ...values, phone: e.target.value })}
-/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
+              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
+            </div>
 
-<TextField
-  id="outlined-basic"
-  className="custom-width"
-  label="Address"
-  variant="outlined"
-  margin="normal"
-  value={values.address || ''} // Use values.address as the controlled value
-  InputLabelProps={{ shrink: true }}
-  onChange={(e) => setValues({ ...values, address: e.target.value })}
-/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
+              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
+            </div>
             <br/>
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
               </Box>

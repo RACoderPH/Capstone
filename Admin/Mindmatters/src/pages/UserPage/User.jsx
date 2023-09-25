@@ -28,6 +28,19 @@ const User = () => {
     setOpen(true);
   };
 
+  // for add user modal
+  const [open1, setOpen1] = React.useState(false);
+  const handleOpen1 = () => {
+    // Set the selected user for editing when the "Edit" button is clicked
+    setOpen1(true);
+  };
+  // for add user modal
+  const handleClose1 = () => {
+    // Clear the selectedUser state to exit edit mode
+    setSelectedUser(null);
+    setOpen1(false);
+  };
+
   const handleClose = () => {
     // Clear the selectedUser state to exit edit mode
     setSelectedUser(null);
@@ -36,13 +49,14 @@ const User = () => {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('http://localhost:5000/api/getuser')
+    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
-  const Updateuser = async (e) => {
+  // User Update
+  const Updateuser = async (e, user) => {
     e.preventDefault();
 
     // Show a confirmation dialog
@@ -50,7 +64,41 @@ const User = () => {
   
     if (confirmUpdate) {
       axios
-        .put(`http://localhost:5000/userUpdate/${selectedUser}`, values)
+        .put(`https://mindmatters-ejmd.onrender.com/userUpdate/${selectedUser}`, values)
+        .then((res) => {
+          console.log(res);
+          alert('Success');
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  // User Add
+  const Adduser = async (e) => {
+    e.preventDefault();
+
+    // Show a confirmation dialog
+    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+  
+    if (confirmUpdate) {
+       await axios
+        .post(`https://mindmatters-ejmd.onrender.com/register/app`, values)
+        .then((res) => {
+          console.log(res);
+          alert('Success');
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  // Delete User
+  const Deleteuser = async (user) => {
+    // Show a confirmation dialog
+    const confirmDelete = window.confirm('Are you sure you want to Delete this user?');
+  
+    if (confirmDelete) {
+      await axios
+        .delete(`https://mindmatters-ejmd.onrender.com/userDelete/${user.id}`)
         .then((res) => {
           console.log(res);
           alert('Success');
@@ -65,7 +113,37 @@ const User = () => {
       <div className="userContainer">
         <br />
         <br />
-        <Button className="modalBtn" variant="outlined" >Add User</Button>
+        <Button className="modalBtn" variant="outlined" onClick={() => handleOpen1()}>Add User</Button>
+
+        <Modal
+          open={open1}
+          onClose={handleClose1}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
+          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+           onChange={(e) => setValues({ ...values, fullname: e.target.value })} />
+
+          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+           onChange={(e) => setValues({ ...values, username: e.target.value })} />
+
+          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
+           onChange={(e) => setValues({ ...values, email: e.target.value })} />
+
+          <TextField className="textBox" id="outlined-password-input" label="Password"  margin="normal"
+          />
+
+          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
+            onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
+
+            <br />
+            <Button className="modalBtn" variant="outlined" onClick={Adduser}>
+              Save
+            </Button>
+          </Box>
+        </Modal>
+
         <div className="listContainer">   
           <table style={{ flex: 1 }}>
             <thead>
@@ -90,7 +168,7 @@ const User = () => {
                   <td>{user.position}</td>
                   <td className="btns">
                     <button onClick={() => handleOpen(user)}>Edit</button>
-                    <button>Delete</button>
+                    <button onClick={() => Deleteuser(user)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -104,39 +182,18 @@ const User = () => {
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
-          <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Full Name"
-              variant="outlined"
-          
-              onChange={(e) => setValues({ ...values, fullname: e.target.value })}
-            />
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Username"
-              variant="outlined"
-              name="user_name"
-           
-              onChange={(e) => setValues({ ...values, username: e.target.value })}
-            />
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Email"
-              variant="outlined"
-             
-              onChange={(e) => setValues({ ...values, email: e.target.value })}
-            />
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Student ID"
-              variant="outlined"
-            
-              onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
-            />
+          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+            onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+
+          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+            onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+
+          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
+            onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+
+          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
+             onChange={(e) => setValues({ ...values, stud_no: e.target.value })}/>
+
             <br />
             <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
               Save

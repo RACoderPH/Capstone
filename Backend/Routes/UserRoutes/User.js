@@ -132,7 +132,8 @@ router.post('/register/app', (req, res) => {
     });
   });
 
-//Login For Admin
+
+
   router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -243,6 +244,36 @@ router.put("/profileUpdate/:id", (req, res) => {
   ];
 
   db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+
+//Update User 
+router.put("/userUpdate/:id", (req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `stud_no`= ? WHERE id = ?";
+
+  const values = [
+    req.body.fullname,
+    req.body.username,
+    req.body.email,
+    req.body.stud_no,
+  ];
+
+  db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+//Delete User 
+router.delete("/userDelete/:id", (req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "DELETE FROM user_info WHERE id = ?";
+
+  db.query(Updatequery, [UserId], (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
   });
