@@ -12,7 +12,7 @@ function Home() {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('http://localhost:5000/api/getuser')
+    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));

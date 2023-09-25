@@ -124,6 +124,14 @@
   align-items: center;
 }
 
+.txtfield{
+  margin: 10px;
+  flex-wrap: wrap;
+  flex: 0 0 calc(50% - 20px);
+  align-items: center;
+  display: flex;
+}
+
 .modalBtn {
   align-items: center;
 }

@@ -1,31 +1,24 @@
 import React,  { useEffect, useState } from "react";
 import './profile.scss'
 import Sidebar from '../../components/Sidebar/Sidebar'
-import Navbar from '../../components/Navbar/Navbar'
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PublishIcon from '@mui/icons-material/Publish';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import axios from "axios";
-import { Link, useNavigate, useParams } from 'react-router-dom';
+
 
 const Profile = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userData, setUserData] = useState({});
   
-  const [updatedUserData, setUpdatedUserData] = useState({
-    Fullname: userData.Fullname,
-    user_name: userData.user_name,
-    Email: userData.Email,
-    // Add other fields you want to update
+  const [values, setValues] = useState({
+    fullname: null,
+    username: null,
+    email: null,
+    phone: null,
+    address: null,
+ 
   });
 
   const [open, setOpen] = React.useState(false);
@@ -34,40 +27,36 @@ const Profile = () => {
 
   useEffect(() => {
     const storedValue = localStorage.getItem('Username');
-     // Retrieve the value from localStorage
+    // Retrieve the value from localStorage
     if (storedValue) {
       setLocalStorageValue(storedValue); // Update the component state with the retrieved value
     }
-    
-
+  
     const userId = localStorage.getItem('ID');
-    fetch(`http://localhost:5000/user/${userId}`)
+    fetch(`https://mindmatters-ejmd.onrender.com/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedUserData({
-      ...updatedUserData,
-      [name]: value,
-    });
-  };
-
+  
   const Update = async (e) => {
+    const userId = localStorage.getItem('ID');
     e.preventDefault();
-    console.log("Updated User Data:", updatedUserData); // Add this line
-    try {
-      const userId = userData.id;
-      await axios.put(`http://localhost:5000/Profile/${userId}`, updatedUserData);
-      console.log("Update successful"); // Add this line
-      // Display a success message or redirect the user
-    } catch (error) {
-      console.log("Update error:", error); // Add this line
-      // Display an error message to the user
+
+    // Show a confirmation dialog
+    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+  
+    if (confirmUpdate) {
+      axios
+        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
+        .then((res) => {
+          console.log(res);
+          alert('Success');
+        })
+        .catch((err) => console.log(err));
     }
   };
+  
   
 
   return (
@@ -110,20 +99,12 @@ const Profile = () => {
             <TextField id="outlined-basic" className="custom-width" label="Email Address" variant="outlined"   margin="normal"  value={userData.Email} InputLabelProps={{shrink: true,}}/>
             </div>
             <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal"  value={userData.phone_number} InputLabelProps={{shrink: true,}}/>
             </div>
             <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
+            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal"  value={userData.address} InputLabelProps={{shrink: true,}}/>
             </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
-            <div className="txtfield">
-            <TextField id="outlined-basic" className="custom-width" label="Firstname" variant="outlined"   margin="normal"  value={userData.Fullname} InputLabelProps={{shrink: true,}}/>
-            </div>
+            
            
           </div>
           <Button onClick={handleOpen}>Edit Info</Button>         
@@ -134,22 +115,34 @@ const Profile = () => {
             aria-describedby="modal-modal-description"
           >
             <Box className="box" >
-            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" onChange={handleInputChange}/>
-              
-            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name"/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+            </div>
 
-            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"/>
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+            </div>
 
-            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined" />
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+            </div>
 
-            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" />
-            
-            <TextField className="textBox" id="outlined-basic" label="Password" variant="outlined" />
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
+              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
+            </div>
 
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
+              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
+            </div>
+            <br/>
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
-
               </Box>
-              </Modal>
+          </Modal>
               
         </div>      
       </div>
