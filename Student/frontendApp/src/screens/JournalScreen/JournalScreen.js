@@ -1,136 +1,125 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, StyleSheet } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { View, Text, StyleSheet,Dimensions,TextInput,ScrollView ,KeyboardAvoidingView} from 'react-native';
 
+import CustomButton from '../../components/CustomButton/CustomButton';
+
+const {width,height} = Dimensions.get('window');
 const JournalScreen = () => {
-  const [entries, setEntries] = useState([]); // Store journal entries
-  const [currentEntry, setCurrentEntry] = useState(''); // Store the current entry being edited
-  const [selectedEntry, setSelectedEntry] = useState(null); // Track the selected journal entry
-  const [isModalVisible, setModalVisible] = useState(false); // Control the visibility of the modal
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [user_id, setUserId] = useState('');
+  const [insertMessage, setInsertMessage] = useState('');
 
-  const addEntry = () => {
-    if (currentEntry.trim() !== '') {
-      setEntries([...entries, currentEntry]);
-      setCurrentEntry('');
-    }
+  const handleInsertData = () => {
+    useEffect(() => {
+      const fetchUserId = async () => {
+        try {
+          const storedUserId = await AsyncStorage.getItem('id');
+          if (storedUserId) {
+            setUserId(storedUserId);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user_id from AsyncStorage:', error);
+        }
+      };
+  
+      fetchUserId();
+    }, []);
+
+
+    // Define the API URL
+    const apiUrl = 'https://mindmatters-ejmd.onrender.com/AddDiary';
+  
+    // Create a request body with the data to insert
+    const requestBody = {
+      title: title,
+      description: description,
+      user_id: user_id,
+    };
+  
+    // Make a POST request to the backend API using Axios
+    axios.post(apiUrl, requestBody)
+      .then((response) => {
+        // Handle the response from the backend
+        setInsertMessage(response.data.message);
+      })
+      .catch((error) => {
+        console.error('Error inserting data:', error);
+      });
   };
-
-  const renderEntry = ({ item, index }) => (
-    <TouchableOpacity onPress={() => handleEntryPress(item)} style={styles.entryContainer}>
-      <Text style={styles.entryText}>{item}</Text>
-    </TouchableOpacity>
-  );
-
-  const handleEntryPress = (entry) => {
-    setSelectedEntry(entry);
-    setModalVisible(true);
-  };
+  
+  
 
   return (
+    <ScrollView style={{height:height * 1,width:width *1 }}
+    keyboardShouldPersistTaps="handled">
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Write your journal entry..."
-          value={currentEntry}
-          onChangeText={(text) => setCurrentEntry(text)}
-          multiline={true}
-          style={styles.input}
-        />
-        <TouchableOpacity style={styles.addButton} onPress={addEntry}>
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={entries}
-        renderItem={renderEntry}
-        keyExtractor={(item, index) => index.toString()}
-      />
-      {/* Modal */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{selectedEntry}</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
+  
+          <Text style={{color:'black',
+          marginTop:height * 0.04,
+          alignSelf:'flex-start',
+          marginLeft:width* 0.05,fontSize:20,fontWeight:'400'}}>How was your day?</Text>
+             <TextInput
+    multiline={true}
+    textAlignVertical="top"
+    numberOfLines={4}
+    value={title}
+    onChangeText={(text) => setTitle(text)} // You can adjust the number of lines as needed
+    style={{
+      width:width * 0.9,
+      borderWidth: 0.2,
+      color:'black',
+      fontWeight:'700',
+      backgroundColor:'white',
+      borderColor: 'gray',
+      borderRadius:10,
+      margin: 15,
+      padding: 12,
+      fontSize: 18,
+      minHeight: 10,// Adjust the height as needed
+    }}
+  />
+          <TextInput
+    multiline={true}
+    textAlignVertical="top"
+    numberOfLines={4}
+    value={description}
+    onChangeText={(text) => setDescription(text)} // You can adjust the number of lines as needed
+    style={{
+      width:width * 0.9,
+      borderWidth: 0.2,
+      color:'black',
+      backgroundColor:'white',
+      borderColor: 'gray',
+      borderRadius:10,
+      margin: 15,
+      padding: 12,
+      fontSize: 14,
+      minHeight: 200,
+      letterSpacing:1,// Adjust the height as needed
+    }}
+  />
+  <View style={{ flex: 1, justifyContent: 'flex-end' ,alignSelf:'center',marginBottom:height * 0.05}}>
+          <CustomButton text="Entry" style={{
+            width: width * 0.9,
+            borderRadius: width * 0.03,
+            fontSize: width * 0.04,
+          }} />
         </View>
-      </Modal>
     </View>
+ 
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#F5F5F5',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  input: {
-    flex: 1,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 4,
-    backgroundColor: 'white',
-  },
-  addButton: {
-    marginLeft: 10,
-    padding: 10,
-    backgroundColor: 'blue',
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  entryContainer: {
-    backgroundColor: 'white',
-    borderRadius: 4,
-    padding: 10,
-    marginBottom: 10,
-  },
-  entryText: {
-    fontSize: 16,
-  },
-  // Modal styles
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 4,
-    width: '80%',
-  },
-  modalText: {
-    fontSize: 18,
-  },
-  closeButton: {
-    marginTop: 10,
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 4,
-    alignSelf: 'flex-end',
-  },
-  closeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
+  container:{
+      width:width,
+      borderBottomLeftRadius:20,
+      borderBottomRightRadius:20,
+      height:height * 1,
+     
+  }
 });
 
 export default JournalScreen;

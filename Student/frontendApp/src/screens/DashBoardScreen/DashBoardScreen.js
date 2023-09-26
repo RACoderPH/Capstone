@@ -57,10 +57,10 @@ const DashBoardScreen = () => {
       return (
         <TouchableOpacity>
         <Card style={styles.content}  onPress={Journal} >
-          <Card.Title title="Diary"/>
+        <Card.Title title="Diary" style={{ color: 'black' }} />
           <Card.Cover source={journal}  style={styles.cover}/>
           <Card.Content>
-            <Text style={{fontSize:width * 0.03}}>Write your thoughts\{'\n'}feeling</Text>
+            <Text style={{fontSize:width * 0.03,color:'black'}}>Write your thoughts\{'\n'}feeling</Text>
           </Card.Content>
         </Card>
         </TouchableOpacity>
@@ -69,12 +69,12 @@ const DashBoardScreen = () => {
 
     const MyComponent2 = () => {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity >
         <Card style={styles.content} onPress={Assessment}>
           <Card.Title title="Assessment"/>
           <Card.Cover source={test}  style={styles.cover}/>
           <Card.Content>
-            <Text style={{fontSize:width * 0.03}}>Check your Mental{'\n'} Health</Text>
+            <Text style={{fontSize:width * 0.03,color:'black'}}>Check your Mental{'\n'} Health</Text>
           </Card.Content>
         </Card>
     </TouchableOpacity>
@@ -104,7 +104,7 @@ const DashBoardScreen = () => {
        <Provider>
       <View style={styles.Topnav}>
     <View style={{ flexDirection: 'row', width: width * 1, alignItems:'center'}}>
-      <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold' }}>{username}</Text>
+      <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold',color:'black' }}>{username}</Text>
       </Text>
       <Image source={bg} resizeMode="contain" style={styles.image}/>
     </View>
@@ -116,6 +116,7 @@ const DashBoardScreen = () => {
           
                 <MyComponent/>
                 <MyComponent2/>
+                
                 
         </View>
         <Text style={{fontSize:16,fontWeight:'700',color:'black', marginLeft: '2%',marginTop:'4%'}}>Tools</Text>
@@ -161,6 +162,8 @@ const styles = StyleSheet.create({
       height:150,
     },
     content:{
+      color:'white',
+      backgroundColor:'white',
       padding:5,
       marginBottom:1,
       margin:5
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
         padding:2,
     },
         image: {
-            marginLeft:width * 0.6,
+            marginLeft:width * 0.5,
             backgroundColor: 'gray',
             width: 40,
             height: 40,

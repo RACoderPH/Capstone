@@ -11,12 +11,10 @@ import {
   Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import io from 'socket.io-client';
 
-const { width, height } = Dimensions.get('window');
-const socket = io.connect('https://mindmatters-ejmd.onrender.com/');
+const {width,height} = Dimensions.get('window');
 
-const RealtimeChat = () => {
+const ChatAiBot = () => {
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [room, setRoom] = useState('12345');
@@ -28,48 +26,9 @@ const RealtimeChat = () => {
         setUsername(value);
       }
     });
-    const handleReceiveMessage = (data) => {
-      // Set sentByUser to false for received messages
-      data.sentByUser = false;
-      setMessageList((list) => [...list, data]);
-    };
-  
-    socket.on("receive_message", handleReceiveMessage);
-  
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("receive_message", handleReceiveMessage);
-    };
   }, []);
 
-  const joinRoom = () => {
-    if (room !== "") {
-      socket.emit("join_room", room);
-    }
-  }
 
-  useEffect(() => {
-    joinRoom();
-  }, []);
-
-  const sendMessage = async () => {
-    if (currentMessage !== '' && room && username && socket) {
-      const messageData = {
-        room: room,
-        author: username,
-        message: currentMessage,
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sentByUser: true, // Sent by the user
-      };
-  
-      await socket.emit('send_message', messageData);
-      setMessageList((list) => [...list, messageData]);
-  
-      // Clear the input field
-      setCurrentMessage('');
-    }
-  };
-  
 
   return (
     <KeyboardAvoidingView
@@ -81,24 +40,16 @@ const RealtimeChat = () => {
        keyExtractor={(item, index) => index.toString()}
        renderItem={({ item }) => (
          <View
-           style={[
-             styles.messageContainer,
-             item.sentByUser ? styles.sentMessage : styles.receivedMessage,
-           ]}
+          
          >
-           <Text style={styles.messageText}>{item.message}</Text>
-           <Text style={styles.from}>
-             {item.author}, {item.time}
+           <Text></Text>
+           <Text>
+             
            </Text>
          </View>
        )}
       />
-      <TextInput
-        style={{ display: 'none' }}
-        placeholder="Join room"
-        value={room}
-        onChangeText={(text) => setRoom(text)}
-      />
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -106,7 +57,7 @@ const RealtimeChat = () => {
           value={currentMessage}
           onChangeText={(text) => setCurrentMessage(text)}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+        <TouchableOpacity style={styles.sendButton} >
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
@@ -172,4 +123,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RealtimeChat;
+export default ChatAiBot;

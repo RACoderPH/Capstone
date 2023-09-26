@@ -17,7 +17,7 @@ import Chat from '../screens/ChatScreens/ChatScreens';
 import TestingScreen from '../screens/TestingScreen';
 import Instruction from '../screens/TestScreen/Instruction/Instruction';
 import Result from '../screens/TestScreen/Result/Result';
-
+import ChatAi from '../screens/ChatScreens/ChatAiBot/ChatAiBot';
 
 
 
@@ -39,13 +39,15 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
+      <Stack.Screen name="Ai" component={ChatAi} />
+      <Stack.Screen name="Journal" component={JournalScreens} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Homes" component={HomeScreen} />  
         <Stack.Screen name="Testing" component={TestingScreen} />
         <Stack.Screen name="Started" component={GetStarted} />
-        <Stack.Screen name="Journal" component={JournalScreens} />
+      
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
         <Stack.Screen name="Breathe1" component={Breathe1} />

@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         width:width * 1,
         height:height,
+        color:'black',
       }
 })
 export default App;
