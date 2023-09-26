@@ -43,8 +43,8 @@ const announce = require("./Routes/AnnounceRoute/announce");
 app.use(announce);
 const answer = require("./Routes/AnswerRoute/answer");
 app.use(answer);
-const diary = require("./Routes/DiaryRoute/AddDiary");
-app.use(diary);
+const diaries = require("./Routes/DiaryRoute/AddDiary")
+app.use(diaries);
 // Create an HTTP server
 
 
