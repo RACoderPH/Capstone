@@ -108,17 +108,18 @@ router.post('/register/app', (req, res) => {
               console.error('Failed to hash password:', hashErr);
               res.send({ message: 'Server error' });
             } else {
+              const verificationToken = generateVerificationToken();
               const position = 'Student';
               const status = 'Offline';
               const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-              const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-              db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
+              const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+              db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status,verificationToken], (insertErr, insertResult) => {
                 if (insertErr) {
                   console.error('Failed to register user:', insertErr);
                   res.send({ message: 'Server error' });
                 } else {
                   // Send verification email
-                  const verificationToken = generateVerificationToken(); // Generate a verification token
+                  // Generate a verification token
                   const verificationLink = `This is your Verification Code:${verificationToken}`; // Replace with your verification link
                   sendVerificationEmail(email, verificationLink); // Send verification email
   
