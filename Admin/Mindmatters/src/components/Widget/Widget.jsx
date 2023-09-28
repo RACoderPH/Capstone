@@ -10,7 +10,7 @@ function Widget  ({type}){
 
   useEffect(() => {
     // Make an HTTP GET request to fetch student count
-    axios.get('http://localhost:5000/student_count')
+    axios.get('https://mindmatters-ejmd.onrender.com/student_count')
       .then((response) => {
         // Update the studentCount state with the fetched count
         setStudentCount(response.data[0].student_count);

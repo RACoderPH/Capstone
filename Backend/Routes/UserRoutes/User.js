@@ -71,7 +71,7 @@ function generateVerificationToken() {
       from: 'mindmattersstdominic@gmail.com',
       to: email,
       subject: 'Email Verification',
-      html: `<p>Thank you for registering. Please click the following link to verify your email:</p>
+      html: `<p>Thank you for registering. Please input that code to verify your account</p>
              <a href="${verificationLink}">${verificationLink}</a>`,
     };
   
@@ -119,7 +119,7 @@ router.post('/register/app', (req, res) => {
                 } else {
                   // Send verification email
                   const verificationToken = generateVerificationToken(); // Generate a verification token
-                  const verificationLink = `http://yourwebsite.com/verify/${verificationToken}`; // Replace with your verification link
+                  const verificationLink = `This is your Verification Code:${verificationToken}`; // Replace with your verification link
                   sendVerificationEmail(email, verificationLink); // Send verification email
   
                   res.send({ message: 'User registered successfully' });
@@ -314,6 +314,19 @@ router.put("/userUpdate/:id", (req, res) => {
 //Show all the Student AND ONLINE
   router.get('/api/getuser', (req, res) => {
     const query = 'SELECT * FROM user_info WHERE status = "Online" AND position = "Student"';
+    db.query(query, (error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
+      }
+    });
+  });
+
+  //Show All Student List
+  router.get('/Student', (req, res) => {
+    const query = 'SELECT * FROM user_info WHERE position = "Student"';
     db.query(query, (error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
