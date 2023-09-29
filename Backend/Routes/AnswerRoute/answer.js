@@ -88,9 +88,9 @@ router.post('/result', (req,res) =>{
   const anxiety = req.body.anxiety;
   const stress = req.body.stress;
 
-    insertResult = "INSERT INTO `student_result`( `user_id`, `depression`, `anxiety`, `stress`) VALUES ('?','?','?','?')";
+    insertResult = "INSERT INTO `student_result`( `user_id`, `depression`, `anxiety`, `stress`) VALUES (?, ?, ?, ?)";
 
-    db.query(insertDiary, [user_id,depression,anxiety,stress], (insertErr, insertResult) => {
+    db.query(insertResult, [user_id,depression,anxiety,stress], (insertErr, insertResult) => {
       if (insertErr) {
         console.error('Failed to insert Diary:', insertErr);
         res.send({ message: 'Server error' });
