@@ -50,7 +50,7 @@ const User = () => {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+    fetch('https://mindmatters-ejmd.onrender.com/Student')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -83,7 +83,7 @@ const User = () => {
   
     if (confirmUpdate) {
        await axios
-        .post(`https://mindmatters-ejmd.onrender.com/Student`, values)
+        .post(`https://mindmatters-ejmd.onrender.com/register/app`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
