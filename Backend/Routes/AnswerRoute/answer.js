@@ -89,14 +89,31 @@ router.post('/result', (req,res) =>{
   const stress = req.body.stress;
 
     insertResult = "INSERT INTO `student_result`( `user_id`, `depression`, `anxiety`, `stress`) VALUES (?, ?, ?, ?)";
+    select = "SELECT * `student_result` WHERE  `user_id` = ?";
 
-    db.query(insertResult, [user_id,depression,anxiety,stress], (insertErr, insertResult) => {
-      if (insertErr) {
-        console.error('Failed to insert Diary:', insertErr);
-        res.send({ message: 'Server error' });
-      } else {
-        res.send({ message: 'Inserted' });
-      }
-    });
+    db.query(select,[user_id] , (res,req) => {
+        if(err){
+          console.error('Failed to check user_id:', err);
+          res.send({ message: 'Server error' });
+        }else{
+          if (result.length > 0) {
+            // User already exists
+            res.send({ message: 'user_id result already exist' });
+          }
+          else{
+            db.query(insertResult, [user_id,depression,anxiety,stress], (insertErr, insertResult) => {
+              if (insertErr) {
+                console.error('Failed to insert Diary:', insertErr);
+                res.send({ message: 'Server error' });
+              } else {
+                res.send({ message: 'Inserted' });
+              }
+            });
+          }
+        }
+    })
+    
+
+   
 })
   module.exports = router;

@@ -92,7 +92,7 @@ router.post('/register/app', (req, res) => {
     const password = req.body.password;
     const stud_no = req.body.stud_no;
   
-    const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
+    const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ? AND Email = ? AND stud_no = ?';
     db.query(checkUsernameQuery, [username], (err, result) => {
       if (err) {
         console.error('Failed to check username:', err);
