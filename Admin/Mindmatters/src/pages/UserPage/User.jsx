@@ -19,6 +19,7 @@ const User = () => {
     username: null,
     email: null,
     stud_no: null,
+    password: null,
   });
 
   const [open, setOpen] = React.useState(false);
@@ -49,7 +50,7 @@ const User = () => {
 
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/Student')
+    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -82,7 +83,7 @@ const User = () => {
   
     if (confirmUpdate) {
        await axios
-        .post(`https://mindmatters-ejmd.onrender.com/register/app`, values)
+        .post(`https://mindmatters-ejmd.onrender.com/Student`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
@@ -132,7 +133,7 @@ const User = () => {
            onChange={(e) => setValues({ ...values, email: e.target.value })} />
 
           <TextField className="textBox" id="outlined-password-input" label="Password"  margin="normal"
-          />
+          onChange={(e) => setValues({ ...values, password: e.target.value })}/>
 
           <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
             onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
