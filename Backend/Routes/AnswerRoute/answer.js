@@ -83,7 +83,7 @@ router.get('/depression/:id', (req, res) => {
 });
 
 router.post('/result', (req,res) =>{
-  const user_id = req.body.stress;
+  const user_id = req.body.user_id;
   const depression = req.body.depression;
   const anxiety = req.body.anxiety;
   const stress = req.body.stress;
