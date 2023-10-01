@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import Login from './pages/LoginPage/AdminLogin'
+import Register from './pages/LoginPage/Login'
 import Home from './pages/HomePage/Home'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import User from './pages/UserPage/User';
@@ -26,7 +27,6 @@ function App() {
               <Route path="chat"  element={<Chat />} />
               <Route path="notification"  element={<Notify />} />
               <Route path="profile"  element={<Profile />} />
-
           </Routes>
         </BrowserRouter>
       //</div>

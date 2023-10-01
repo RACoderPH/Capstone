@@ -13,18 +13,21 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   
   const [values, setValues] = useState({
-    fullname: null,
-    username: null,
-    email: null,
-    phone: null,
-    address: null,
- 
+    fullname: "",
+    username: "",
+    email: "",
+    phone: "",
+    address: "",
   });
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleFileChange =  (e) =>{
+    setUserData({...userData, image_file:  e.target.files[0]});
+  };
+  //Fetch Id
   useEffect(() => {
     const storedValue = localStorage.getItem('Username');
     // Retrieve the value from localStorage
@@ -38,7 +41,34 @@ const Profile = () => {
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
+  //Upload
+  const Upload = async (e) => {
+    const userId = localStorage.getItem('ID');
+    e.preventDefault();
   
+    // Create a FormData object to send both data and file
+    const formData = new FormData();
+    formData.append('image_file', userData.image_file); // Use the image_file from userData
+  
+    // Show a confirmation dialog
+    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+  
+    if (confirmUpdate) {
+      axios
+        .put(`https://mindmatters-ejmd.onrender.com/Upload/${userId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          alert('Success');
+          window.location.reload();
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  //Update
   const Update = async (e) => {
     const userId = localStorage.getItem('ID');
     e.preventDefault();
@@ -48,7 +78,7 @@ const Profile = () => {
   
     if (confirmUpdate) {
       axios
-        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
+        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
@@ -56,8 +86,6 @@ const Profile = () => {
         .catch((err) => console.log(err));
     }
   };
-  
-  
 
   return (
     <div className="profile">
@@ -70,8 +98,9 @@ const Profile = () => {
       <div className="UserContainer">
         <div className="userShow">
         <div className="centerImage">
-                <img
-                  src="https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=100"
+                  <img
+               src={`https://mindmatters-ejmd.onrender.com/images/${userData.image_file}`}
+               // Provide a default image URL
                   alt=""
                   className="userShowImg"
                 />
@@ -82,7 +111,11 @@ const Profile = () => {
               <p className="DisplayInfo">{userData.created_at}</p>
                
               <div className="centerButton">
-            <Button className="UploadPicture">Upload Picture</Button>
+              <div className="txtfield">
+              <label>select profile</label>
+                <input type='file' className='textBox' id='outlined-basic'onChange={handleFileChange}/>
+            </div>
+            <Button className="UploadPicture" onClick={Upload}>Upload Picture</Button>
           </div>
         </div>
         <div className="userUpdate">
@@ -107,7 +140,8 @@ const Profile = () => {
             
            
           </div>
-          <Button onClick={handleOpen}>Edit Info</Button>         
+          <Button onClick={handleOpen}>Edit Info</Button>     
+
           <Modal
             open={open}
             onClose={handleClose}
@@ -140,6 +174,45 @@ const Profile = () => {
               onChange={(e) => setValues({ ...values, address: e.target.value })}/>
             </div>
             <br/>
+         
+            <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
+              </Box>
+          </Modal>
+
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box className="box" >
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+            </div>
+
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+            </div>
+
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+            </div>
+
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
+              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
+            </div>
+
+            <div className="txtfield">
+            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
+              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
+            </div>
+            <br/>
+         
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
               </Box>
           </Modal>
