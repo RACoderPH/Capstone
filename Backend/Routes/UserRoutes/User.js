@@ -2,9 +2,22 @@ const nodemailer = require('nodemailer');
 const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
-
+const multer = require('multer');
+const path = require('path');
 const db = require('../database'); 
 
+
+const storage = multer.diskStorage({
+  destination:(req, file, cb)=>{
+    cb(null,'public/images')
+  },
+  filename:(req, file, cb)=>{
+    cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname));
+  }
+})
+const upload = multer({
+  storage:storage
+})
 
 // ...
 router.post('/register', (req, res) => {
@@ -33,7 +46,7 @@ router.post('/register', (req, res) => {
             const status = 'Offline';
             const emp_id = "";
             const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no,phone_number,address Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?,?,?,?,?)';
+            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no,Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?, ?, ?)';
             db.query(insertUserQuery, [fullname,username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
               if (insertErr) {
                 console.error('Failed to register user:', insertErr);
@@ -133,8 +146,6 @@ router.post('/register/app', (req, res) => {
     });
   });
 
-
-
   router.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -232,9 +243,10 @@ router.post('/register/app', (req, res) => {
   });
 
 //Update Profile 
+
 router.put("/profileUpdate/:id", (req, res) => {
   const UserId = req.params.id;
-  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `phone_number`= ?, `address`= ? WHERE id = ?";
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `phone_number`= ?, `address`= ?, WHERE id = ?";
 
   const values = [
     req.body.fullname,
@@ -242,6 +254,7 @@ router.put("/profileUpdate/:id", (req, res) => {
     req.body.email,
     req.body.phone,
     req.body.address,
+  
   ];
 
   db.query(Updatequery, [...values,UserId], (err, data) => {
@@ -249,6 +262,21 @@ router.put("/profileUpdate/:id", (req, res) => {
     return res.json(data);
   });
 });
+//Upload Image
+router.put("/Upload/:id",upload.single('image_file'), (req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `image_file`= ? WHERE id = ?";
+
+  const values = [
+    req.file.filename
+  ];
+
+  db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
 
 
 //Update User 

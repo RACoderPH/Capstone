@@ -35,6 +35,7 @@ socket.on("disconnect", () =>{
 
 // Connection to the database
 
+app.use(express.static('public'));
 const userRoute = require("./Routes/UserRoutes/User");
 app.use(userRoute);
 const question = require("./Routes/QuestionRoute/Question");
