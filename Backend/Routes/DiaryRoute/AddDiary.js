@@ -20,4 +20,16 @@ router.post('/AddDiary', (req, res) => {
   });
   });
 
+router.get('/Quotes', (req,res) => {
+  const query = 'SELECT * FROM motivation_tb';
+  db.query(query, (error, result) => {
+    if (error) {
+      console.error('Failed to fetch data:', error);
+      res.sendStatus(500);
+    } else {
+      res.send(result); // Send the JSON data as the response
+    }
+  });
+})
+
   module.exports = router;
