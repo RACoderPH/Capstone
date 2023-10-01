@@ -20,7 +20,7 @@ router.post('/AddDiary', (req, res) => {
   });
   });
 
-router.get('/Quotes', (req,res) => {
+router.get('/quotes', (req,res) => {
   const query = 'SELECT * FROM motivation_tb';
   db.query(query, (error, result) => {
     if (error) {
