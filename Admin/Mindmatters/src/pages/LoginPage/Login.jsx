@@ -5,7 +5,7 @@ import Home from '../HomePage/Home';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { colors } from '@mui/material';
-function Login() {
+function register() {
 
 const input = () => toast.warn('Please Fill-out the Field', {
   });
@@ -32,7 +32,7 @@ const userexist = () => toast.warn('User Already Exist', {
       if(passwordReg !== ConfirmpasswordReg){
         warning();
     }else{
-      Axios.post('https://mindmatters-ejmd.onrender.com/register', {
+      Axios.post('http://localhost:5000/register', {
         fullname: fullnameReg,
         username: usernameReg,
         email: emailReg,
@@ -237,4 +237,4 @@ theme="light"
   );
 }
 
-export default Login;
+export default register;
