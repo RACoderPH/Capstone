@@ -47,6 +47,9 @@ const User = () => {
     setSelectedUser(null);
     setOpen(false);
   };
+  // for closing modal
+  const [isUpdateConfirmed, setIsUpdateConfirmed] = useState(false);
+
 
   useEffect(() => {
     // Fetch user data from the backend API
@@ -55,6 +58,16 @@ const User = () => {
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
+
+   // Use useEffect to listen for changes in the confirmation state and close the modal
+   useEffect(() => {
+    if (isUpdateConfirmed) {
+      // Close the modal
+      handleClose();
+      // You can also perform any other actions you want after the update is confirmed
+    }
+  }, [isUpdateConfirmed]);
+
 
   // User Update
   const Updateuser = async (e, user) => {
@@ -69,6 +82,10 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
+          // Set the update confirmation state to true
+          setIsUpdateConfirmed(true);
+          // Reload the page after the update is confirmed
+          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
@@ -79,7 +96,7 @@ const User = () => {
     e.preventDefault();
 
     // Show a confirmation dialog
-    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+    const confirmUpdate = window.confirm('Are you sure you want to add this user?');
   
     if (confirmUpdate) {
        await axios
@@ -87,6 +104,10 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
+          // Set the update confirmation state to true
+          setIsUpdateConfirmed(true);
+          // Reload the page after the update is confirmed
+          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
@@ -103,6 +124,8 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
+          // Reload the page after the update is confirmed
+          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
@@ -123,20 +146,32 @@ const User = () => {
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
+          <span className="userUpdateTitle">Add New User</span>
+          <span className="txt">The information can be edited</span>
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
            onChange={(e) => setValues({ ...values, fullname: e.target.value })} />
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
            onChange={(e) => setValues({ ...values, username: e.target.value })} />
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
            onChange={(e) => setValues({ ...values, email: e.target.value })} />
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-password-input" label="Password"  margin="normal"
           onChange={(e) => setValues({ ...values, password: e.target.value })}/>
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
             onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
+          </div>
 
             <br />
             <Button className="modalBtn" variant="outlined" onClick={Adduser}>
@@ -183,18 +218,27 @@ const User = () => {
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
+          <span className="userUpdateTitle">Edit User Information</span>
+          <span className="txt">The information can be edited</span>
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
             onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
             onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
             onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+          </div>
 
+          <div className="txtfield">
           <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
              onChange={(e) => setValues({ ...values, stud_no: e.target.value })}/>
-
+          </div>
             <br />
             <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
               Save
