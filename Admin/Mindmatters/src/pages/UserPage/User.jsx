@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import './user.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import Navbar from '../../components/Navbar/Navbar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import axios from "axios";
+import axios from 'axios';
+import { DataGrid } from '@mui/x-data-grid';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const User = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
-  const [user, setUserData] = useState({});
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -50,7 +51,6 @@ const User = () => {
   // for closing modal
   const [isUpdateConfirmed, setIsUpdateConfirmed] = useState(false);
 
-
   useEffect(() => {
     // Fetch user data from the backend API
     fetch('https://mindmatters-ejmd.onrender.com/Student')
@@ -59,23 +59,25 @@ const User = () => {
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
-   // Use useEffect to listen for changes in the confirmation state and close the modal
-   useEffect(() => {
-    if (isUpdateConfirmed) {
-      // Close the modal
-      handleClose();
-      // You can also perform any other actions you want after the update is confirmed
-    }
-  }, [isUpdateConfirmed]);
+  // Use the userList state for DataGrid rows
+  const rows = userList.map((user) => ({
+    id: user.id,
+    Fullname: user.Fullname,
+    username: user.user_name,
+    Email: user.Email,
+    stud_no: user.stud_no,
+    staus: user.staus,
+    position: user.position,
+  }));
 
+  // ... (your update, add, and delete functions)
 
-  // User Update
-  const Updateuser = async (e, user) => {
+  const Updateuser = async (e) => {
     e.preventDefault();
 
     // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to update this user?');
-  
+
     if (confirmUpdate) {
       axios
         .put(`https://mindmatters-ejmd.onrender.com/userUpdate/${selectedUser}`, values)
@@ -91,15 +93,14 @@ const User = () => {
     }
   };
 
-  // User Add
   const Adduser = async (e) => {
     e.preventDefault();
 
     // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to add this user?');
-  
+
     if (confirmUpdate) {
-       await axios
+      await axios
         .post(`https://mindmatters-ejmd.onrender.com/register/app`, values)
         .then((res) => {
           console.log(res);
@@ -113,11 +114,10 @@ const User = () => {
     }
   };
 
-  // Delete User
   const Deleteuser = async (user) => {
     // Show a confirmation dialog
     const confirmDelete = window.confirm('Are you sure you want to Delete this user?');
-  
+
     if (confirmDelete) {
       await axios
         .delete(`https://mindmatters-ejmd.onrender.com/userDelete/${user.id}`)
@@ -133,121 +133,103 @@ const User = () => {
 
   return (
     <div className="user">
-      <Sidebar />
-      <div className="userContainer">
-        <br />
-        <br />
-        <Button className="modalBtn" variant="outlined" onClick={() => handleOpen1()}>Add User</Button>
-
-        <Modal
-          open={open1}
-          onClose={handleClose1}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box className="box">
-          <span className="userUpdateTitle">Add New User</span>
-          <span className="txt">The information can be edited</span>
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-           onChange={(e) => setValues({ ...values, fullname: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-           onChange={(e) => setValues({ ...values, username: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
-           onChange={(e) => setValues({ ...values, email: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-password-input" label="Password"  margin="normal"
-          onChange={(e) => setValues({ ...values, password: e.target.value })}/>
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
-            onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
-          </div>
-
-            <br />
-            <Button className="modalBtn" variant="outlined" onClick={Adduser}>
-              Save
-            </Button>
-          </Box>
-        </Modal>
-
-        <div className="listContainer">   
-          <table style={{ flex: 1 }}>
-            <thead>
-              <tr>
-                <th>Full name</th>
-                <th>User Name</th>
-                <th>Email</th>
-                <th>Student ID</th>
-                <th>Status</th>
-                <th>Position</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userList.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.Fullname}</td>
-                  <td>{user.user_name}</td>
-                  <td>{user.Email}</td>
-                  <td>{user.stud_no}</td>
-                  <td>{user.staus}</td>
-                  <td>{user.position}</td>
-                  <td className="btns">
-                    <button onClick={() => handleOpen(user)}>Edit</button>
-                    <button onClick={() => Deleteuser(user)}>Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <Sidebar />
+    <div className="userContainer">
+      <br />
+      <br />
+      <Button className="modalBtn" variant="outlined" onClick={() => handleOpen1()}>
+        Add User
+      </Button>
+      <div style={{ width: '99%', padding: '10px' }}>
+        <div style={{ height: 550, width: '100%' }}>
+          {/* Use the rows from userList */}
+          <DataGrid
+            rows={rows}
+            columns={[
+              { field: 'id', headerName: 'ID', flex: 1 },
+              { field: 'Fullname', headerName: 'Full Name', flex: 7 },
+              { field: 'username', headerName: 'Username', flex: 3 },
+              { field: 'Email', headerName: 'Email', flex: 5 },
+              { field: 'stud_no', headerName: 'Student ID', flex: 5 },
+              { field: 'staus', headerName: 'Status', flex: 2 },
+              { field: 'position', headerName: 'Position', flex: 3 },
+              {
+                field: 'actions',
+                headerName: 'Actions',
+                flex: 4,
+                renderCell: (params) => (
+                  <div className="btns">
+                    <Button variant="outlined"  onClick={() => handleOpen(params.row)}>
+                      Edit
+                    </Button>
+                    <IconButton aria-label="delete" size="large"onClick={() => Deleteuser(params.row)}>
+                    <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                  </div>
+                ),
+              },
+            ]}
+          />
         </div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box className="box">
+      </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="box">
           <span className="userUpdateTitle">Edit User Information</span>
           <span className="txt">The information can be edited</span>
           <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-            onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
+            <TextField
+              className="textBox"
+              id="outlined-basic"
+              label="Full Name"
+              variant="outlined"
+              onChange={(e) => setValues({ ...values, fullname: e.target.value })}
+            />
           </div>
 
           <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-            onChange={(e) => setValues({ ...values, username: e.target.value })}/>
+            <TextField
+              className="textBox"
+              id="outlined-basic"
+              label="Username"
+              variant="outlined"
+              name="user_name"
+              onChange={(e) => setValues({ ...values, username: e.target.value })}
+            />
           </div>
 
           <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
-            onChange={(e) => setValues({ ...values, email: e.target.value })}/>
+            <TextField
+              className="textBox"
+              id="outlined-basic"
+              label="Email"
+              variant="outlined"
+              onChange={(e) => setValues({ ...values, email: e.target.value })}
+            />
           </div>
 
           <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
-             onChange={(e) => setValues({ ...values, stud_no: e.target.value })}/>
+            <TextField
+              className="textBox"
+              id="outlined-basic"
+              label="Student ID"
+              variant="outlined"
+              onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
+            />
           </div>
-            <br />
-            <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
-              Save
-            </Button>
-          </Box>
-        </Modal>
-      </div>
+          <br />
+          <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
+            Save
+          </Button>
+        </Box>
+      </Modal>
     </div>
-  );
+  </div>
+);
 };
 
 export default User;

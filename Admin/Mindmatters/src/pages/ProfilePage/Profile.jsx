@@ -92,7 +92,7 @@ const Profile = () => {
             <div className="profileContainer">
 
       <div className="containers">        
-      <h1 className="colTitle">Account</h1>
+     
 
       <div className="UserContainer">
         <div className="userShow">
@@ -111,7 +111,7 @@ const Profile = () => {
                
               <div className="centerButton">
               <div className="txtfield">
-              <label>select profile</label>
+              <label>Select profile</label>
                 <input type='file'  id='outlined-basic'onChange={handleFileChange}/>
             </div>
             <Button className="UploadPicture" onClick={Upload}>Upload Picture</Button>

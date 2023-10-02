@@ -61,10 +61,10 @@ const Annoucement = () => {
           <div className="form-group">
             <TextField
               id="outlined-basic"
-              className="custom-width"
               label="Title"
               variant="outlined"
               margin="normal"
+              className="txtWidth"
               value={Title}
               onChange={handleTitleChange}
             />
@@ -72,10 +72,10 @@ const Annoucement = () => {
           <div className="form-group">
             <TextField
               id="outlined-basic"
-              className="custom-width"
               label="About What?"
               variant="outlined"
               margin="normal"
+              className="txtWidth"
               value={Message}
               onChange={handleMessageChange}
             />
@@ -83,8 +83,8 @@ const Annoucement = () => {
           <div className="form-group">
             <TextField
               id="outlined-basic"
-              className="custom-width"
               label="Where it will be held?"
+              className="txtWidth"
               variant="outlined"
               margin="normal"
             />
@@ -95,7 +95,7 @@ const Annoucement = () => {
                 label="Select Date"
                 value={selectedDate}
                 onChange={handleDateTimeChange}
-                className="custom-width"
+                className="txtWidth"
                 margin="normal"
               />
             </LocalizationProvider>

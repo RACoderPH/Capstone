@@ -161,7 +161,7 @@ theme="light"
       <br/>
       <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => handleJustifyClick('tab1')} active={justifyActive === 'tab1'}>
+          <MDBTabsLink >
             Login as Admin
           </MDBTabsLink>
         </MDBTabsItem>
@@ -179,10 +179,7 @@ theme="light"
               setPassword(e.target.value)
               }}/>
 
-          <div className="d-flex justify-content-between mx-4 mb-4">
-            <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
-            <a href="!#">Forgot password?</a>
-          </div>
+          
 
           <MDBBtn className="mb-4 w-100"  onClick={login}>Sign in</MDBBtn>
        
