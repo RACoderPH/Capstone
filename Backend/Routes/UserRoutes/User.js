@@ -380,6 +380,7 @@ router.put("/userUpdate/:id", (req, res) => {
   });
 //Get one user Info
   router.get('/user/:id', (req, res) => {
+    
     const userId = req.params.id; // Get the user ID from the request parameters
     const query = 'SELECT * FROM user_info WHERE id = ?'; // Query modified to include the WHERE clause
     db.query(query, [userId], (error, result) => { // Pass the user ID as a parameter to the query
@@ -395,6 +396,7 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
+  
   //Count the Student
   router.get('/student_count', (req, res) => {
     const query = 'SELECT COUNT(*) AS student_count FROM user_info WHERE position = "student"';
@@ -408,4 +410,16 @@ router.put("/userUpdate/:id", (req, res) => {
     });
   });
   
+  router.get('/verification', (req,res) => {
+   const verify = "SELECT `verification_code` FROM `user_info`";
+
+    db.query(verify,(error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
+      }
+    });
+  });
   module.exports = router;
