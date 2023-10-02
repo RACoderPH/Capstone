@@ -410,7 +410,7 @@ router.put("/userUpdate/:id", (req, res) => {
     });
   });
   //Verification_code
-  router.get('/verification:user_name', (req,res) => {
+  router.get('/verification/:user_name', (req,res) => {
     const username = req.params.username;
    const verify = "SELECT `verification_code` FROM `user_info` WHERE user_name = ?";
 
