@@ -86,19 +86,18 @@ const Profile = () => {
         .catch((err) => console.log(err));
     }
   };
-
   return (
     <div className="profile">
         <Sidebar/>
             <div className="profileContainer">
 
-      <div className="container">        
+      <div className="containers">        
       <h1 className="colTitle">Account</h1>
 
       <div className="UserContainer">
         <div className="userShow">
         <div className="centerImage">
-                  <img
+               <img
                src={`https://mindmatters-ejmd.onrender.com/images/${userData.image_file}`}
                // Provide a default image URL
                   alt=""
@@ -113,7 +112,7 @@ const Profile = () => {
               <div className="centerButton">
               <div className="txtfield">
               <label>select profile</label>
-                <input type='file' className='textBox' id='outlined-basic'onChange={handleFileChange}/>
+                <input type='file'  id='outlined-basic'onChange={handleFileChange}/>
             </div>
             <Button className="UploadPicture" onClick={Upload}>Upload Picture</Button>
           </div>
@@ -140,8 +139,7 @@ const Profile = () => {
             
            
           </div>
-          <Button onClick={handleOpen}>Edit Info</Button>     
-
+          <Button onClick={handleOpen}>Edit Info</Button>         
           <Modal
             open={open}
             onClose={handleClose}
@@ -149,6 +147,9 @@ const Profile = () => {
             aria-describedby="modal-modal-description"
           >
             <Box className="box" >
+            <span className="userUpdateTitle">Update Profile</span>
+          <span className="txt">The information can be edited</span>
+              <div className="txtfield-container">
             <div className="txtfield">
             <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
               onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
@@ -173,47 +174,10 @@ const Profile = () => {
             <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
               onChange={(e) => setValues({ ...values, address: e.target.value })}/>
             </div>
+            
             <br/>
-         
             <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
-              </Box>
-          </Modal>
-
-
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box className="box" >
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
             </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
-              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
-              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
-              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
-            </div>
-            <br/>
-         
-            <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
               </Box>
           </Modal>
               

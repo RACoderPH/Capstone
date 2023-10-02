@@ -26,7 +26,7 @@
   font-weight: 500;
   text-align: center;
 }
-
+.file
 .UserContainer {
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +36,6 @@
 .userShow {
   flex: 1;
   padding: 20px;
-  margin-bottom: 20px;
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 }
 
@@ -106,12 +105,17 @@
 .box {
   position: relative;
   width: 100%;
-  max-width: 800px;
-  margin: 10px auto;
+  max-width: 700px;
+  margin: 20px auto;
   padding: 90px;
   background: #fff;
-  border: 2px solid #ccc;
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  border: 2px solid #b8b9bd;
+  box-shadow: 0px 0px 15px -10px rgba(100, 98, 98, 0.75);
+  padding: 30px; /* Reduce padding for a smaller box */
+  flex-direction: column; /* Center contents vertically */
+  align-items: center; /* Center contents horizontally */
+  border-radius: 10px; /* Add border radius */
+  
 }
 
 .textBox {
@@ -122,19 +126,45 @@
   margin-top: 10px;
   margin-bottom: 10px;
   align-items: center;
+  width: 100%; 
 }
 
 .txtfield{
-  margin: 10px;
+  margin: 10px 10px;
+  display: inline-flex;
   flex-wrap: wrap;
-  flex: 0 0 calc(50% - 20px);
+  flex: 0 0 calc(50% - 30px);
   align-items: center;
   display: flex;
+  width: 100%; /* Make text fields full width */
+  display: inline-flex; /* Display text fields in a single row */
+  width: calc(50% - 80px); /* Set width to 50% minus margins */
+}
+
+.txtfield-container {
+  display: flex;
+  flex-direction: column; /* Center text fields vertically */
+  align-items: center; /* Center text fields horizontally */
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  flex-wrap: wrap; /* Allow text fields to wrap to the next line */
+  justify-content: space-between; /* Add space between text fields */
 }
 
 .modalBtn {
   align-items: center;
+  margin-top: 10px; /* Add margin to separate from text fields */
+  margin-left: 20px;
+  width: 20%;
+  transition: background-color 0.3s ease;
 }
+.modalBtn:hover {
+  background-color: #96a197; /* Change the background color when hovered */
+  color: #0e0ecf; /* Change the text color for better visibility */
+}
+
+
 
 /* Media Queries */
 @media (max-width: 768px) {
