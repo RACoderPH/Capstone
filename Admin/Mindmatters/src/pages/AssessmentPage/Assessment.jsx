@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
+
 const Assessment = () => {
   const [Question, setlist] = useState([]);
   const [open, setOpen] = React.useState(false);
@@ -68,7 +69,10 @@ const Assessment = () => {
         <br />
         <div className='TopContainer'>
           <h2>Mind Matters Assessment</h2>
+          <center>
           <h3>DASS - 42</h3>
+          </center>
+          
           <button onClick={handleOpen}>Add</button>
         </div>
         <br />
@@ -79,13 +83,19 @@ const Assessment = () => {
     <div className="questionContainer" key={question_list.id}>
       <h3>Question: {question_list.Question} </h3>
       <h4>Category: {question_list.category}</h4>
+      
+
       <ol className='list'>
         <li>{question_list.option1}</li>
         <li>{question_list.option2}</li>
         <li>{question_list.option3}</li>
         <li>{question_list.option4}</li>
+        
       </ol>
+      
+      
       <input type="submit" value="Edit" className='btn'/>
+      
     </div>
   ))
 )}
@@ -98,7 +108,7 @@ const Assessment = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
+            <Box sx={style} >
               <input
                 type="text"
                 name=""
@@ -159,6 +169,7 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  padding: '20px',
 };
 
 export default Assessment;
