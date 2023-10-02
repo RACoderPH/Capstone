@@ -78,7 +78,7 @@ const Profile = () => {
   
     if (confirmUpdate) {
       axios
-        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
+        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
