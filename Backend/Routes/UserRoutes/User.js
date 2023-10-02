@@ -414,7 +414,7 @@ router.put("/userUpdate/:id", (req, res) => {
   // Use req.params.user_name to match the route parameter
     const verify = "SELECT `verification_code` FROM `user_info`";
   
-    db.query(verify, username, (error, result) => {
+    db.query(verify, (error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
         res.sendStatus(500);

@@ -7,11 +7,15 @@ router.post('/AddDiary', (req, res) => {
   const title = req.body.title;
     const description = req.body.description;
     const user_id = req.body.user_id;
-    const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Zero-padding the month
+    const day = String(currentDate.getDate()).padStart(2, '0'); // Zero-padding the day
+    const formattedDate = `${year}-${month}-${day}`;
 
   insertDiary = "INSERT INTO `Diary`( `title`, `description`, `user_id`, `date`) VALUES (?, ? ,?,?)"
   
-  db.query(insertDiary, [title,description,user_id,createdAt], (insertErr, insertResult) => {
+  db.query(insertDiary, [title,description,user_id,formattedDate], (insertErr, insertResult) => {
     if (insertErr) {
       console.error('Failed to insert Diary:', insertErr);
       res.send({ message: 'Server error' });
