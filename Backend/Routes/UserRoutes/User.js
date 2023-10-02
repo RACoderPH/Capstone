@@ -410,11 +410,11 @@ router.put("/userUpdate/:id", (req, res) => {
     });
   });
   //Verification_code
-  router.get('/verification/:user_name', (req,res) => {
-    const username = req.params.username;
-   const verify = "SELECT `verification_code` FROM `user_info` WHERE user_name = ?";
-
-    db.query(verify,username,(error, result) => {
+  router.get('/verification/:user_name', (req, res) => {
+    const username = req.params.user_name; // Use req.params.user_name to match the route parameter
+    const verify = "SELECT `verification_code` FROM `user_info` WHERE user_name = ?";
+  
+    db.query(verify, username, (error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
         res.sendStatus(500);
@@ -423,4 +423,5 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
+  
   module.exports = router;
