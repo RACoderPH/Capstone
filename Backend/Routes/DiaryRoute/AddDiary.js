@@ -21,7 +21,21 @@ router.post('/AddDiary', (req, res) => {
   });
   });
 
+ router.get('/MyDiary/:id', (req,res) => {
+  const userId = req.params.id;
+  const query = 'SELECT * FROM Diary WHERE user_id = ?';
+  db.query(query,userId, (error, result) => {
+    if (error) {
+      console.error('Failed to fetch data:', error);
+      res.sendStatus(500);
+    } else {
+      res.send(result); // Send the JSON data as the response
+    }
+  });
+ }) ;
+
 router.get('/quotes', (req,res) => {
+  
   const query = 'SELECT * FROM motivation_tb';
   db.query(query, (error, result) => {
     if (error) {
