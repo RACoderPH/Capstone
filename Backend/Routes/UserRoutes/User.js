@@ -414,7 +414,7 @@ router.put("/userUpdate/:id", (req, res) => {
     const username = req.query.username; // Retrieve the username from the query parameter
   
     // Use the retrieved username to fetch verification codes
-    const verify = `SELECT verification_code FROM user_info WHERE username = '${username}'`;
+    const verify = `SELECT verification_code FROM user_info WHERE user_name = '${username}'`;
   
     db.query(verify, (error, result) => {
       if (error) {
