@@ -409,11 +409,12 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
-  
-  router.get('/verification', (req,res) => {
-   const verify = "SELECT `verification_code` FROM `user_info`";
+  //Verification_code
+  router.get('/verification:user_name', (req,res) => {
+    const username = req.params.username;
+   const verify = "SELECT `verification_code` FROM `user_info` WHERE user_name = ?";
 
-    db.query(verify,(error, result) => {
+    db.query(verify,username,(error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
         res.sendStatus(500);
