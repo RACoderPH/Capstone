@@ -173,6 +173,46 @@ const User = () => {
         </div>
       </div>
       <Modal
+          open={open1}
+          onClose={handleClose1}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
+          <span className="userUpdateTitle">Add New User</span>
+          <span className="txt">The information can be edited</span>
+          <div className="txtfield">
+          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
+           onChange={(e) => setValues({ ...values, fullname: e.target.value })} />
+          </div>
+
+          <div className="txtfield">
+          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
+           onChange={(e) => setValues({ ...values, username: e.target.value })} />
+          </div>
+
+          <div className="txtfield">
+          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
+           onChange={(e) => setValues({ ...values, email: e.target.value })} />
+          </div>
+
+          <div className="txtfield">
+          <TextField className="textBox" type="password" id="outlined-password-input" label="Password"  margin="normal"
+          onChange={(e) => setValues({ ...values, password: e.target.value })}/>
+          </div>
+
+          <div className="txtfield">
+          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
+            onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
+          </div>
+
+            <br />
+            <Button className="modalBtn" variant="outlined" onClick={Adduser}>
+              Save
+            </Button>
+          </Box>
+        </Modal>
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
