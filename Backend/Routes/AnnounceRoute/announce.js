@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const db = require('../database'); 
+
 router.post('/announce', (req,res) =>{
     const title = req.body.title;
     const what = req.body.what;
