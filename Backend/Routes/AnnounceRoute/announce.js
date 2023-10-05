@@ -3,11 +3,14 @@ const router = express.Router();
 
 router.post('/announce', (req,res) =>{
     const title = req.body.title;
-    const message = req.body.message;
+    const what = req.body.what;
+    const where = req.body.where;
+    const when = req.body.when;
+
   
-    const insertAnnouncement = 'INSERT into announce_tb (title,message) VALUES (?, ?)' ; 
+    const insertAnnouncement = 'INSERT into announcement (title,what_announce,where_announce,when_announce) VALUES (?, ?, ? ,?)' ; 
   
-    db.query(insertAnnouncement, [title,message], (insertErr, insertResult) => {
+    db.query(insertAnnouncement, [title,what,where,when], (insertErr, insertResult) => {
       if (insertErr) {
         console.error('Failed to insert announcement:', insertErr);
         res.send({ message: 'Server error' });
