@@ -100,4 +100,20 @@ router.post('/result', (req,res) =>{
       }
     });
 })
+
+router.get('/student_result:id', (req,res) => {
+  const userId = req.params.id;
+
+  const getAnxiety = 'SELECT * FROM `student_result` WHERE `user_id` = ?';
+
+  db.query(getAnxiety, userId, (error, result) => {
+    if (error) {
+      console.error('Failed to fetch anxiety data:', error);
+      res.status(500).json({ error: 'Failed to result data' });
+    } else {
+      
+        res.json(result); // Send the JSON data as the response
+    }
+  })
+});
   module.exports = router;

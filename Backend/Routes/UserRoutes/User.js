@@ -124,9 +124,10 @@ router.post('/register/app', (req, res) => {
               const verificationToken = generateVerificationToken();
               const position = 'Student';
               const status = 'Offline';
+              const room_id = Math.floor(10000 + Math.random() * 90000);
               const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-              const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-              db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status,verificationToken], (insertErr, insertResult) => {
+              const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code,room_id) VALUES (? ,?, ?, ?, ?, ?, ?, ?, ?, ?)';
+              db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status,verificationToken, room_id], (insertErr, insertResult) => {
                 if (insertErr) {
                   console.error('Failed to register user:', insertErr);
                   res.send({ message: 'Server error' });
