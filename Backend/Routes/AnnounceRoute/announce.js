@@ -25,9 +25,9 @@ router.post('/announce', (req,res) =>{
   });
 router.get('/announcement',(req,res) =>{
 
-  const getAnxiety = 'SELECT * FROM `announcement`';
+  const announce = 'SELECT * FROM `announcement`';
 
-  db.query(getAnxiety, userId, (error, result) => {
+  db.query(announce,(error, result) => {
     if (error) {
       console.error('Failed to fetch announcement data:', error);
       res.status(500).json({ error: 'Failed to result data' });
