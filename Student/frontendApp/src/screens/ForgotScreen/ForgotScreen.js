@@ -1,22 +1,44 @@
 
 import React from 'react'
-import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid} from 'react-native'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid} from 'react-native'
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../../../assets/images/Mindmatters.png'
+import LottieView from 'lottie-react-native';
+
+const {width,height} = Dimensions.get('window');
 const ForgotScreen = () => {
     const navigation = useNavigation();
-    const {height} = useWindowDimensions();
+   
 
-    const SubmitEmail = () =>{
-        ToastAndroid.show('Submit Email',ToastAndroid.SHORT);
-    }
+    const SubmitEmail = async () => {
+      try {
+        const response = await axios.post('http://your-server-url/forgot', {
+          email: email, // Pass the email to the server
+        });
+  
+        // Check the response message from the server
+        if (response.data.message === 'exists') {
+          ToastAndroid.show('Email exists', ToastAndroid.SHORT);
+          navigation.navigate('OTP');
+        } else {
+          ToastAndroid.show('Email does not exist', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        console.error('Error submitting email:', error);
+        ToastAndroid.show('Error submitting email', ToastAndroid.SHORT);
+      }
+    };
   return (
         <View style={styles.root}>
        <View style={styles.circle} />
        <View style={styles.circle2} />
-      <Image source={Logo} style={[styles.logo, {height:height * 0.3}]}  resizeMode='contain'/>
+       <LottieView
+          source={require('../../../assets/animation/forgot.json')}
+          autoPlay
+          loop
+          style={{ width: width, height: width }}
+        />
       <CustomInputs 
        mode="outlined"
        label="Email"
