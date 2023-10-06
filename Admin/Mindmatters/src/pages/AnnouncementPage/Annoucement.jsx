@@ -14,16 +14,21 @@ import Button from '@mui/material/Button';
 
 const Annoucement = () => {
   const [Title, setTitle] = useState('');
-  const [Message, setMessage] = useState('');
+  const [what, setWhat] = useState('');
+  const [where, setWhere] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17T15:30'));
 
   const Messagebtn = () => {
-    if (Title === '' || Message === '') {
+    if (Title === '' || what === '' || where == '') {
       alert('Fill fields');
     } else {
+      const formattedDate = selectedDate.format('YYYY-MM-DD HH:mm:ss');
+
       Axios.post('https://mindmatters-ejmd.onrender.com/announce', {
         title: Title,
-        message: Message,
+        what: what,
+        where: where,
+        when: formattedDate,
       })
         .then((response) => {
           console.log(response);
@@ -45,7 +50,11 @@ const Annoucement = () => {
   };
 
   const handleMessageChange = (event) => {
-    setMessage(event.target.value);
+    setWhat(event.target.value);
+  };
+
+  const handleWhereChange = (event) => {
+    setWhere(event.target.value);
   };
 
   const handleDateTimeChange = (newValue) => {
@@ -76,7 +85,7 @@ const Annoucement = () => {
               variant="outlined"
               margin="normal"
               className="txtWidth"
-              value={Message}
+              value={what}
               onChange={handleMessageChange}
             />
           </div>
@@ -87,6 +96,8 @@ const Annoucement = () => {
               className="txtWidth"
               variant="outlined"
               margin="normal"
+              value={where}
+              onChange={handleWhereChange}
             />
           </div>
           <div className="form-group">
