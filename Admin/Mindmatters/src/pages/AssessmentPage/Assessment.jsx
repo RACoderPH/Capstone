@@ -97,6 +97,8 @@ const Assessment = () => {
             console.log('Server Error');
           } else if (response.data.message === 'Inserted') {
             console.log('Inserted');
+            window.location.reload(); // Reload the page after successful update
+            
           }
         })
         .catch((error) => {
@@ -105,7 +107,7 @@ const Assessment = () => {
         });
   
       handleClose1(); // Close the modal after submitting
-      window.location.reload(); // Reload the page after successful update
+        
     }
   };
 
