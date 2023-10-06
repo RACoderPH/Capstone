@@ -296,10 +296,10 @@ router.put("/userUpdate/:id", (req, res) => {
   const values = [
     req.body.fullname,
     req.body.username,
-    req.body.phone,
-    req.body.address,
     req.body.email,
     req.body.stud_no,
+    req.body.phone,
+    req.body.address,
   ];
 
   db.query(Updatequery, [...values,UserId], (err, data) => {
