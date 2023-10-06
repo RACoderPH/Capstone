@@ -6,9 +6,34 @@ import Widget from "../../components/Widget/Widget";
 import Chart from "../../components/Chart/Chart";
 import User from "../UserPage/User";
 import axios from "axios";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  BarChart,
+  XAxis,
+  YAxis,
+  Legend,
+  CartesianGrid,
+  Bar,
+} from "recharts";
 
 function Home() {
   const [userList, setUserList] = useState([]);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const data = [
+    { name: "Stress", users: 2000000000 },
+    { name: "Anxiety", users: 1500000000 },
+    { name: "Depression", users: 1000000000 },
+  ];
 
   useEffect(() => {
     // Fetch user data from the backend API
@@ -58,7 +83,7 @@ function Home() {
                   <td>{user.status}</td>
                   <td>{user.position}</td>
             <td className="btns">
-              <button>View</button>
+              <button onClick={handleOpen}>View</button>
             </td>
           </tr>
   ))}
@@ -66,6 +91,37 @@ function Home() {
     </table>
         </div>
       </div>
+      <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
+          <span className="userUpdateTitle">User Results</span>
+          <span className="txt">The information can be edited</span>
+          
+
+          <PieChart width={400} height={400}>
+          <Pie
+            dataKey="users"
+            isAnimationActive={false}
+            data={data}
+            cx={200}
+            cy={200}
+            outerRadius={80}
+            fill="#8884d8"
+            label
+          />
+          <Tooltip />
+          </PieChart>
+
+            <br />
+            <Button className="modalBtn" variant="outlined" >
+              Save
+            </Button>
+          </Box>
+        </Modal>
     </div>
   );
 }
