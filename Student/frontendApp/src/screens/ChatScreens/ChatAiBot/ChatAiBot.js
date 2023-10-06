@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   View,
   Text,
@@ -10,117 +10,114 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { GiftedChat } from 'react-native-gifted-chat'
+import axios from 'axios';
+import LottieView from 'lottie-react-native';
 const {width,height} = Dimensions.get('window');
 
 const ChatAiBot = () => {
-  const [currentMessage, setCurrentMessage] = useState('');
-  const [messageList, setMessageList] = useState([]);
-  const [room, setRoom] = useState('12345');
-  const [username, setUsername] = useState('');
+  const [messages, setMessages] = useState([])
 
-  useEffect(() => {
-    AsyncStorage.getItem('username').then((value) => {
-      if (value) {
-        setUsername(value);
+  const chat_gpt_api = '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';
+
+  const handleSend = async (newMessages = []) => {
+    try {
+      if (newMessages.length === 0) {
+        return; // No messages to send
       }
-    });
-  }, []);
-
-
+  
+      const userMessage = newMessages[0];
+      if (!userMessage || !userMessage.text) {
+        return; // Invalid user message
+      }
+  
+      setMessages(previousMessages => GiftedChat.append(previousMessages, userMessage));
+      const messageText = userMessage.text.toLowerCase();
+      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep','hi','psychiatry',
+      'psychology','therapy/counceling','suicide','stigma','self-care','medication',
+      'trauma','prevention','crisis intervention'];
+  
+      if (!keywords.some(keyword => messageText.includes(keyword))) {
+        const botMessage = {
+          _id: new Date().getTime() + 1,
+          text: "I'm your MiMa bot, ask me anything related to mental health",
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'MiMa Bot'
+          },
+        };
+        setMessages(previousMessages => GiftedChat.append(previousMessages, botMessage));
+        return;
+      }
+  
+      const response = await axios.post(
+        'https://api.openai.com/v1/engines/text-babbage-001/completions',
+        {
+          prompt: `Get me some advice for ${messageText}`,
+          max_tokens: 1024,
+          temperature: 0.5,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${chat_gpt_api}`,
+          },
+        }
+      );
+  
+      if (response && response.data && response.data.choices && response.data.choices.length > 0) {
+        const information = response.data.choices[0].text.trim();
+        const botMessage = {
+          _id: new Date().getTime() + 2,
+          text: information,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'MiMa Bot',
+          },
+        };
+        setMessages(previousMessages => GiftedChat.append(previousMessages, botMessage));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <FlatList
-       data={messageList}
-       keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => (
-         <View
-          
-         >
-           <Text></Text>
-           <Text>
-             
-           </Text>
-         </View>
-       )}
-      />
+    <View style={{width:width* 1,height:height,color:'black'}} > 
+      <View style={{
+          flexDirection:'row',
+          backgroundColor:'white',
+          padding:5,
+          alignItems:'center',
+          justifyContent:'center',
+          borderBottomWidth:0.2,
+          marginBottom:5
+      }}>
+         <LottieView 
+         source={require('../../../../assets/animation/chat-bot.json')}
+          autoPlay 
+          loop 
+          style={{ width: 50, height: 50 }}/>
+        <Text style={{fontSize:22,fontWeight:'500',color:'black'}}>MiMa Bot</Text>
+        </View>
+        <GiftedChat
+      messages={messages}
+      onSend={messages => handleSend(messages)}
+      user={{
+        _id: 1
+      }}
+    />
+    </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Type your message..."
-          value={currentMessage}
-          onChangeText={(text) => setCurrentMessage(text)}
-        />
-        <TouchableOpacity style={styles.sendButton} >
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
+
+  
+  )
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height:height,
-    backgroundColor: 'white',
-  },
-  messageContainer: {
-    borderRadius: 5,
-    padding: 5,
-    margin:10,
-    marginBottom: 8,
-  },
-  sentMessage: {
-    backgroundColor: 'gray',
-    alignSelf: 'flex-end', // Align to the right for user's own messages
-  },
-  receivedMessage: {
-    backgroundColor: '#0084ff',
-    alignSelf: 'flex-start', // Align to the left for received messages
-  },
-  messageText: {
-    fontSize: 16,
-    fontWeight:'500',
-    color: 'white', // Set text color for received messages
-  },
-  inputContainer: {
-    width:width*1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    borderWidth: 1,
-    marginLeft: 1,
-    marginRight: 5,
-    marginBottom: 20,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-  },
-  sendButton: {
-    padding: 15,
-    backgroundColor: '#0084ff',
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
-  },
-  sendButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  from:{
-    fontSize:12,
-    color:'white',
-    fontWeight:'300'
-  }
+ 
 });
 
-export default ChatAiBot;
+export default ChatAiBot

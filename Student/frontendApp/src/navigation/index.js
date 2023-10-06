@@ -18,6 +18,9 @@ import TestingScreen from '../screens/TestingScreen';
 import Instruction from '../screens/TestScreen/Instruction/Instruction';
 import Result from '../screens/TestScreen/Result/Result';
 import ChatAi from '../screens/ChatScreens/ChatAiBot/ChatAiBot';
+import AboutScreen from '../screens/AboutScreen';
+import VerificationScreen from '../screens/SignUpScreen/VerificationScreen/VerificationScreen';
+import TermsScreen from '../screens/TermsAndCondition/TermsScreen';
 
 
 
@@ -39,15 +42,15 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
-      <Stack.Screen name="Ai" component={ChatAi} />
+    
       <Stack.Screen name="Journal" component={JournalScreens} />
+      <Stack.Screen name="Testing" component={TestingScreen} />
+      
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Homes" component={HomeScreen} />  
-        <Stack.Screen name="Testing" component={TestingScreen} />
         <Stack.Screen name="Started" component={GetStarted} />
-      
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
         <Stack.Screen name="Breathe1" component={Breathe1} />
@@ -55,8 +58,11 @@ const Navigation = () => {
         <Stack.Screen name="Edit" component={EditProfile} />
         <Stack.Screen name="ChatBot" component={Chat} />
         <Stack.Screen name="Instruction" component={Instruction} />
-        <Stack.Screen name="Result" component={Result} />  
- 
+        <Stack.Screen name="Result" component={Result} /> 
+        <Stack.Screen name="Ai" component={ChatAi} />
+        <Stack.Screen name="About" component={AboutScreen} />  
+        <Stack.Screen name="verify" component={VerificationScreen} />  
+        <Stack.Screen name="Terms" component={TermsScreen} />  
       </Stack.Navigator>
     </NavigationContainer>
   );
