@@ -65,6 +65,11 @@ function sendVerificationEmail(email, verificationLink) {
               padding: 10px;
               border-radius: 5px;
             }
+            .code{
+              color: #00000;
+              font-size: 14px;
+              text-align: center;
+            }
           </style>
         </head>
         <body>
@@ -72,7 +77,7 @@ function sendVerificationEmail(email, verificationLink) {
             <h1>Forgot Password</h1>
             <p><strong>Do not share this code with anyone:</strong></p>
             <div class="code-container">
-            <a href="${verificationLink}">${verificationLink}</a>
+            <p class="code">${verificationLink}</p>
             </div>
           </div>
         </body>
