@@ -101,7 +101,7 @@ router.post('/result', (req,res) =>{
     });
 })
 
-router.get('/student_result:id', (req,res) => {
+router.get('/student_result/:id', (req,res) => {
   const userId = req.params.id;
 
   const getAnxiety = 'SELECT * FROM `student_result` WHERE `user_id` = ?';
