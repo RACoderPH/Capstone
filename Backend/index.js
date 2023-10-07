@@ -46,6 +46,8 @@ const answer = require("./Routes/AnswerRoute/answer");
 app.use(answer);
 const diaries = require("./Routes/DiaryRoute/AddDiary")
 app.use(diaries);
+const forgot = require("./Routes/ForgotRoute/forgot")
+app.use(forgot);
 // Create an HTTP server
 
 
