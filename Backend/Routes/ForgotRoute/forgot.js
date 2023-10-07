@@ -5,8 +5,14 @@ const db = require('../database');
 
 
 function generateVerificationToken() {
-  // Generate a random token
-  const token = Math.random().toString(36).substr(2);
+  // Generate a random 6-digit number
+  const min = 100000; // Minimum value (inclusive)
+  const max = 999999; // Maximum value (inclusive)
+  const randomSixDigitNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  
+  // Convert it to a string
+  const token = randomSixDigitNumber.toString();
+  
   return token;
 }
 
