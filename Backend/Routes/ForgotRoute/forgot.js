@@ -5,7 +5,12 @@ const db = require('../database');
 
 
 router.post('/forgot', (req, res) => {
-  const email = req.body.email.trim().toLowerCase(); // Trim and convert to lowercase
+  const email = (req.body.email || '').trim().toLowerCase(); // Trim and convert to lowercase
+
+  if (!email) {
+    // Handle the case where the email is missing or empty
+    return res.status(400).json({ error: 'Email is missing or empty' });
+  }
 
   const checkEmailQuery = 'SELECT * FROM `user_info` WHERE LOWER(Email) = ?'; // Use LOWER for case-insensitive comparison
 
@@ -24,6 +29,7 @@ router.post('/forgot', (req, res) => {
     }
   });
 });
+
 
   
 
