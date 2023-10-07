@@ -16,10 +16,10 @@ router.post('/forgot', (req, res) => {
       } else {
         if (results.length > 0) {
           // If there are results, the email exists
-          res.message({ message: 'exists' });
+          res.send({ message: 'exists' });
         } else {
           // If there are no results, the email does not exist
-          res.message({ message: 'not exists' });
+          res.send({ message: 'not exists' });
         }
       }
     });
