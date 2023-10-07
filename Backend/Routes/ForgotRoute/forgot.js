@@ -96,7 +96,7 @@ router.post('/forgot', (req, res) => {
     const email = req.body.email; // Assuming email is sent in the request body
     const verificationToken = generateVerificationToken();
     const checkEmailQuery = 'SELECT * FROM `user_info` WHERE Email = ?';
-    const updateOTPQuery = 'UPDATE `user_info` SET otp = ? WHERE Email = ?';
+   
 
     db.query(checkEmailQuery, [email], (error, results) => {
       if (error) {
@@ -108,16 +108,6 @@ router.post('/forgot', (req, res) => {
           res.send({ message: 'exists' });
           const verificationLink = verificationToken; // Replace with your verification link
           sendVerificationEmail(email, verificationLink);
-          //Insertion of otp
-          db.query(updateOTPQuery, [verificationToken,email], (insertErr, insertResult) => {
-            if (insertErr) {
-              console.error('Failed to insert OTP:', insertErr);
-              res.send({ message: 'Server error' });
-            } else {
-              res.send({ message: 'Inserted' });
-            }
-          });
-
         } else {
           // If there are no results, the email does not exist
           res.send({ message: 'not exists' });
