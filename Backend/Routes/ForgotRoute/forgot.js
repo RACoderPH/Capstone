@@ -32,8 +32,52 @@ function sendVerificationEmail(email, verificationLink) {
     from: 'mindmattersstdominic@gmail.com',
     to: email,
     subject: 'Forgot Password',
-    html: `<p>Don't Share this Code</p>
-           <a href="${verificationLink}">${verificationLink}</a>`,
+    html: `
+      <html>
+        <head>
+          <style>
+            /* Add CSS styles here */
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f5f5f5;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              border-radius: 5px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #555;
+              font-size: 16px;
+              line-height: 1.5;
+            }
+            .code-container {
+              background-color: #007BFF;
+              color: #fff;
+              text-align: center;
+              font-size: 24px;
+              padding: 10px;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Forgot Password</h1>
+            <p><strong>Do not share this code with anyone:</strong></p>
+            <div class="code-container">
+            <a href="${verificationLink}">${verificationLink}</a>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
   };
 
   // Send the email
@@ -61,7 +105,7 @@ router.post('/forgot', (req, res) => {
         if (results.length > 0) {
           // If there are results, the email exists
           res.send({ message: 'exists' });
-          const verificationLink = `This is your Forgot Password OTP:${verificationToken}`; // Replace with your verification link
+          const verificationLink = verificationToken; // Replace with your verification link
           sendVerificationEmail(email, verificationLink);
         } else {
           // If there are no results, the email does not exist
