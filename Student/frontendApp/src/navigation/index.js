@@ -21,6 +21,9 @@ import ChatAi from '../screens/ChatScreens/ChatAiBot/ChatAiBot';
 import AboutScreen from '../screens/AboutScreen';
 import VerificationScreen from '../screens/SignUpScreen/VerificationScreen/VerificationScreen';
 import TermsScreen from '../screens/TermsAndCondition/TermsScreen';
+import RecommendationScreen from '../screens/TestScreen/Recommendation/RecommendationScreen';
+import OTPscreen from '../screens/ForgotScreen/OTP/OTPscreen';
+import NewPassword from '../screens/ForgotScreen/NewPassword/NewPassword';
 
 
 
@@ -43,7 +46,7 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
     
-      <Stack.Screen name="Journal" component={JournalScreens} />
+      <Stack.Screen name="Ai" component={ChatAi} />
       <Stack.Screen name="Testing" component={TestingScreen} />
       
         <Stack.Screen name="SignIn" component={SignInScreen} />
@@ -54,15 +57,20 @@ const Navigation = () => {
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
         <Stack.Screen name="Breathe1" component={Breathe1} />
+        <Stack.Screen name="Journal" component={JournalScreens} />
         <Stack.Screen name="Test" component={TestScreen} />
         <Stack.Screen name="Edit" component={EditProfile} />
         <Stack.Screen name="ChatBot" component={Chat} />
         <Stack.Screen name="Instruction" component={Instruction} />
         <Stack.Screen name="Result" component={Result} /> 
-        <Stack.Screen name="Ai" component={ChatAi} />
+        <Stack.Screen name="otp" component={OTPscreen} /> 
+    
         <Stack.Screen name="About" component={AboutScreen} />  
         <Stack.Screen name="verify" component={VerificationScreen} />  
         <Stack.Screen name="Terms" component={TermsScreen} />  
+        <Stack.Screen name="recommendation" component={RecommendationScreen} />  
+        <Stack.Screen name="NewPass" component={NewPassword} /> 
+         
       </Stack.Navigator>
     </NavigationContainer>
   );

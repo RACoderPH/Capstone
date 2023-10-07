@@ -1,54 +1,66 @@
 
-import React from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid} from 'react-native'
+import React ,{useState}from 'react'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity} from 'react-native'
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import axios from 'axios';
 
 const {width,height} = Dimensions.get('window');
 const ForgotScreen = () => {
+  const [Email,setEmail] = useState("");
     const navigation = useNavigation();
    
 
     const SubmitEmail = async () => {
       try {
-        const response = await axios.post('http://your-server-url/forgot', {
-          email: email, // Pass the email to the server
+        const response = await axios.post('https://mindmatters-ejmd.onrender.com/forgot', {
+          email: Email, // Pass the email to the server
         });
-  
-        // Check the response message from the server
-        if (response.data.message === 'exists') {
-          ToastAndroid.show('Email exists', ToastAndroid.SHORT);
-          navigation.navigate('OTP');
+    
+        // Check the response status
+        if (response.status === 200) {
+              console.log(response.data.message);
+          if (response.data.message === 'exists') {
+            ToastAndroid.show('Email exists', ToastAndroid.SHORT);
+            navigation.navigate('otp');
+          } else {
+            ToastAndroid.show('Email does not exist', ToastAndroid.SHORT);
+          }
         } else {
-          ToastAndroid.show('Email does not exist', ToastAndroid.SHORT);
+          ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
         }
       } catch (error) {
-        console.error('Error submitting email:', error);
-        ToastAndroid.show('Error submitting email', ToastAndroid.SHORT);
+        ToastAndroid.show('Network error', ToastAndroid.SHORT);
       }
     };
+    
+    
+
   return (
-        <View style={styles.root}>
+      <View style={styles.root}>
        <View style={styles.circle} />
        <View style={styles.circle2} />
+
        <LottieView
           source={require('../../../assets/animation/forgot.json')}
           autoPlay
           loop
           style={{ width: width, height: width }}
         />
+          <Text>Forgot Password</Text>
       <CustomInputs 
        mode="outlined"
        label="Email"
        placeholder="Enter Email"
-       onChangeText={(e) => setUsername(e)}
+       onChangeText={(e) => setEmail(e)}
      />
+      <TouchableOpacity onPress={SubmitEmail} >
         <CustomButton
-        onPress={SubmitEmail} 
         mode="elevated" 
         text="Submit" />
+        </TouchableOpacity>
     </View>
   )
 }

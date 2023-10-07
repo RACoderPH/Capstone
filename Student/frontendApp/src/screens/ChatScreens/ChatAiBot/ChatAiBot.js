@@ -13,12 +13,13 @@ import {
 import { GiftedChat } from 'react-native-gifted-chat'
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
+import ChatSplash from '../../ChatAiSplash/ChatSplash';
 const {width,height} = Dimensions.get('window');
 
 const ChatAiBot = () => {
   const [messages, setMessages] = useState([])
 
-  const chat_gpt_api = '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';
+  const chat_gpt_api = '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';
 
   const handleSend = async (newMessages = []) => {
     try {
@@ -84,40 +85,74 @@ const ChatAiBot = () => {
     }
   };
 
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // Delay for 5 seconds (5000 milliseconds)
+  }, []);
+
+
+  if (isLoading) {
+    return <ChatSplash/>;
+  }
+
   return (
-    <View style={{width:width* 1,height:height,color:'black'}} > 
-      <View style={{
-          flexDirection:'row',
-          backgroundColor:'white',
-          padding:5,
-          alignItems:'center',
-          justifyContent:'center',
-          borderBottomWidth:0.2,
-          marginBottom:5
-      }}>
-         <LottieView 
-         source={require('../../../../assets/animation/chat-bot.json')}
-          autoPlay 
-          loop 
-          style={{ width: 50, height: 50 }}/>
-        <Text style={{fontSize:22,fontWeight:'500',color:'black'}}>MiMa Bot</Text>
-        </View>
-        <GiftedChat
-      messages={messages}
-      onSend={messages => handleSend(messages)}
-      user={{
-        _id: 1
-      }}
-    />
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={styles.container}
+  >
+    <View style={styles.header}>
+      <LottieView
+        source={require('../../../../assets/animation/chat-bot.json')}
+        autoPlay
+        loop
+        style={styles.headerIcon}
+      />
+      <Text style={styles.headerText}>MiMa Bot</Text>
     </View>
-
-
-  
+    <GiftedChat
+      messages={messages}
+      onSend={(messages) => handleSend(messages)}
+      user={{
+        _id: 1,
+      }}
+      placeholder="Type a message..."
+    />
+  </KeyboardAvoidingView>
   )
 };
 
 const styles = StyleSheet.create({
- 
+  container: {
+    flex:1,
+    height:height,
+    width:width,
+    backgroundColor: 'white',
+    paddingBottom:20,
+    borderBottomWidth:1,
+    borderBottomColor:'black',
+  },
+  header: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.2,
+    marginBottom: 5,
+  },
+  headerIcon: {
+    width: 50,
+    height: 50,
+  },
+  headerText: {
+    fontSize: 22,
+    fontWeight: '500',
+    color: 'black',
+  },
 });
 
 export default ChatAiBot

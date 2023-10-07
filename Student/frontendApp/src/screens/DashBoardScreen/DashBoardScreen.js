@@ -103,16 +103,7 @@ const DashBoardScreen = () => {
       );
     };
 
-    const Dash = () => {
-      return (
-      <Card style={styles.firstbox}>
-        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{height:"100%"}} />
-        <Card.Content>
-            <Text></Text>
-        </Card.Content>
-      </Card>
-      );
-    };
+
 
     const [state, setState] = React.useState({ open: false });
 
@@ -124,17 +115,19 @@ const DashBoardScreen = () => {
     <ScrollView style={styles.main}>
        <Provider>
       <View style={styles.Topnav}>
-    <View style={{ flexDirection: 'row', width: width * 1, alignItems:'center'}}>
+    <View style={{ flexDirection: 'row', width: width, margin:4}}>
       <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold',color:'black' }}>{username}</Text>
       </Text>
     </View>
       </View>
-      <View style={{width:'100%',justifyContent:'center',alignContent:'center',alignItems:'center'}}>
-         <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{width:width*0.9,height:200}} onPress={Breathe}>
-          <Text style={{color:'white',fontSize:20,fontWeight:'700',margin:15}} >{quoteData.quote}</Text>
-          <Text style={{color:'white',fontSize:18, marginLeft:10}}>-{quoteData.author}</Text>
-      </ImageBackground>
-      </View>
+      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+  <View style={{ borderRadius: 15, overflow: 'hidden' }}>
+    <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{ width: width * 0.9, height: 200 }}>
+      <Text style={{ color: 'white', fontSize: 18, fontWeight: '300', margin: 15 }}>{quoteData.quote}</Text>
+      <Text style={{ color: 'white', fontSize: 16, marginLeft: 10 }}>-{quoteData.author}</Text>
+    </ImageBackground>
+  </View>
+</View>
 
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Let me help you to reduce your stress</Text>
@@ -223,8 +216,9 @@ const styles = StyleSheet.create({
         },
         backgroundImage: {
           flex: 1,
+          overflow:'hidden',
           resizeMode: 'cover',
-          borderRadius: 15,
+          borderRadius: 2,
         },
       box: {
         width: '45%',

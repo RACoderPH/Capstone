@@ -3,12 +3,16 @@ import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'rea
 import Logo from '../../../assets/images/getStarted.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
+
+const {width,height} = Dimensions.get('window');
+
 
 const GetStarted = () => {
   const navigation = useNavigation();
 
   const onGetStartedPressed = () => {
-      navigation.navigate('Homes');
+      navigation.navigate('Result');
   };
 
   return (
@@ -16,14 +20,20 @@ const GetStarted = () => {
       <View style={styles.circle} />
       <View style={styles.circle2} />
       <View style={styles.imageContainer}>
-        <Image source={Logo} resizeMode='contain' style={styles.image} />
+      <LottieView
+                  source={require('../../../assets/animation/Welcome.json')}
+                  style={{ width:width, height: width }}
+                  autoPlay
+                  loop
+                />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.welcome}>Welcome to Mind Matters</Text>
         <Text style={styles.content}>
-          Start your journey towards mental well-being by prioritizing self-care and mindfulness practices. Our app
-          provides a variety of guided meditation sessions, daily affirmations, and tools to track your emotional
-          well-being. Take the first step and invest in your mental health today!
+          Welcome to the Mind Matters Application - your companion on the journey towards improved mental well-being!. We understand that 
+          taking care of your mental health is essential for a happy and fulfilling life.
+          That's why we're excited to have you on board as new user, ready to embark on this 
+          empowering journey with us.
         </Text>
       </View>
       <View style={styles.bottomContainer}>
@@ -65,9 +75,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(241, 204, 74, 0.45)', // Adjust the color of the circle as desired
   },
   imageContainer: {
+    marginVertical:5,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop: -windowHeight * 0.01,
   },
   image: {
     width: windowWidth * 0.9,
@@ -82,31 +92,30 @@ const styles = StyleSheet.create({
   welcome: {
     color: 'black',
     fontFamily: 'Poppins',
-    fontWeight: 'bold',
-    fontSize: windowWidth * 0.06,
-    marginTop: windowHeight * 0.02,
+    fontWeight: '700',
+    fontSize:19,
   },
   content: {
-    fontSize: windowWidth * 0.03,
-    color: '#454545',
+    fontSize: 12,
+    fontWeight:'100',
+    color: '#393E46',
     fontFamily: 'Poppins',
-    padding: windowHeight * 0.01,
+    padding: 2,
     textAlign: 'center',
   },
   bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
-    paddingHorizontal: windowWidth * 0.1,
-    paddingBottom: windowHeight * 0.10,
+    justifyContent:'center',
+    alignItems:'center',
+    padding:10,  
   },
   btn: {
     width: windowWidth * 0.80,
-    borderRadius: windowWidth * 0.05,
+    borderRadius: windowWidth * 0.04,
     fontSize: windowWidth * 0.04,
   },
   line: {
-    width: '100%',
+    width: '80%',
     height: 1,
     backgroundColor: '#F1CC4A',
     marginTop: windowHeight * 0.01,

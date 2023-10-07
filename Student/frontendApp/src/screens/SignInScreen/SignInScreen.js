@@ -8,6 +8,7 @@ import {
   ToastAndroid,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -65,42 +66,47 @@ const SignInScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust the behavior as per your requirements
       enabled
     >
-      <View style={styles.circle} />
-      <View style={styles.circle2} />
-      <Image source={Logo} style={[styles.logo, { height: height * 0.3 }]} resizeMode="contain" />
-      <CustomInputs mode="outlined" label="Username" placeholder="Enter Username" onChangeText={(e) => setUsername(e)} />
-      <CustomInputs
-        mode="outlined"
-        label="Password"
-        placeholder="Enter Password"
-        onChangeText={(e) => setPassword(e)}
-        secureTextEntry={true}
-      />
-      <Text style={styles.forgot} onPress={onForgot}>
-        Forgot Password
-      </Text>
-      <TouchableOpacity onPress={onSignInPressed} disabled={isSubmitted}>
-        <CustomButton mode="elevated" text="Sign in" />
-      </TouchableOpacity>
-      <Text style={styles.text}>
-        Don't have an Account?
-        <Text style={{ color: '#59C4CB' }} onPress={onCreate}>
-          {' '}
-          Create one
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.circle} />
+        <View style={styles.circle2} />
+        <Image source={Logo} style={[styles.logo, { height: height * 0.3 }]} resizeMode="contain" />
+        <CustomInputs mode="outlined" label="Username" placeholder="Enter Username" onChangeText={(e) => setUsername(e)} />
+        <CustomInputs
+          mode="outlined"
+          label="Password"
+          placeholder="Enter Password"
+          onChangeText={(e) => setPassword(e)}
+          secureTextEntry={true}
+        />
+        <Text style={styles.forgot} onPress={onForgot}>
+          Forgot Password
         </Text>
-      </Text>
+        <TouchableOpacity onPress={onSignInPressed}>
+          <CustomButton mode="elevated" text="Sign in" />
+        </TouchableOpacity>
+        <Text style={styles.text}>
+          Don't have an Account?
+          <Text style={{ color: '#59C4CB' }} onPress={onCreate}>
+            {' '}
+            Create one
+          </Text>
+        </Text>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1, // Use flex: 1 to allow the view to expand to fill the screen
-    alignItems: 'center',
-    justifyContent: 'center', // Center the content vertically
+    flex: 1,
     backgroundColor: 'white',
     width: '100%',
     height: '100%',
+  },
+  scrollViewContent: {
+    flexGrow: 1, // This makes the content within ScrollView take up all available space
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   circle: {
     position: 'absolute',
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     width: 224,
     height: 216,
     borderRadius: 110,
-    backgroundColor: 'rgba(241, 204, 74, 0.45)', // Adjust the color of the circle as desired
+    backgroundColor: 'rgba(241, 204, 74, 0.45)',
   },
   circle2: {
     position: 'absolute',
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
     width: 224,
     height: 216,
     borderRadius: 110,
-    backgroundColor: 'rgba(241, 204, 74, 0.45)', // Adjust the color of the circle as desired
+    backgroundColor: 'rgba(241, 204, 74, 0.45)',
   },
   logo: {
     maxWidth: 500,

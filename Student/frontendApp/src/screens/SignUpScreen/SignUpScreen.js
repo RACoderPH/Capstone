@@ -35,7 +35,7 @@ const SignUpScreen = () => {
    const containerStyle = {backgroundColor: 'white', width:'90%',height:'80%' ,padding: 11,margin:20,alignItems:'center',borderRadius:10};
    //BTN Function
    const onSignInPressed = () => {
-     if (Username.trim() === '' || Email.trim() === '' || password.trim() === '') {
+     if (Username.trim() === '' || Email.trim() === '' || password.trim() === '' || checked === false) {
        ToastAndroid.show('Field must not be empty',ToastAndroid.SHORT);
        return;
      }
@@ -72,6 +72,12 @@ const SignUpScreen = () => {
    const onCreate = () =>{
      navigation.navigate('SignIn');
    };
+    // Function to handle the "Agreed" button press
+  const onAgreedPressed = () => {
+    setChecked(true); // Update the checkbox state to checked
+    hideModal(); // Close the modal after agreeing
+  };
+
  
  return (
    <KeyboardAvoidingView style={{flex:1}}
@@ -223,9 +229,9 @@ const SignUpScreen = () => {
          If you have any questions or concerns about these Terms, please contact us at [mindmatters@gmail.com]
          </Text>
 
-         <TouchableOpacity>
-         <CustomButton text="Agreed" style={{width:'100%'}}/>
-         </TouchableOpacity>
+         <TouchableOpacity onPress={onAgreedPressed}>
+          <CustomButton text="Agreed" style={{ width: '100%' }} />
+        </TouchableOpacity>
          {/* Add more content as needed */}
        </ScrollView>
      </Modal>
