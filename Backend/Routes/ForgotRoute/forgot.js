@@ -65,13 +65,6 @@ function sendVerificationEmail(email, verificationLink) {
               padding: 10px;
               border-radius: 5px;
             }
-            .code{
-              color: #00000;
-              font-size: 25px;
-              letter-spacing:1;
-              font-style:bold;
-              text-align: center;
-            }
           </style>
         </head>
         <body>
