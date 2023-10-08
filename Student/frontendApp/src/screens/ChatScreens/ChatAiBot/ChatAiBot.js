@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   View,
   Text,
@@ -10,117 +10,149 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { GiftedChat } from 'react-native-gifted-chat'
+import axios from 'axios';
+import LottieView from 'lottie-react-native';
+import ChatSplash from '../../ChatAiSplash/ChatSplash';
 const {width,height} = Dimensions.get('window');
 
 const ChatAiBot = () => {
-  const [currentMessage, setCurrentMessage] = useState('');
-  const [messageList, setMessageList] = useState([]);
-  const [room, setRoom] = useState('12345');
-  const [username, setUsername] = useState('');
+  const [messages, setMessages] = useState([])
+
+  const chat_gpt_api = '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';
+
+  const handleSend = async (newMessages = []) => {
+    try {
+      if (newMessages.length === 0) {
+        return; // No messages to send
+      }
+  
+      const userMessage = newMessages[0];
+      if (!userMessage || !userMessage.text) {
+        return; // Invalid user message
+      }
+  
+      setMessages(previousMessages => GiftedChat.append(previousMessages, userMessage));
+      const messageText = userMessage.text.toLowerCase();
+      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep','hi','psychiatry',
+      'psychology','therapy/counceling','suicide','stigma','self-care','medication',
+      'trauma','prevention','crisis intervention'];
+  
+      if (!keywords.some(keyword => messageText.includes(keyword))) {
+        const botMessage = {
+          _id: new Date().getTime() + 1,
+          text: "I'm your MiMa bot, ask me anything related to mental health",
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'MiMa Bot'
+          },
+        };
+        setMessages(previousMessages => GiftedChat.append(previousMessages, botMessage));
+        return;
+      }
+  
+      const response = await axios.post(
+        'https://api.openai.com/v1/engines/text-babbage-001/completions',
+        {
+          prompt: `Get me some advice for ${messageText}`,
+          max_tokens: 1024,
+          temperature: 0.5,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${chat_gpt_api}`,
+          },
+        }
+      );
+  
+      if (response && response.data && response.data.choices && response.data.choices.length > 0) {
+        const information = response.data.choices[0].text.trim();
+        const botMessage = {
+          _id: new Date().getTime() + 2,
+          text: information,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'MiMa Bot',
+          },
+        };
+        setMessages(previousMessages => GiftedChat.append(previousMessages, botMessage));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('username').then((value) => {
-      if (value) {
-        setUsername(value);
-      }
-    });
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000); // Delay for 5 seconds (5000 milliseconds)
   }, []);
 
 
+  if (isLoading) {
+    return <ChatSplash/>;
+  }
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <FlatList
-       data={messageList}
-       keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => (
-         <View
-          
-         >
-           <Text></Text>
-           <Text>
-             
-           </Text>
-         </View>
-       )}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={styles.container}
+  >
+    <View style={styles.header}>
+      <LottieView
+        source={require('../../../../assets/animation/chat-bot.json')}
+        autoPlay
+        loop
+        style={styles.headerIcon}
       />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Type your message..."
-          value={currentMessage}
-          onChangeText={(text) => setCurrentMessage(text)}
-        />
-        <TouchableOpacity style={styles.sendButton} >
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
+      <Text style={styles.headerText}>MiMa Bot</Text>
+    </View>
+    <GiftedChat
+      messages={messages}
+      onSend={(messages) => handleSend(messages)}
+      user={{
+        _id: 1,
+      }}
+      placeholder="Type a message..."
+    />
+  </KeyboardAvoidingView>
+  )
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     height:height,
+    width:width,
     backgroundColor: 'white',
+    paddingBottom:20,
+    borderBottomWidth:1,
+    borderBottomColor:'black',
   },
-  messageContainer: {
-    borderRadius: 5,
-    padding: 5,
-    margin:10,
-    marginBottom: 8,
-  },
-  sentMessage: {
-    backgroundColor: 'gray',
-    alignSelf: 'flex-end', // Align to the right for user's own messages
-  },
-  receivedMessage: {
-    backgroundColor: '#0084ff',
-    alignSelf: 'flex-start', // Align to the left for received messages
-  },
-  messageText: {
-    fontSize: 16,
-    fontWeight:'500',
-    color: 'white', // Set text color for received messages
-  },
-  inputContainer: {
-    width:width*1,
+  header: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
     backgroundColor: 'white',
-    borderRadius: 8,
-    borderWidth: 1,
-    marginLeft: 1,
-    marginRight: 5,
-    marginBottom: 20,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 0.2,
+    marginBottom: 5,
   },
-  input: {
-    flex: 1,
-    fontSize: 16,
+  headerIcon: {
+    width: 50,
+    height: 50,
   },
-  sendButton: {
-    padding: 15,
-    backgroundColor: '#0084ff',
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
+  headerText: {
+    fontSize: 22,
+    fontWeight: '500',
+    color: 'black',
   },
-  sendButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  from:{
-    fontSize:12,
-    color:'white',
-    fontWeight:'300'
-  }
 });
 
-export default ChatAiBot;
+export default ChatAiBot

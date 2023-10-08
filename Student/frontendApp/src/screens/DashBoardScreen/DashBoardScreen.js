@@ -10,6 +10,7 @@ import React,
 import bg from '../../../assets/images/exercise.jpg';
 import journal from '../../../assets/images/journal.jpg';
 import test from '../../../assets/images/test.jpg';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
    Card,
@@ -24,6 +25,26 @@ const { width, height } = Dimensions.get('window');
 const DashBoardScreen = () => {
   const navigation = useNavigation();
     const [username, setUsername] = useState('');
+    const [quoteData, setQuoteData] = useState({ quote: '', author: '' });
+
+    useEffect(() => {
+      // Fetch the quote data from your API using Axios
+      axios.get('https://mindmatters-ejmd.onrender.com/Quotes')
+        .then((response) => {
+          const data = response.data;
+          // Choose a random quote from the data
+          const randomIndex = Math.floor(Math.random() * data.length);
+          const randomQuote = data[randomIndex].quotes;
+          const randomAuthor = data[randomIndex].author;
+          
+          // Update the state with both the quote and author
+          setQuoteData({ quote: randomQuote, author: randomAuthor });
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+    }, []);
+
     useEffect(() => {
       retrieveData();
     }, []);
@@ -82,16 +103,7 @@ const DashBoardScreen = () => {
       );
     };
 
-    const Dash = () => {
-      return (
-      <Card style={styles.firstbox}>
-        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} style={{height:"100%"}} />
-        <Card.Content>
-            <Text></Text>
-        </Card.Content>
-      </Card>
-      );
-    };
+
 
     const [state, setState] = React.useState({ open: false });
 
@@ -103,16 +115,23 @@ const DashBoardScreen = () => {
     <ScrollView style={styles.main}>
        <Provider>
       <View style={styles.Topnav}>
-    <View style={{ flexDirection: 'row', width: width * 1, alignItems:'center'}}>
+    <View style={{ flexDirection: 'row', width: width, margin:4}}>
       <Text style={{ marginLeft:width * 0.02,fontSize:16,color:'black',fontWeight:'600' }}>Hello <Text style={{ fontWeight: 'bold',color:'black' }}>{username}</Text>
       </Text>
-      <Image source={bg} resizeMode="contain" style={styles.image}/>
     </View>
       </View>
-        <Dash />
+      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+  <View style={{ borderRadius: 15, overflow: 'hidden' }}>
+    <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{ width: width * 0.9, height: 200 }}>
+      <Text style={{ color: 'white', fontSize: 18, fontWeight: '300', margin: 15 }}>{quoteData.quote}</Text>
+      <Text style={{ color: 'white', fontSize: 16, marginLeft: 10 }}>-{quoteData.author}</Text>
+    </ImageBackground>
+  </View>
+</View>
+
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>
         <Text style={{marginLeft: '2%',color:'#6B7280'}}>Let me help you to reduce your stress</Text>
-        <View style={{ flexDirection: 'row',alignSelf:'center',width:width*0.95,alignSelf:'center'}}>
+        <View style={{ flexDirection: 'row',alignSelf:'center',width:width*0.95,alignSelf:'center',alignContent:"center",justifyContent:'center'}}>
           
                 <MyComponent/>
                 <MyComponent2/>
@@ -197,8 +216,9 @@ const styles = StyleSheet.create({
         },
         backgroundImage: {
           flex: 1,
+          overflow:'hidden',
           resizeMode: 'cover',
-          borderRadius: 15,
+          borderRadius: 2,
         },
       box: {
         width: '45%',

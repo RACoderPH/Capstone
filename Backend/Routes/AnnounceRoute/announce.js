@@ -4,6 +4,8 @@ const router = express.Router();
 const db = require('../database'); 
 
 router.post('/announce', (req,res) =>{
+
+
     const title = req.body.title;
     const what = req.body.what;
     const where = req.body.where;
@@ -21,5 +23,18 @@ router.post('/announce', (req,res) =>{
       }
     });
   });
+router.get('/announcement',(req,res) =>{
 
+  const announce = 'SELECT * FROM `announcement`';
+
+  db.query(announce,(error, result) => {
+    if (error) {
+      console.error('Failed to fetch announcement data:', error);
+      res.status(500).json({ error: 'Failed to result data' });
+    } else {
+      
+        res.json(result); // Send the JSON data as the response
+    }
+  })
+})
   module.exports = router;

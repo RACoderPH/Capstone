@@ -62,6 +62,12 @@ const ProfileScreen = () => {
       const edit = () =>{
         navigation.navigate('Edit');
       }
+      const terms = () =>{
+        navigation.navigate('Terms');
+      }
+      const about = () =>{
+        navigation.navigate('About');
+      }
 
   return (
     <ScrollView contentContainerStyle={styles.main} 
@@ -77,14 +83,21 @@ const ProfileScreen = () => {
      <TouchableOpacity onPress={edit} ><CustomButton text="Edit Profile" style={styles.btn}/></TouchableOpacity> 
       <View style={styles.line} />
       <View style={styles.information}> 
-      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="person-circle-outline" style={styles.icons}></Icon>  User Management </Text>
+
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="person-circle-outline" style={styles.icons}></Icon>  View Result </Text>
       <View style={styles.line} />
-      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="help-outline" style={styles.icons}></Icon>  How to use</Text>
+      <TouchableOpacity onPress={logout}>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="help-outline" style={styles.icons}></Icon>  Change Password</Text>
       <View style={styles.line} />
-      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="information-circle-outline" style={styles.icons}></Icon>  Help Support</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={terms}>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="information-circle-outline" style={styles.icons}></Icon>  Terms and Condition</Text>
       <View style={styles.line} />
-      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="settings-outline" style={styles.icons}></Icon>  Setting</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={about}>
+      <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="settings-outline" style={styles.icons}></Icon> About</Text>
       <View style={styles.line} />
+      </TouchableOpacity>
       <TouchableOpacity onPress={logout}>
       <Text style={{fontSize:18,fontWeight:'300',color:'black',margin:15}}><Icon name="log-out-outline" style={styles.icons} ></Icon>  Logout</Text>
       </TouchableOpacity>

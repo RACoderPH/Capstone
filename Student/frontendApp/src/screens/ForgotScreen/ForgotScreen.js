@@ -1,32 +1,66 @@
 
-import React from 'react'
-import { View, Text ,Image, StyleSheet, useWindowDimensions,ToastAndroid} from 'react-native'
+import React ,{useState}from 'react'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity} from 'react-native'
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import Logo from '../../../assets/images/Mindmatters.png'
-const ForgotScreen = () => {
-    const navigation = useNavigation();
-    const {height} = useWindowDimensions();
+import LottieView from 'lottie-react-native';
+import axios from 'axios';
 
-    const SubmitEmail = () =>{
-        ToastAndroid.show('Submit Email',ToastAndroid.SHORT);
-    }
+const {width,height} = Dimensions.get('window');
+const ForgotScreen = () => {
+  const [Email,setEmail] = useState("");
+    const navigation = useNavigation();
+   
+
+    const SubmitEmail = async () => {
+      try {
+        const response = await axios.post('https://mindmatters-ejmd.onrender.com/forgot', {
+          email: Email, // Pass the email to the server
+        });
+    
+        // Check the response status
+        if (response.status === 200) {
+              console.log(response.data.message);
+          if (response.data.message === 'exists') {
+            ToastAndroid.show('Email exists', ToastAndroid.SHORT);
+            navigation.navigate('otp');
+          } else {
+            ToastAndroid.show('Email does not exist', ToastAndroid.SHORT);
+          }
+        } else {
+          ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show('Network error', ToastAndroid.SHORT);
+      }
+    };
+    
+    
+
   return (
-        <View style={styles.root}>
+      <View style={styles.root}>
        <View style={styles.circle} />
        <View style={styles.circle2} />
-      <Image source={Logo} style={[styles.logo, {height:height * 0.3}]}  resizeMode='contain'/>
+
+       <LottieView
+          source={require('../../../assets/animation/forgot.json')}
+          autoPlay
+          loop
+          style={{ width: width, height: width }}
+        />
+          <Text>Forgot Password</Text>
       <CustomInputs 
        mode="outlined"
        label="Email"
        placeholder="Enter Email"
-       onChangeText={(e) => setUsername(e)}
+       onChangeText={(e) => setEmail(e)}
      />
+      <TouchableOpacity onPress={SubmitEmail} >
         <CustomButton
-        onPress={SubmitEmail} 
         mode="elevated" 
         text="Submit" />
+        </TouchableOpacity>
     </View>
   )
 }
