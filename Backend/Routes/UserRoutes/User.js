@@ -394,18 +394,24 @@ router.put("/userUpdate/:id", (req, res) => {
     });
   });
   //Verification_code
-  router.get('/verification', (req, res) => {
-    const username = req.query.username; // Retrieve the username from the query parameter
+  router.post('/verification', (req, res) => {
+    const userProvidedVerification = req.body.verificationCodes;
   
-    // Use the retrieved username to fetch verification codes
-    const verify = `SELECT verification_code FROM user_info WHERE user_name = '${username}'`;
+    // Query the database to check if the provided OTP exists in the user_info table
+    const verifyQuery = 'SELECT * FROM user_info WHERE verification_code = ?';
   
-    db.query(verify, (error, result) => {
+    db.query(verifyQuery, [userProvidedVerification], (error, results) => {
       if (error) {
-        console.error('Failed to fetch data:', error);
-        res.sendStatus(500);
+        console.error('Failed to verify code:', error);
+        res.status(500).json({ error: 'Failed to verify OTP' });
       } else {
-        res.send(result); // Send the JSON data as the response
+        if (results.length > 0) {
+    
+          res.send({ message: 'match' });
+        } else {
+          // If no results are returned, the provided OTP does not exist in the table
+          res.send({ message: 'not match' });
+        }
       }
     });
   });

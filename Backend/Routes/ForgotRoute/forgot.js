@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const db = require('../database'); 
-
+const bcrypt = require('bcrypt');
 
 function generateVerificationToken() {
   // Generate a random 6-digit number
@@ -105,19 +105,17 @@ router.post('/forgot', (req, res) => {
       } else {
         if (results.length > 0) {
           // If there are results, the email exists
-          res.send({ message: 'exists' });
-          const verificationLink = verificationToken; // Replace with your verification link
-          sendVerificationEmail(email, verificationLink);
-
-          const userId = results[0].user_id; // Assuming user_id is the primary key
-          const updateOTPQuery = 'UPDATE `user_info` SET otp = ? WHERE user_id = ?';
+          const userId = results[0].id; // Assuming user_id is the primary key
+          const updateOTPQuery = 'UPDATE `user_info` SET otp = ? WHERE id = ?';
   
           db.query(updateOTPQuery, [verificationToken, userId], (error) => {
             if (error) {
               console.error('Failed to update OTP:', error);
               res.status(500).json({ error: 'Failed to update OTP' });
             } else {
-              res.send({ message: 'Updated OTP'});
+              res.send({ message: 'exists' });
+              const verificationLink = verificationToken; // Replace with your verification link
+              sendVerificationEmail(email, verificationLink);
             }
           });
         
@@ -128,6 +126,54 @@ router.post('/forgot', (req, res) => {
       }
     });
   });
+   
+router.post('/otp', (req, res) => {
+    const userProvidedOTP = req.body.otp;
   
+    // Query the database to check if the provided OTP exists in the user_info table
+    const verifyQuery = 'SELECT * FROM user_info WHERE otp = ?';
+  
+    db.query(verifyQuery, [userProvidedOTP], (error, results) => {
+      if (error) {
+        console.error('Failed to verify OTP:', error);
+        res.status(500).json({ error: 'Failed to verify OTP' });
+      } else {
+        if (results.length > 0) {
+          // If results are returned, the provided OTP exists in the user_info table
+          // You can perform any additional actions you need here
+          res.send({ message: 'match' });
+        } else {
+          // If no results are returned, the provided OTP does not exist in the table
+          res.send({ message: 'not match' });
+        }
+      }
+    });
+  });
+  
+router.post('/ChangePassword', (req, res) => {
+    const userEmail = req.body.userEmail; // Assuming userId is sent in the request body
+    const newPassword = req.body.newPassword; // Assuming newPassword is sent in the request body
+  
+    // Hash the new password before storing it in the database
+    bcrypt.hash(newPassword, 10, (hashError, hashedPassword) => {
+      if (hashError) {
+        console.error('Password hashing error:', hashError);
+        return res.status(500).json({ error: 'Password hashing error' });
+      }
+  
+      // Update the hashed password in the database
+      const updatePasswordQuery = 'UPDATE user_info SET Password = ? WHERE Email = ?';
+  
+      db.query(updatePasswordQuery, [hashedPassword, userEmail], (updateError) => {
+        if (updateError) {
+          console.error('Failed to update password:', updateError);
+          return res.status(500).json({ error: 'Failed to update password' });
+        }
+  
+        // Password successfully updated
+        res.send({ message: 'Password updated successfully' });
+      });
+    });
+  });
 
 module.exports = router;
