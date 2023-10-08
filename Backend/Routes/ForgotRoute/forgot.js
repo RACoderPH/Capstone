@@ -108,6 +108,19 @@ router.post('/forgot', (req, res) => {
           res.send({ message: 'exists' });
           const verificationLink = verificationToken; // Replace with your verification link
           sendVerificationEmail(email, verificationLink);
+
+          const userId = results[0].user_id; // Assuming user_id is the primary key
+          const updateOTPQuery = 'UPDATE `user_info` SET otp = ? WHERE user_id = ?';
+  
+          db.query(updateOTPQuery, [verificationToken, userId], (error) => {
+            if (error) {
+              console.error('Failed to update OTP:', error);
+              res.status(500).json({ error: 'Failed to update OTP' });
+            } else {
+              res.send({ message: 'Updated OTP'});
+            }
+          });
+        
         } else {
           // If there are no results, the email does not exist
           res.send({ message: 'not exists' });
