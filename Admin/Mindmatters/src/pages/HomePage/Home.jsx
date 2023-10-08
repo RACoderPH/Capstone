@@ -24,36 +24,29 @@ import {
 
 function Home() {
   const [userList, setUserList] = useState([]);
-  const [userId, setId] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null); // State to store the selected user's ID
+  const [Stress, setStress] = useState(null);
+  const [Anxiety, setAnxiety] = useState(null);
+  const [Depression, setDepression] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const [assessmentResult, setAssessmentResult] = useState(null); // State to store assessment result data
-
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload(); // Reload the page
+  };
+
+   // Define the data variable here with initial values
+   const [data, setData] = useState([
+    { name: "Stress", value: Stress },
+    { name: "Anxiety", value: Anxiety },
+    { name: "Depression", value: Depression },
+  ]);
 
   // Click handler for the "View" button
   const handleViewClick = (userId) => {
-    setId(userId); // Set the selected user's ID
-    handleOpen(); // Open the modal
-
-    // Fetch assessment result data when the button is clicked
-    axios.get(`https://mindmatters-ejmd.onrender.com/student_result/${userId}`)
-      .then((response) => {
-        // Handle the response data here
-        const resultData = response.data;
-        setAssessmentResult(resultData); // Set assessment result data to state
-        console.log('Assessment Result Data:', resultData); // Log the data
-      }).catch((error) => {
-        // Handle any errors that occur during the request
-        console.error('Failed to fetch assessment result data:', error);
-      });
-  };
-
-  const data = [
-    { name: "Stress", users: 2000000000 },
-    { name: "Anxiety", users: 1500000000 },
-    { name: "Depression", users: 1000000000 },
-  ];
+  setSelectedUserId(userId); // Set the selected user's ID
+  handleOpen(); // Open the modal
+};
 
   useEffect(() => {
     // Fetch user data from the backend API
@@ -63,6 +56,35 @@ function Home() {
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
+  useEffect(() => {
+    if (selectedUserId !== null) {
+      axios
+        .get(`https://mindmatters-ejmd.onrender.com/student_result/${selectedUserId}`)
+        .then((response) => {
+          const resultDataArray = response.data;
+          console.log('Assessment Result Data (Raw):', resultDataArray);
+  
+          // Extract the values of stress, anxiety, and depression from the first object in the array
+          if (resultDataArray.length > 0) {
+            const { stress, anxiety, depression } = resultDataArray[0];
+  
+            // Create the data array for the PieChart directly
+            const dataForPieChart = [
+              { name: "Stress", value: stress },
+              { name: "Anxiety", value: anxiety },
+              { name: "Depression", value: depression },
+            ];
+  
+            // Update the data state with the PieChart data
+            setData(dataForPieChart);
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to fetch assessment result data:', error);
+        });
+    }
+  }, [selectedUserId]);
+  
   return (
     <div className="home">
       <Sidebar />
@@ -79,69 +101,68 @@ function Home() {
         </div>
 
         <div className="listContainer">
-          <table style={{ flex: 1 }}>
-            <thead>
-              <tr>
-                <th>Fullname</th>
-                <th>UserName</th>
-                <th>Email</th>
-                <th>Student ID</th>
-                <th>Status</th>
-                <th>Position</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userList.map((user) => (
-                <tr key={user.id}>
+      <table style={{ flex: 1 }}>
+      <thead>
+        <tr>
+         
+          <th>Fullname</th>
+          <th>UserName</th>
+          <th>Email</th>
+          <th>Student ID</th>
+          <th>Status</th>
+          <th>Position</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      {userList.map((user) => (
+          <tr key={user.id}>
+           
                   <td>{user.Fullname}</td>
                   <td>{user.user_name}</td>
                   <td>{user.Email}</td>
                   <td>{user.stud_no}</td>
                   <td>{user.status}</td>
                   <td>{user.position}</td>
-                  <td className="btns">
-                    <button onClick={() => handleViewClick(user.id)}>View</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            <td className="btns">
+            <button onClick={() => handleViewClick(user.id)}>View</button>
+            </td>
+          </tr>
+  ))}
+      </tbody>
+    </table>
         </div>
       </div>
       <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box className="box">
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
           <span className="userUpdateTitle">User Results</span>
           <span className="txt">The information can be edited</span>
+          
+          <PieChart width={400} height={400}>
+          <Pie
+            dataKey="value"
+            isAnimationActive={false}
+            data={data}
+            cx={200}
+            cy={200}
+            outerRadius={80}
+            fill="#8884d8"
+            label
+          />
+          <Tooltip />
+          </PieChart>
 
-          {/* Display assessment result data if available */}
-          {assessmentResult && (
-            <PieChart width={400} height={400}>
-              <Pie
-                dataKey="users"
-                isAnimationActive={false}
-                data={data}
-                cx={200}
-                cy={200}
-                outerRadius={80}
-                fill="#8884d8"
-                label
-              />
-              <Tooltip />
-            </PieChart>
-          )}
-
-          <br />
-          <Button className="modalBtn" variant="outlined">
-            Save
-          </Button>
-        </Box>
-      </Modal>
+            <br />
+            <Button className="modalBtn" variant="outlined" >
+              Save
+            </Button>
+          </Box>
+        </Modal>
     </div>
   );
 }
