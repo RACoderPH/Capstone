@@ -9,11 +9,13 @@ import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 
 const User = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [searchInput, setSearchInput] = useState('');
 
   const [values, setValues] = useState({
     fullname: null,
@@ -24,42 +26,37 @@ const User = () => {
   });
 
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = (user) => {
-    // Set the selected user for editing when the "Edit" button is clicked
     setSelectedUser(user.id);
     setOpen(true);
   };
 
-  // for add user modal
   const [open1, setOpen1] = React.useState(false);
+
   const handleOpen1 = () => {
-    // Set the selected user for editing when the "Edit" button is clicked
     setOpen1(true);
   };
-  // for add user modal
+
   const handleClose1 = () => {
-    // Clear the selectedUser state to exit edit mode
     setSelectedUser(null);
     setOpen1(false);
   };
 
   const handleClose = () => {
-    // Clear the selectedUser state to exit edit mode
     setSelectedUser(null);
     setOpen(false);
   };
-  // for closing modal
+
   const [isUpdateConfirmed, setIsUpdateConfirmed] = useState(false);
 
   useEffect(() => {
-    // Fetch user data from the backend API
     fetch('https://mindmatters-ejmd.onrender.com/Student')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 
-  // Use the userList state for DataGrid rows
   const rows = userList.map((user) => ({
     id: user.id,
     Fullname: user.Fullname,
@@ -70,12 +67,13 @@ const User = () => {
     position: user.position,
   }));
 
-  // ... (your update, add, and delete functions)
+  const filteredRows = rows.filter((row) =>
+    row.stud_no.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const Updateuser = async (e) => {
     e.preventDefault();
 
-    // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to update this user?');
 
     if (confirmUpdate) {
@@ -84,9 +82,7 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
-          // Set the update confirmation state to true
           setIsUpdateConfirmed(true);
-          // Reload the page after the update is confirmed
           window.location.reload();
         })
         .catch((err) => console.log(err));
@@ -96,7 +92,6 @@ const User = () => {
   const Adduser = async (e) => {
     e.preventDefault();
 
-    // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to add this user?');
 
     if (confirmUpdate) {
@@ -105,9 +100,7 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
-          // Set the update confirmation state to true
           setIsUpdateConfirmed(true);
-          // Reload the page after the update is confirmed
           window.location.reload();
         })
         .catch((err) => console.log(err));
@@ -115,7 +108,6 @@ const User = () => {
   };
 
   const Deleteuser = async (user) => {
-    // Show a confirmation dialog
     const confirmDelete = window.confirm('Are you sure you want to Delete this user?');
 
     if (confirmDelete) {
@@ -124,7 +116,6 @@ const User = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
-          // Reload the page after the update is confirmed
           window.location.reload();
         })
         .catch((err) => console.log(err));
@@ -133,143 +124,180 @@ const User = () => {
 
   return (
     <div className="user">
-    <Sidebar />
-    <div className="userContainer">
-      <br />
-      <br />
-      <Button className="modalBtn" variant="outlined" onClick={() => handleOpen1()}>
-        Add User
-      </Button>
-      <div style={{ width: '99%', padding: '10px' }}>
-        <div style={{ height: 550, width: '100%' }}>
-          {/* Use the rows from userList */}
-          <DataGrid
-            rows={rows}
-            columns={[
-              { field: 'id', headerName: 'ID', flex: 1 },
-              { field: 'Fullname', headerName: 'Full Name', flex: 7 },
-              { field: 'username', headerName: 'Username', flex: 3 },
-              { field: 'Email', headerName: 'Email', flex: 5 },
-              { field: 'stud_no', headerName: 'Student ID', flex: 5 },
-              { field: 'staus', headerName: 'Status', flex: 2 },
-              { field: 'position', headerName: 'Position', flex: 3 },
-              {
-                field: 'actions',
-                headerName: 'Actions',
-                flex: 4,
-                renderCell: (params) => (
-                  <div className="btns">
-                    <Button variant="outlined"  onClick={() => handleOpen(params.row)}>
-                      Edit
-                    </Button>
-                    <IconButton aria-label="delete" size="large"onClick={() => Deleteuser(params.row)}>
-                    <DeleteIcon fontSize="inherit" />
-                    </IconButton>
-                  </div>
-                ),
-              },
-            ]}
-          />
+      <Sidebar />
+      <div className="userContainer">
+        <br/>
+        <br/>
+        <Button className="modalBtn" variant="outlined" onClick={handleOpen1}>
+          Add User
+        </Button>
+        <TextField
+          className="search-bar"
+          label="Search"
+          variant="standard"
+          style={{ marginLeft: '80%'}}
+          
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        
+
+        <div style={{ width: '99%', padding: '10px' }}>
+          <div style={{ height: 550, width: '100%' }}>
+            <DataGrid
+              rows={filteredRows}
+              columns={[
+                { field: 'id', headerName: 'ID', flex: 1 },
+                { field: 'Fullname', headerName: 'Full Name', flex: 7 },
+                { field: 'username', headerName: 'Username', flex: 3 },
+                { field: 'Email', headerName: 'Email', flex: 5 },
+                { field: 'stud_no', headerName: 'Student ID', flex: 5 },
+                { field: 'staus', headerName: 'Status', flex: 2 },
+                { field: 'position', headerName: 'Position', flex: 3 },
+                {
+                  field: 'actions',
+                  headerName: 'Actions',
+                  flex: 4,
+                  renderCell: (params) => (
+                    <div className="btns">
+                      <Button variant="outlined" onClick={() => handleOpen(params.row)}>
+                        Edit
+                      </Button>
+                      <IconButton
+                        aria-label="delete"
+                        size="large"
+                        onClick={() => Deleteuser(params.row)}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
         </div>
-      </div>
-      <Modal
+
+        {/* Modals for adding and editing users */}
+        <Modal
           open={open1}
           onClose={handleClose1}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
-          <span className="userUpdateTitle">Add New User</span>
-          <span className="txt">The information can be edited</span>
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-           onChange={(e) => setValues({ ...values, fullname: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-           onChange={(e) => setValues({ ...values, username: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" 
-           onChange={(e) => setValues({ ...values, email: e.target.value })} />
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" type="password" id="outlined-password-input" label="Password"  margin="normal"
-          onChange={(e) => setValues({ ...values, password: e.target.value })}/>
-          </div>
-
-          <div className="txtfield">
-          <TextField className="textBox" id="outlined-basic" label="Student ID" variant="outlined" 
-            onChange={(e) => setValues({ ...values, stud_no: e.target.value })} />
-          </div>
-
+            <span className="userUpdateTitle">Add New User</span>
+            <span className="txt">The information can be edited</span>
+            {/* Add user input fields */}
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Full Name"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, fullname: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Username"
+                variant="outlined"
+                name="user_name"
+                onChange={(e) => setValues({ ...values, username: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Email"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, email: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                type="password"
+                id="outlined-password-input"
+                label="Password"
+                margin="normal"
+                onChange={(e) => setValues({ ...values, password: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Student ID"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
+              />
+            </div>
             <br />
             <Button className="modalBtn" variant="outlined" onClick={Adduser}>
               Save
             </Button>
           </Box>
         </Modal>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box className="box">
-          <span className="userUpdateTitle">Edit User Information</span>
-          <span className="txt">The information can be edited</span>
-          <div className="txtfield">
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Full Name"
-              variant="outlined"
-              onChange={(e) => setValues({ ...values, fullname: e.target.value })}
-            />
-          </div>
-
-          <div className="txtfield">
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Username"
-              variant="outlined"
-              name="user_name"
-              onChange={(e) => setValues({ ...values, username: e.target.value })}
-            />
-          </div>
-
-          <div className="txtfield">
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Email"
-              variant="outlined"
-              onChange={(e) => setValues({ ...values, email: e.target.value })}
-            />
-          </div>
-
-          <div className="txtfield">
-            <TextField
-              className="textBox"
-              id="outlined-basic"
-              label="Student ID"
-              variant="outlined"
-              onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
-            />
-          </div>
-          <br />
-          <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
-            Save
-          </Button>
-        </Box>
-      </Modal>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
+            <span className="userUpdateTitle">Edit User Information</span>
+            <span className="txt">The information can be edited</span>
+            {/* Edit user input fields */}
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Full Name"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, fullname: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Username"
+                variant="outlined"
+                name="user_name"
+                onChange={(e) => setValues({ ...values, username: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Email"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, email: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Student ID"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
+              />
+            </div>
+            <br />
+            <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
+              Save
+            </Button>
+          </Box>
+        </Modal>
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default User;
