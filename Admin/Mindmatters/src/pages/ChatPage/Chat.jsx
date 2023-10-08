@@ -3,10 +3,17 @@ import './chat.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
 import io from "socket.io-client";
-
+import avatar from "../../images/blank.png"
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 const socket = io.connect("https://mindmatters-ejmd.onrender.com");
 
 const Chat = () => {
+  const [userList, setUserList] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [room, setRoom] = useState('12345'); // Set the default room ID to "12345"
@@ -55,14 +62,45 @@ const Chat = () => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    // Fetch user data from the backend API
+    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+      .then((response) => response.json())
+      .then((data) => setUserList(data))
+      .catch((error) => console.error('Failed to fetch data:', error));
+  }, []);
+  const style = {
+    width: '100%',
+    maxWidth: 360,
+    bgcolor: 'background.paper',
+  };
+  
   return (
     <div className="chat">
       <Sidebar />
-        <div className="userOnline">
-            <p>
-              
-            </p>
-        </div>
+      <div className="userOnline">
+        {userList.map((user) => (
+          <List sx={style} component="nav" aria-label="mailbox folders" key={user.Fullname}>
+            <ListItem button alignItems="flex-start">
+              <Avatar src="/broken-image.jpg" alt={user.Fullname} className="user-profile-pic" />
+              <div className="user-info">
+                <Typography
+                  sx={{ display: 'inline' }}
+                  component="span"
+                  variant="body2"
+                  color="text.primary"
+                >
+                  {user.Fullname}
+                </Typography>
+                <ListItemText className={`user-status ${user.status === "online" ? "online" : "offline"}`}>
+                  {user.status === "online" ? "Online" : "Offline"}
+                </ListItemText>
+                <Divider />
+              </div>
+            </ListItem>
+          </List>
+        ))}
+      </div>
       <div className="chatContainer">
         <div className="chatBox">
           <input
@@ -117,4 +155,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Chat;  
