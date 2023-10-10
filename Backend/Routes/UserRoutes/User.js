@@ -84,8 +84,66 @@ function generateVerificationToken() {
       from: 'mindmattersstdominic@gmail.com',
       to: email,
       subject: 'Email Verification',
-      html: `<p>Thank you for registering. Please input that code to verify your account</p>
-             <a href="${verificationLink}">${verificationLink}</a>`,
+      html: `<html>
+      <head>
+        <style>
+          /* Add CSS styles here */
+          body {
+            font-family: Times New Roman, sans-serif;
+            background-color: #f5f5f5;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 35px;
+            background-color: #ffffe0;
+            border-radius: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+          h1 {
+            color: #000000;
+          }
+          p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.5;
+          }
+          .code-container {
+            background-color: #63e5ff;
+            color: #000000;
+            text-align: center;
+            font-size: 50px;
+            padding: 1px;
+            border-radius: 0px;
+          }
+          .code {
+            color: '#00000';
+            font-size: 25px;
+            letter-spacing:1;
+            font-style:bold;
+            text-align: center;
+          }
+    .ImageLogo{
+    height: 110px;
+    width: 100px;
+    margin-left:510px;
+    }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1><b>Email Verification</b></h1>
+          <p>Thank you for registering. Please input the code to verify your account.</br> </br> This is your Verification Code:</p>
+          <div class="code-container">
+          <h2 class="code">${verificationLink}</h2>
+    
+    
+          </div>
+    <p>After verifying your email, you can set up your profile, add a profile picture, and start exploring MindMatters App.</br></br>If you didn't sign up for MindMatters App, please disregard this email. </br></br> If you need any assistance, feel free to reach out to our support team at <a href>mindmattersdominic@gmail.com</a>. We're here to help! </br> </br> Best regards,  </br> The MindMatters Team</p>
+        <img src="Logo.png" class="ImageLogo">
+    </div>
+      </body>
+    </html>`,
     };
   
     // Send the email
@@ -98,54 +156,69 @@ function generateVerificationToken() {
     });
   }
   //Registration for Application
-router.post('/register/app', (req, res) => {
+  router.post('/register/app', (req, res) => {
     const fullname = req.body.fullname;
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
     const stud_no = req.body.stud_no;
-  
+
+    // Check if the username already exists
     const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
-    db.query(checkUsernameQuery, [username], (err, result) => {
-      if (err) {
-        console.error('Failed to check username:', err);
-        res.send({ message: 'Server error' });
-      } else {
-        if (result.length > 0) {
-          // User already exists
-          res.send({ message: 'Username already exists' });
+    db.query(checkUsernameQuery, [username], (err, usernameResult) => {
+        if (err) {
+            console.error('Failed to check username:', err);
+            res.send({ message: 'Server error' });
         } else {
-          // Username is available, proceed with registration
-          bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
-            if (hashErr) {
-              console.error('Failed to hash password:', hashErr);
-              res.send({ message: 'Server error' });
+            if (usernameResult.length > 0) {
+                // Username already exists
+                res.send({ message: 'Username already exists' });
             } else {
-              const verificationToken = generateVerificationToken();
-              const position = 'Student';
-              const status = 'Offline';
-              const room_id = Math.floor(10000 + Math.random() * 90000);
-              const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-              const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code,room_id) VALUES (? ,?, ?, ?, ?, ?, ?, ?, ?, ?)';
-              db.query(insertUserQuery, [fullname,username, email, stud_no, hashedPassword, createdAt, position, status,verificationToken, room_id], (insertErr, insertResult) => {
-                if (insertErr) {
-                  console.error('Failed to register user:', insertErr);
-                  res.send({ message: 'Server error' });
-                } else {
-                  // Send verification email
-                  // Generate a verification token
-                  const verificationLink = `This is your Verification Code:${verificationToken}`; // Replace with your verification link
-                  sendVerificationEmail(email, verificationLink); // Send verification email
-  
-                  res.send({ message: 'User registered successfully' });
-                }
-              });
+                // Username is available, now check if the email exists
+                const checkEmailQuery = 'SELECT * FROM user_info WHERE Email = ?';
+                db.query(checkEmailQuery, [email], (err, emailResult) => {
+                    if (err) {
+                        console.error('Failed to check email:', err);
+                        res.send({ message: 'Server error' });
+                    } else {
+                        if (emailResult.length > 0) {
+                            // Email already exists
+                            res.send({ message: 'Email already exists' });
+                        } else {
+                            // Both username and email are available, proceed with registration
+                            bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
+                                if (hashErr) {
+                                    console.error('Failed to hash password:', hashErr);
+                                    res.send({ message: 'Server error' });
+                                } else {
+                                    const verificationToken = generateVerificationToken();
+                                    const position = 'Student';
+                                    const status = 'Offline';
+                                    const room_id = Math.floor(10000 + Math.random() * 90000);
+                                    const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                                    const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code,room_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                    db.query(insertUserQuery, [fullname, username, email, stud_no, hashedPassword, createdAt, position, status, verificationToken, room_id], (insertErr, insertResult) => {
+                                        if (insertErr) {
+                                            console.error('Failed to register user:', insertErr);
+                                            res.send({ message: 'Server error' });
+                                        } else {
+                                            // Send verification email
+                                            // Generate a verification token
+                                            const verificationLink = `${verificationToken}`; // Replace with your verification link
+                                            sendVerificationEmail(email, verificationLink); // Send verification email
+
+                                            res.send({ message: 'User registered successfully' });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
             }
-          });
         }
-      }
     });
-  });
+});
 
   router.post('/login', (req, res) => {
     const username = req.body.username;
