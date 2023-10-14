@@ -399,7 +399,7 @@ router.put("/userUpdate/:id", (req, res) => {
   });
 //Show all the Student AND ONLINE
   router.get('/api/getuser', (req, res) => {
-    const query = 'SELECT * FROM user_info WHERE status = "Online" AND position = "Student"';
+    const query = 'SELECT * FROM user_info WHERE IsAnswer = 1 AND position = "Student"';
     db.query(query, (error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
