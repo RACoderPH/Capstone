@@ -64,9 +64,9 @@
 
     button {
       border-radius: 20px;
-      border: 1px solid #ff4b2b;
-      background-color: #ff4b2b;
-      color: #ffffff;
+      border: 1px solid #6373cf;
+      background-color: #ffffff;
+      color: #6885e6;
       font-size: 12px;
       font-weight: bold;
       padding: 12px 45px;
@@ -75,6 +75,14 @@
       transition: transform 80ms ease-in;
     }
   }
+}
+
+/* Add this CSS code to your existing styles */
+
+.PieChart {
+  margin: 0 auto; /* Center the PieChart horizontally */
+  width: 60%; /* Adjust the width as needed */
+  height: 400px; /* Adjust the height as needed */
 }
 
 /* Media Query for Smaller Screens */

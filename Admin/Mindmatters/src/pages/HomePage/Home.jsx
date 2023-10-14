@@ -20,6 +20,7 @@ import {
   Legend,
   CartesianGrid,
   Bar,
+  Label,
 } from "recharts";
 
 function Home() {
@@ -34,6 +35,11 @@ function Home() {
     setOpen(false);
     window.location.reload(); // Reload the page
   };
+
+  // Create state variables for Stress, Anxiety, and Depression
+  const [stressData, setStressData] = useState(0);
+  const [anxietyData, setAnxietyData] = useState(0);
+  const [depressionData, setDepressionData] = useState(0);
 
    // Define the data variable here with initial values
    const [data, setData] = useState([
@@ -76,6 +82,9 @@ function Home() {
             ];
   
             // Update the data state with the PieChart data
+            setStressData(stress);
+            setAnxietyData(anxiety);
+            setDepressionData(depression);
             setData(dataForPieChart);
           }
         })
@@ -125,7 +134,7 @@ function Home() {
                   <td>{user.status}</td>
                   <td>{user.position}</td>
             <td className="btns">
-            <button onClick={() => handleViewClick(user.id)}>View</button>
+            <Button variant="outlined" onClick={() => handleViewClick(user.id)}>View</Button>
             </td>
           </tr>
   ))}
@@ -140,10 +149,11 @@ function Home() {
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
-          <span className="userUpdateTitle">User Results</span>
+          <span className="userUpdateTitle">Mental Health Assesment Results</span>
           <span className="txt">The information can be edited</span>
-          
-          <PieChart width={400} height={400}>
+
+          <div className="chart">
+          <PieChart className="PieChart" width={400} height={320}>
           <Pie
             dataKey="value"
             isAnimationActive={false}
@@ -153,14 +163,22 @@ function Home() {
             outerRadius={80}
             fill="#8884d8"
             label
-          />
+          >
+          </Pie>
           <Tooltip />
           </PieChart>
+          </div>
 
-            <br />
-            <Button className="modalBtn" variant="outlined" >
-              Save
-            </Button>
+        <div className="result-placeholder">
+        <h2>Results</h2>
+        <ul>
+          <li>Stress: {stressData}</li>
+          <li>Anxiety: {anxietyData}</li>
+          <li>Depression: {depressionData}</li>
+        </ul>
+        </div>
+          
+            <br/>
           </Box>
         </Modal>
     </div>

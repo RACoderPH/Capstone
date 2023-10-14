@@ -126,4 +126,43 @@ router.get('/student_result/:id', (req,res) => {
     }
   })
 });
+
+// for bar chart data
+router.get('/student_result', (req, res) => {
+  // SQL query to calculate the average of stress, anxiety, and depression for all students
+  const getAverages = `
+    SELECT
+      AVG(stress) AS avg_stress,
+      AVG(anxiety) AS avg_anxiety,
+      AVG(depression) AS avg_depression
+    FROM student_result
+  `;
+
+  db.query(getAverages, (error, result) => {
+    if (error) {
+      console.error('Failed to fetch average data:', error);
+      res.status(500).json({ error: 'Failed to fetch average data' });
+    } else {
+      res.json(result[0]); // Send the JSON data as the response (assuming you expect a single row result)
+    }
+  });
+});
+
+// for piechart
+router.get('/count', (req, res) => {
+  const query = 'SELECT SUM(CASE WHEN IsAnswer = 0 THEN 1 ELSE 0 END) AS notTaken, SUM(CASE WHEN IsAnswer = 1 THEN 1 ELSE 0 END) AS taken FROM user_info';
+
+  db.query(query, (error, results) => {
+    if (error) {
+      console.error('Failed to fetch assessment status:', error);
+      res.status(500).json({ error: 'Failed to fetch assessment status' });
+    } else {
+      const assessmentStatus = {
+        notTaken: results[0].notTaken,
+        taken: results[0].taken,
+      };
+      res.json(assessmentStatus);
+    }
+  });
+});
   module.exports = router;
