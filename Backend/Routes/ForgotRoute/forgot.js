@@ -176,4 +176,30 @@ router.post('/ChangePassword', (req, res) => {
     });
   });
 
+  router.post('/ChangePasswordProfile', (req, res) => {
+    const userId = req.body.userId; // Assuming userId is sent in the request body
+    const newPassword = req.body.newPassword; // Assuming newPassword is sent in the request body
+  
+    // Hash the new password before storing it in the database
+    bcrypt.hash(newPassword, 10, (hashError, hashedPassword) => {
+      if (hashError) {
+        console.error('Password hashing error:', hashError);
+        return res.status(500).json({ error: 'Password hashing error' });
+      }
+  
+      // Update the hashed password in the database
+      const updatePasswordQuery = 'UPDATE user_info SET Password = ? WHERE id = ?';
+  
+      db.query(updatePasswordQuery, [hashedPassword, userId], (updateError) => {
+        if (updateError) {
+          console.error('Failed to update password:', updateError);
+          return res.status(500).json({ error: 'Failed to update password' });
+        }
+  
+        // Password successfully updated
+        res.send({ message: 'Password updated successfully' });
+      });
+    });
+  });
+
 module.exports = router;
