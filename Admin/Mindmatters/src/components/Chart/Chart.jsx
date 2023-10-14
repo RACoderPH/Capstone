@@ -38,7 +38,7 @@ const Chart = () => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div style={{ flex: 1 }}>
           <BarChart
-            width={500}
+            width={600}
             height={300}
             data={[
               { name: 'Stress', Student: averages.avg_stress },

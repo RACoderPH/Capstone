@@ -150,7 +150,7 @@ router.get('/student_result', (req, res) => {
 
 // for piechart
 router.get('/count', (req, res) => {
-  const query = 'SELECT SUM(CASE WHEN IsAnswer = 0 THEN 1 ELSE 0 END) AS notTaken, SUM(CASE WHEN IsAnswer = 1 THEN 1 ELSE 0 END) AS taken FROM user_info';
+  const query = 'SELECT SUM(CASE WHEN IsAnswer = 0 THEN 1 ELSE 0 END) AS notTaken, SUM(CASE WHEN IsAnswer = 1 THEN 1 ELSE 0 END) AS taken FROM user_info WHERE position = "Student"';
 
   db.query(query, (error, results) => {
     if (error) {

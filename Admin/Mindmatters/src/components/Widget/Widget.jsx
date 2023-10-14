@@ -5,8 +5,11 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import WebAssetOffIcon from '@mui/icons-material/WebAssetOff';
+
 function Widget  ({type}){
   const [studentCount, setStudentCount] = useState(0);
+  const [takenCount, setTakenCount] = useState(0);
+  const [notTakenCount, setNotTakenCount] = useState(0);
 
   useEffect(() => {
     // Make an HTTP GET request to fetch student count
@@ -17,6 +20,16 @@ function Widget  ({type}){
       })
       .catch((error) => {
         console.error('Failed to fetch student count:', error);
+      });
+
+      axios.get('https://mindmatters-ejmd.onrender.com/count')
+      .then((response) => {
+        // Update the state with the fetched counts
+        setTakenCount(response.data.taken);
+        setNotTakenCount(response.data.notTaken);
+      })
+      .catch((error) => {
+        console.error('Failed to fetch assessment counts:', error);
       });
   }, []);
 
@@ -29,6 +42,7 @@ function Widget  ({type}){
         data = {
           title:"User",
           isCount:true,
+          count: studentCount,
           link:"See all users",
           icon:(
             <PersonOutlinedIcon className="icon"/>
@@ -39,6 +53,7 @@ function Widget  ({type}){
         data = {
           title:"Taked Assessment",
           isCount:true,
+          count: takenCount, // Display the count of users who have taken the assessment
           link:"View details",
           icon:(
             <AssignmentIcon className="icon"/>
@@ -47,8 +62,9 @@ function Widget  ({type}){
         break;
         case "Not":
         data = {
-          title:"Not Take Asseesment",
+          title:"Not Take Assesment",
           isCount:true,
+          count: notTakenCount, // Display the count of users who have not taken the assessment
           link:"View details",
           icon:(
             <WebAssetOffIcon className="icon"/>
@@ -59,13 +75,12 @@ function Widget  ({type}){
             break;
     }
 
-
     return(
 
     <div className="widget">
         <div className="left">
             <span className="title">{data.title}</span>
-            <span className="counter">{data.isCount && studentCount}</span>
+            {data.isCount && <span className="counter">{data.count}</span>}
             <span className="link">{data.link}</span>
         </div>
         <div className="right">
