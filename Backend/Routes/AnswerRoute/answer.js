@@ -21,7 +21,7 @@ router.post('/submit_answer', (req, res) => {
         insertionErrors.push(insertErr);
       } else {
         // Successfully inserted an answer, now update user_info
-        const updateUserInfo = 'UPDATE user_info SET IsAnswer = 1 WHERE user_id = ?';
+        const updateUserInfo = 'UPDATE user_info SET IsAnswer = 1 WHERE id = ?';
         db.query(updateUserInfo, [user_id], (updateErr, updateResult) => {
           if (updateErr) {
             console.error('Failed to update user_info:', updateErr);
