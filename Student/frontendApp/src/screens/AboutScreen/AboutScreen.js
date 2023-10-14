@@ -28,8 +28,8 @@ const AboutScreen = () => {
                </View>
                <View style={styles.features}>
                     <Text style={styles.head}>Connect With Us:</Text>
-                    <Text style={styles.text}>Contact us:               09168514723</Text>
-                    <Text style={styles.text}>Email:                        sdapulilan@gmail.com</Text>
+                    <Text style={styles.text2}>Contact us:                    09168514723</Text>
+                    <Text style={styles.text2}>Email:            sdapulilan@gmail.com</Text>
                </View>
             
             </View>
@@ -42,18 +42,24 @@ const styles = StyleSheet.create({
       height:height,
     },
     content:{
-        marginTop:45,
+        marginTop:20,
         width:'100%',
         height:'100%',
-        padding:35,
+        padding:14,
     },
     text:{
         padding:2,
-        fontSize:18,
+        fontSize:16,
         fontWeight:'400',
         color:'#353839',
         textAlign:'justify'
     },
+    text2:{
+      padding:2,
+      fontSize:14,
+      fontWeight:'400',
+      color:'#353839',
+  },
     head:{
         padding:2,
         fontSize:18,

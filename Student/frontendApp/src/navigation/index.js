@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import GetStarted from '../screens/GetStarted/GetStarted';
 import SplashScreens from '../screens/SplashScreen/SplashScreen';
 import ForgotScreens from '../screens/ForgotScreen/ForgotScreen';
-import JournalScreens from '../screens/JournalScreen/JournalScreen';
+import JournalScreens from '../screens/JournalScreen/Diary';
 import ProfileScreens from '../screens/ProfileScreen/ProfileScreen';
 import BreathingScreens from '../screens/BreathingScreen/BreathingScreen';
 import Breathe1 from '../screens/BreathingScreen/BreatheTechniques/Breathe1';
@@ -24,7 +24,10 @@ import TermsScreen from '../screens/TermsAndCondition/TermsScreen';
 import RecommendationScreen from '../screens/TestScreen/Recommendation/RecommendationScreen';
 import OTPscreen from '../screens/ForgotScreen/OTP/OTPscreen';
 import NewPassword from '../screens/ForgotScreen/NewPassword/NewPassword';
-
+import Diary from '../screens/JournalScreen/UserDiary/Diary';
+import NotificationScreen from '../screens/NotificationScreen';
+import ChangePasswordScreen from '../screens/ChangePassword/ChangePasswordScreen';
+import userDiary from '../screens/JournalScreen/Journal/JournalScreen';
 
 
 const Navigation = () => {
@@ -45,8 +48,9 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
-    
-      <Stack.Screen name="Ai" component={ChatAi} />
+
+     
+      <Stack.Screen name="Breathe1" component={Breathe1} />
       <Stack.Screen name="Testing" component={TestingScreen} />
       
         <Stack.Screen name="SignIn" component={SignInScreen} />
@@ -56,21 +60,30 @@ const Navigation = () => {
         <Stack.Screen name="Started" component={GetStarted} />
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
-        <Stack.Screen name="Breathe1" component={Breathe1} />
+        
+      
         <Stack.Screen name="Journal" component={JournalScreens} />
-        <Stack.Screen name="Test" component={TestScreen} />
+        <Stack.Screen name="Diary" component={Diary} />
+        <Stack.Screen name="UserDiary" component={userDiary} />
+        <Stack.Screen name="Announce" component={NotificationScreen} />
+      
+        <Stack.Screen name="verify" component={VerificationScreen} /> 
+        
         <Stack.Screen name="Edit" component={EditProfile} />
         <Stack.Screen name="ChatBot" component={Chat} />
-        <Stack.Screen name="Instruction" component={Instruction} />
+        <Stack.Screen name="Ai" component={ChatAi} />
+
+       
         <Stack.Screen name="Result" component={Result} /> 
-        <Stack.Screen name="otp" component={OTPscreen} /> 
-    
+        <Stack.Screen name="Test" component={TestScreen} />
+        <Stack.Screen name="Instruction" component={Instruction} />
         <Stack.Screen name="About" component={AboutScreen} />  
-        <Stack.Screen name="verify" component={VerificationScreen} />  
         <Stack.Screen name="Terms" component={TermsScreen} />  
         <Stack.Screen name="recommendation" component={RecommendationScreen} />  
         <Stack.Screen name="NewPass" component={NewPassword} /> 
-         
+        
+      <Stack.Screen name="otp" component={OTPscreen} /> 
+      <Stack.Screen name="ChangePass" component={ChangePasswordScreen} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );

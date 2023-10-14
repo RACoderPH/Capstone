@@ -1,7 +1,6 @@
 
 import React from 'react'
-import { View, Image,StyleSheet,Dimensions} from 'react-native';
-import Logo from '../../../assets/images/Mindmatters.png'
+import { View, Image,StyleSheet,Dimensions,Text} from 'react-native';
 import LottieView from 'lottie-react-native';
 
 const {width,height} = Dimensions.get('window');
@@ -15,10 +14,15 @@ const ChatSplash = () => {
        loop
        style={{ width: width, height: width }}
      />
+      <Text style={styles.text}>MiMa Ai Bot</Text>
   </View>
   )
 }
 const styles = StyleSheet.create({
+    text:{
+      fontSize:30,
+      color:'black',
+    },
     circle: {
         position: 'absolute',
         top: -110,

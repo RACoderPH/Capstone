@@ -5,31 +5,41 @@ const router = express.Router();
 const db = require('../database'); 
 
 router.post('/submit_answer', (req, res) => {
-    const answers = req.body.answers; // Assuming you are sending an array of answers from the frontend
-  
-    // Loop through each answer and insert it into the database
-    const insertQuestion = 'INSERT INTO answer (answer_value, category, user_id, question_id) VALUES (?, ?, ?, ?)';
-  
-    const insertionErrors = [];
-  
-    answers.forEach((answer) => {
-      const { answer_value, category, user_id, question_id } = answer;
-  
-      db.query(insertQuestion, [answer_value, category, user_id, question_id], (insertErr, insertResult) => {
-        if (insertErr) {
-          console.error('Failed to submit:', insertErr);
-          insertionErrors.push(insertErr);
-        }
-      });
+  const answers = req.body.answers; // Assuming you are sending an array of answers from the frontend
+
+  // Loop through each answer and insert it into the database
+  const insertAnswer = 'INSERT INTO answer (answer_value, category, user_id, question_id) VALUES (?, ?, ?, ?)';
+
+  const insertionErrors = [];
+
+  answers.forEach((answer) => {
+    const { answer_value, category, user_id, question_id } = answer;
+
+    db.query(insertAnswer, [answer_value, category, user_id, question_id], (insertErr, insertResult) => {
+      if (insertErr) {
+        console.error('Failed to submit:', insertErr);
+        insertionErrors.push(insertErr);
+      } else {
+        // Successfully inserted an answer, now update user_info
+        const updateUserInfo = 'UPDATE user_info SET IsAnswer = 1 WHERE user_id = ?';
+        db.query(updateUserInfo, [user_id], (updateErr, updateResult) => {
+          if (updateErr) {
+            console.error('Failed to update user_info:', updateErr);
+            insertionErrors.push(updateErr);
+          }
+        });
+      }
     });
-  
-    // Check if there were any insertion errors
-    if (insertionErrors.length > 0) {
-      res.status(500).json({ message: 'Some answers failed to submit', errors: insertionErrors });
-    } else {
-      res.json({ message: 'All answers submitted successfully' });
-    }
   });
+
+  // Check if there were any insertion errors
+  if (insertionErrors.length > 0) {
+    res.status(500).json({ message: 'Some answers failed to submit', errors: insertionErrors });
+  } else {
+    res.json({ message: 'All answers submitted successfully' });
+  }
+});
+
 //For Stress Computation
 router.get('/stress/:id', (req, res) => {
   const userId = req.params.id;

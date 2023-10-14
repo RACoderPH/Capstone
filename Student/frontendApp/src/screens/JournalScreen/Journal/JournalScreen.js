@@ -7,11 +7,13 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomButton from '../../components/CustomButton/CustomButton';
+import CustomButton from '../../../components/CustomButton/CustomButton';
 import axios from 'axios';
 import { TextInput } from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,6 +22,7 @@ const JournalScreen = () => {
   const [description, setDescription] = useState('');
   const [user_id, setUserId] = useState('');
   const [insertMessage, setInsertMessage] = useState('');
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -46,17 +49,22 @@ const JournalScreen = () => {
       description: description,
       user_id: user_id,
     };
-
-    // Make a POST request to the backend API using Axios
-    axios
+    if(title.trim() === "" || description === ""){
+      Alert.alert('Blank Field','Pleas Fill out the field');
+    }else{
+      axios
       .post(apiUrl, requestBody)
       .then((response) => {
         // Handle the response from the backend
         setInsertMessage(response.data.message);
+        navigation.navigate('Diary');
       })
       .catch((error) => {
-        console.error('Error inserting data:', error);
+        console.log('Error inserting data:', error);
       });
+    }
+    // Make a POST request to the backend API using Axios
+   
   };
 
   return (
@@ -90,12 +98,14 @@ const JournalScreen = () => {
             onChangeText={(text) => setDescription(text)}
             style={{ width: width * 0.98, minHeight: 200, margin: 10 }}
           />
-        </View>
-        <View style={{ justifyContent: 'flex-end', marginBottom: 20 }}>
+
+          <View style={{ justifyContent: 'flex-end', marginBottom: 20 }}>
           <TouchableOpacity onPress={handleInsertData}>
             <CustomButton text="Entry" />
           </TouchableOpacity>
         </View>
+        </View>
+    
       </View>
     </ScrollView>
   );

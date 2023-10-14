@@ -1,1 +1,1 @@
-export {default} from './Journal';
+export {default} from './Diary';

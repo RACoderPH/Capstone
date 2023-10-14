@@ -109,7 +109,7 @@ const RecommendationScreen = () => {
           </Text>
           {/* Repeat this pattern for other sections */}
           <TouchableOpacity onPress={Homepage}>
-          <CustomButton text={'Next'}/>
+          <CustomButton text={'Done'}/>
           </TouchableOpacity>
         </View>
        

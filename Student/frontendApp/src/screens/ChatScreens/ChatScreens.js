@@ -1,8 +1,9 @@
 import { View, Text,Dimensions } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import ChatBot from './Chatbot/ChatBot'
+
 import ChatUser from './ChatUser';
 import axios from 'axios'; // Import axios
+import ChatAiBot from './ChatAiBot';
 
 const {width,height} = Dimensions.get('window');
 const ChatScreens = () => {
@@ -25,18 +26,18 @@ const ChatScreens = () => {
     <View style={{width:width*1}}>
     {userdata.length > 0 ? (
       userdata.map((user, index) => (
-        <View key={index}>
+        <View key={index} style={{width:width,height:height}}>
           {user.status === 'online' ? (
             // Render the ChatScreen when status is 'online'
             <ChatUser />
           ) : (
             // Render the status text when status is 'offline'
-            <ChatBot />
+           <ChatAiBot/>
           )}
         </View>
       ))
     ) : (
-      <Text>Loading user data...</Text>
+      <Text style={{justifyContent:'center',textAlign:'center',fontSize:25}}>Wait a moment</Text>
     )}
   </View>
   );

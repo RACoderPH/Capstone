@@ -113,11 +113,13 @@ const styles = StyleSheet.create({
     fontWeight:'500'
   },
   terms:{
+    color:'black',
     fontSize:16,
     fontWeight:'700',
     padding:2,
 },
 other:{
+  color:'black',
   padding:3,
   fontSize:14,
   fontWeight:'400'

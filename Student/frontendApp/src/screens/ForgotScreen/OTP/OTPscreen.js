@@ -1,5 +1,5 @@
-import React ,{useState}from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity} from 'react-native'
+import React ,{useState,useEffect}from 'react'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert} from 'react-native'
 import CustomInputs from '../../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +12,44 @@ const OTPscreen = () => {
   const [otp,setOtp] = useState("");
   const navigation = useNavigation();
 
+  const SubmitOTP = async () => {
+
+    if(otp.trim() === ""){
+      Alert.alert('One Time Password', 'Please input One Time Password');
+    }else
+    {
+      try {
+        const response = await axios.post('https://mindmatters-ejmd.onrender.com/otp', {
+          otp: otp, // Pass the email to the server
+        });
+    
+        // Check the response status
+        if (response.status === 200) {
+              console.log(response.data.message);
+          if (response.data.message === 'match') {
+         
+            Alert.alert(
+              'One Time Password',
+              'Verification Success ',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => OneTime(),
+                },
+              ],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert('One Time Password', 'OTP code is Invalid ');
+          }
+        } else {
+          ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show('Network error', ToastAndroid.SHORT);
+      }
+    }
+  };
 
   const OneTime = () => {
       navigation.navigate('NewPass');
@@ -32,11 +70,11 @@ const OTPscreen = () => {
        <Text styles={styles.text}>One Time Password</Text>
    <CustomInputs 
     mode="outlined"
-    label="Email"
+    label="One Time Password"
     placeholder="OTP"
     onChangeText={(e) => setOtp(e)}
   />
-   <TouchableOpacity onPress={OneTime}>
+   <TouchableOpacity onPress={SubmitOTP}>
      <CustomButton
      mode="elevated" 
      text="Submit" />

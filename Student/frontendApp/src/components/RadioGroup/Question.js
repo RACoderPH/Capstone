@@ -6,7 +6,7 @@ import axios from 'axios';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import {useNavigation} from '@react-navigation/native';
-const { width } = Dimensions.get('window');
+const { width,height} = Dimensions.get('window');
 
 const Question = () => {
   const navigation = useNavigation();
@@ -91,41 +91,43 @@ const Question = () => {
   const renderRadioButtons = (questionData) => {
     const questionId = questionData.Question_id;
 
+    const isAnswerSelected = selectedValues[questionId] !== undefined;
     return (
       <View style={styles.radioGroup}>
-        <View style={styles.radioOption}>
-          <RadioButton.Android
-            value={0}
-            status={selectedValues[questionId] === 0 ? 'checked' : 'unchecked'}
-            onPress={() => handleRadioChange(questionId, 0)}
-          />
-          <Text style={{fontSize:10}}>{questionData.option1}</Text>
-        </View>
-        <View style={styles.radioOption}>
-          <RadioButton.Android
-            value={1}
-            status={selectedValues[questionId] === 1 ? 'checked' : 'unchecked'}
-            onPress={() => handleRadioChange(questionId, 1)}
-          />
-          <Text style={{fontSize:10}}>{questionData.option2}</Text>
-        </View>
-        <View style={styles.radioOption}>
-          <RadioButton.Android
-            value={2}
-            status={selectedValues[questionId] === 2 ? 'checked' : 'unchecked'}
-            onPress={() => handleRadioChange(questionId, 2)}
-          />
-          <Text style={{fontSize:10}}>{questionData.option3}</Text>
-        </View>
-        <View style={styles.radioOption}>
-          <RadioButton.Android
-            value={3}
-            status={selectedValues[questionId] === 3 ? 'checked' : 'unchecked'}
-            onPress={() => handleRadioChange(questionId, 3)}
-          />
-          <Text style={{fontSize:10}}>{questionData.option4}</Text>
-        </View>
+      {isAnswerSelected ? null : <Text style={{ color: 'red', fontSize: 20, marginRight: 5, marginTop: 2, marginBottom: 2 }}>*</Text>}
+      <View style={styles.radioOption}>
+        <RadioButton.Android
+          value={0}
+          status={selectedValues[questionId] === 0 ? 'checked' : 'unchecked'}
+          onPress={() => handleRadioChange(questionId, 0)}
+        />
+        <Text style={{ fontSize: 10 }}>{questionData.option1}</Text>
       </View>
+      <View style={styles.radioOption}>
+        <RadioButton.Android
+          value={1}
+          status={selectedValues[questionId] === 1 ? 'checked' : 'unchecked'}
+          onPress={() => handleRadioChange(questionId, 1)}
+        />
+        <Text style={{ fontSize: 10 }}>{questionData.option2}</Text>
+      </View>
+      <View style={styles.radioOption}>
+        <RadioButton.Android
+          value={2}
+          status={selectedValues[questionId] === 2 ? 'checked' : 'unchecked'}
+          onPress={() => handleRadioChange(questionId, 2)}
+        />
+        <Text style={{ fontSize: 10 }}>{questionData.option3}</Text>
+      </View>
+      <View style={styles.radioOption}>
+        <RadioButton.Android
+          value={3}
+          status={selectedValues[questionId] === 3 ? 'checked' : 'unchecked'}
+          onPress={() => handleRadioChange(questionId, 3)}
+        />
+        <Text style={{ fontSize: 10 }}>{questionData.option4}</Text>
+      </View>
+    </View>
     );
   };
   //Check para ma identify kung nag choice si user ng Answer per radiogroup
@@ -142,7 +144,10 @@ const Question = () => {
   }
   };
   return (
-    <View>
+    <View style={{width:'100%'}}>
+      <View>
+        <Text style={{fontSize:25,textAlign:'center',fontWeight:'600'}}>DASS 42 Mental Health Assessment</Text>
+        </View>
     {isLoading ? ( // Show loading indicator if isLoading is true
       <ActivityIndicator size="large" color="#0084ff" style={styles.loadingIndicator} />
     ) : (

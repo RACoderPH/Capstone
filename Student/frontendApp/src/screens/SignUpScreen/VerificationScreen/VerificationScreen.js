@@ -6,6 +6,7 @@ import {
   Dimensions,
   ToastAndroid,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import CustomInputs from '../../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../../components/CustomButton/CustomButton';
@@ -17,8 +18,8 @@ import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 const VerificationScreen = () => {
   const navigation = useNavigation();
-  const [verificationCodes, setVerificationCodes] = useState([]);
-  const [code, setCode] = useState('');
+
+  const [verificationCodes, setVerificationCodes] = useState('');
   const [username, setUsername] = useState(''); // State to store the username
 
   useEffect(() => {
@@ -46,7 +47,6 @@ const VerificationScreen = () => {
       .get(`https://mindmatters-ejmd.onrender.com/verification?username=${username}`)
       .then((response) => {
         if (response.data) {
-          setVerificationCodes(response.data);
           console.log(response.data);
         } else {
           console.error('No data or incorrect data structure in API response.');
@@ -57,17 +57,45 @@ const VerificationScreen = () => {
       });
   };
 
-  const SubmitEmail = () => {
-    // Check if the entered code matches any of the verification codes
-    console.log(code);
-    const enteredCode = code.trim().toLowerCase(); // Convert entered code to lowercase for case-insensitive comparison
-    const isCodeMatched = verificationCodes.includes(enteredCode);
-  
-    if (isCodeMatched) {
-      ToastAndroid.show('Verification Successful', ToastAndroid.SHORT);
-      navigation.navigate('SignIn');
-    } else {
-      ToastAndroid.show('Verification Failed', ToastAndroid.SHORT);
+  const SignIn = () => {
+    navigation.navigate('SignIn');
+}
+
+  const SubmitCode = async () => {
+    if(verificationCodes.trim() === ""){
+      Alert.alert('Verification', 'Please input Verification Code');
+    }else
+    {
+      try {
+        const response = await axios.post('https://mindmatters-ejmd.onrender.com/verification', {
+          verificationCodes: verificationCodes, // Pass the email to the server
+        });
+    
+        // Check the response status
+        if (response.status === 200) {
+              console.log(response.data.message);
+          if (response.data.message === 'match') {
+         
+            Alert.alert(
+              'Verified User',
+              'Verification Success ',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => SignIn(),
+                },
+              ],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert('Verification', 'Verification is Invalid');
+          }
+        } else {
+          ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show('Network error', ToastAndroid.SHORT);
+      }
     }
   };
   
@@ -94,10 +122,10 @@ const VerificationScreen = () => {
         <CustomInputs
           mode="outlined"
           label="Code"
-          placeholder="Enter Email"
-          onChangeText={(e) => setCode(e)}
+          placeholder="Enter Code "
+          onChangeText={(e) => setVerificationCodes(e)}
         />
-        <TouchableOpacity onPress={SubmitEmail}>
+        <TouchableOpacity onPress={SubmitCode}>
           <CustomButton mode="elevated" text="Submit" />
         </TouchableOpacity>
       </View>

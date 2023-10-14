@@ -83,16 +83,16 @@ const Result = () => {
           <Text style={styles.chartTitle}>Equivalent Score of your Result</Text>
           <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:'space-evenly' }}>
           <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text>{userDepression}</Text>
-          <Text>Depression</Text>
+          <Text style={{color:'black',}}>{userDepression}</Text>
+          <Text style={{color:'black',}}>Depression</Text>
           </View>
           <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text>{userAnxiety}</Text>
-          <Text>Anxiety</Text>
+          <Text style={{color:'black',}}>{userAnxiety}</Text>
+          <Text style={{color:'black',}}>Anxiety</Text>
           </View>
           <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text>{userStress}</Text>
-          <Text>Stress</Text>
+          <Text style={{color:'black',}}>{userStress}</Text>
+          <Text style={{color:'black',}}>Stress</Text>
         </View>
         </View>
         <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:"space-evenly" }}>
@@ -137,13 +137,15 @@ const Result = () => {
       ? "Normal"
       : ''}
           </Text>
-        </View>
 
-        </>
-      )}
-       <TouchableOpacity onPress={recommendation}>
+          
+        </View>
+        <TouchableOpacity onPress={recommendation}>
             <CustomButton text="Next"/>
        </TouchableOpacity>
+        </>
+      )}
+      
     </View>
   );
 };
@@ -159,6 +161,7 @@ const styles = StyleSheet.create({
   chartTitle: {
     fontSize: 18,
     textAlign:'center',
+    color:'black',
     fontWeight: 'bold',
     marginBottom: 5,
   },

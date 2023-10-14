@@ -11,6 +11,7 @@ import bg from '../../../assets/images/exercise.jpg';
 import journal from '../../../assets/images/journal.jpg';
 import test from '../../../assets/images/test.jpg';
 import axios from 'axios';
+import LottieView from 'lottie-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
    Card,
@@ -78,8 +79,12 @@ const DashBoardScreen = () => {
       return (
         <TouchableOpacity>
         <Card style={styles.content}  onPress={Journal} >
-        <Card.Title title="Diary" style={{ color: 'black' }} />
-          <Card.Cover source={journal}  style={styles.cover}/>
+        <Text style={{color:"black",padding:15,fontWeight:'700'}}>Diary  </Text>
+        <LottieView
+       source={require('../../../assets/animation/diary.json')}
+       autoPlay
+       loop
+       style={{ width:150, height: 150 }}/>
           <Card.Content>
             <Text style={{fontSize:width * 0.03,color:'black'}}>Write your thoughts\{'\n'}feeling</Text>
           </Card.Content>
@@ -92,8 +97,13 @@ const DashBoardScreen = () => {
       return (
         <TouchableOpacity >
         <Card style={styles.content} onPress={Assessment}>
-          <Card.Title title="Assessment"/>
-          <Card.Cover source={test}  style={styles.cover}/>
+     
+          <Text style={{color:"black",padding:15,fontWeight:'700'}}>Assessment</Text>
+          <LottieView
+       source={require('../../../assets/animation/test.json')}
+       autoPlay
+       loop
+       style={{ width:150, height: 150 }}/>
           <Card.Content>
             <Text style={{fontSize:width * 0.03,color:'black'}}>Check your Mental{'\n'} Health</Text>
           </Card.Content>
@@ -121,12 +131,16 @@ const DashBoardScreen = () => {
     </View>
       </View>
       <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-  <View style={{ borderRadius: 15, overflow: 'hidden' }}>
-    <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{ width: width * 0.9, height: 200 }}>
-      <Text style={{ color: 'white', fontSize: 18, fontWeight: '300', margin: 15 }}>{quoteData.quote}</Text>
-      <Text style={{ color: 'white', fontSize: 16, marginLeft: 10 }}>-{quoteData.author}</Text>
-    </ImageBackground>
-  </View>
+      <View style={{ borderRadius: 15, overflow: 'hidden' }}>
+  <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{ width: width * 0.9, height: 200 }}>
+    {/* Semi-transparent background */}
+    <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)',width:'100%',height:'100%',justifyContent:'center' }}>
+      <Text style={{ color: 'white', fontSize: 16, fontWeight: '300', margin: 5 ,padding:2 ,textAlign:'center'}}>{quoteData.quote}</Text>
+      <Text style={{ color: 'white', fontSize: 14, marginLeft: 5 }}>- {quoteData.author}</Text>
+    </View>
+  </ImageBackground>
+</View>
+
 </View>
 
         <Text style={{fontSize:16,fontWeight:'700',color:'black',marginLeft: '2%',marginTop:'4%'}}>Features </Text>

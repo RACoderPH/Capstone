@@ -8,7 +8,8 @@ import {
   ToastAndroid,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,7 +47,7 @@ const SignInScreen = () => {
             setIsSubmitted(true);
             navigation.navigate('Started');
           } else {
-            ToastAndroid.show('User not Exist', ToastAndroid.SHORT);
+            Alert.alert('Mind Matters', 'Please Check Username and Password');
           }
         });
     }

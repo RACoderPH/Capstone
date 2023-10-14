@@ -1,11 +1,12 @@
 
 import React ,{useState}from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity} from 'react-native'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert} from 'react-native'
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width,height} = Dimensions.get('window');
 const ForgotScreen = () => {
@@ -14,25 +15,31 @@ const ForgotScreen = () => {
    
 
     const SubmitEmail = async () => {
-      try {
-        const response = await axios.post('https://mindmatters-ejmd.onrender.com/forgot', {
-          email: Email, // Pass the email to the server
-        });
-    
-        // Check the response status
-        if (response.status === 200) {
-              console.log(response.data.message);
-          if (response.data.message === 'exists') {
-            ToastAndroid.show('Email exists', ToastAndroid.SHORT);
-            navigation.navigate('otp');
+
+      if(Email.trim() === ""){
+        Alert.alert('Forgot Password', 'Please input your Email');
+      }else{
+        try {
+          const response = await axios.post('https://mindmatters-ejmd.onrender.com/forgot', {
+            email: Email, // Pass the email to the server
+          });
+      
+          // Check the response status
+          if (response.status === 200) {
+                console.log(response.data.message);
+            if (response.data.message === 'exists') {
+              ToastAndroid.show('Email exists', ToastAndroid.SHORT);
+              await AsyncStorage.setItem('userEmail', Email);
+              navigation.navigate('otp');
+            } else {
+              Alert.alert("Forgot Password', 'Email Doesn't exist");
+            }
           } else {
-            ToastAndroid.show('Email does not exist', ToastAndroid.SHORT);
+            ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
           }
-        } else {
-          ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
+        } catch (error) {
+          ToastAndroid.show('Network error', ToastAndroid.SHORT);
         }
-      } catch (error) {
-        ToastAndroid.show('Network error', ToastAndroid.SHORT);
       }
     };
     

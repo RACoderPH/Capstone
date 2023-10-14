@@ -6,6 +6,7 @@ import { View,
  TouchableOpacity,
  Dimensions,
  KeyboardAvoidingView,
+ Alert,
 } from 'react-native'
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -55,12 +56,15 @@ const SignUpScreen = () => {
            console.log(response.data.message);
            // Check the response for the status code indicating username already exists
            if (response.data.message === 'Username already exists') {
-             ToastAndroid.show('User Already Exists',ToastAndroid.SHORT);
-           } else if (response.data.message === 'User registered successfully') {
+             Alert.alert('Mind Matters','User Already Exists');
+           }else if(response.data.message === 'Email already exists'){
+            Alert.alert('Mind Matters','Email Already Exists');
+           }
+            else if (response.data.message === 'User registered successfully') {
              AsyncStorage.setItem('username', Username);
              ToastAndroid.show('Registered Successfully',ToastAndroid.SHORT);
              setIsSubmitted(true);
-             navigation.navigate('Verify');
+             navigation.navigate('verify');
            }
          })
          .catch((error) => {

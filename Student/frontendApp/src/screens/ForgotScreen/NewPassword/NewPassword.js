@@ -1,9 +1,10 @@
 import React ,{useState}from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity} from 'react-native'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert} from 'react-native'
 import CustomInputs from '../../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const {width,height} = Dimensions.get('window');
@@ -14,11 +15,61 @@ const NewPassword = () => {
     const navigation = useNavigation();
   
   
-    const OneTime = () => {
+    const SignIn = () => {
         navigation.navigate('SignIn');
     }
+    
+    const changePassword = async () => {
+
+      if(pass.trim() === "" || Cpass === ""){
+          Alert.alert('Reset Password','Please Fill out the Field');
+      }else{
+          if(pass === Cpass){
+            try {
+              // Retrieve the userEmail value from AsyncStorage
+              const userEmail = await AsyncStorage.getItem('userEmail');
+              console.log(userEmail);
+              // Make the API request with userEmail and newPassword
+              const response = await axios.post('https://mindmatters-ejmd.onrender.com/ChangePassword', {
+                userEmail: userEmail,
+                newPassword: pass,
+              });
+                if(response.status === 200){
+                  console.log(response.data.message);
+                  if (response.data.message === 'Password updated successfully') {
+                    Alert.alert(
+                      'Reset Password',
+                      'Successfully Reset your Password',
+                      [
+                        {
+                          text: 'OK',
+                          onPress: () => SignIn(),
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+      
+                  }
+                  else{
+                    Alert.alert('Reset Password', 'Password not reset');
+                  }
+      
+                }else {
+                  ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
+                }
+            } catch (error) {
+              // Handle network error
+              console.error('Network error:', error);
+              return { success: false, message: 'Network error' };
+            }
+          }else{
+            Alert.alert('Reset Password','Password and Confirm Password Not match');
+          }
+      }
+    };
 
 
+    
   return (
     <View style={styles.root}>
     <View style={styles.circle} />
@@ -35,17 +86,19 @@ const NewPassword = () => {
     mode="outlined"
     label="Password"
     placeholder="New Password"
+    secureTextEntry={true}
     onChangeText={(e) => setPass(e)}
   />
    <CustomInputs 
     mode="outlined"
-    label="Password"
+    label="Confirm Password"
     placeholder="Confirm Password"
+    secureTextEntry={true}
     onChangeText={(e) => setCpass(e)}
   />
   
 
-   <TouchableOpacity onPress={OneTime}>
+   <TouchableOpacity onPress={changePassword}>
      <CustomButton
      mode="elevated" 
      text="Submit" />
@@ -58,8 +111,8 @@ const styles = StyleSheet.create({
     root:{
       alignItems:'center',
       backgroundColor:'white',
-      width:'100%',
-      height:'100%',
+      width:width,
+      height:height,
   },
   circle: {
     position: 'absolute',

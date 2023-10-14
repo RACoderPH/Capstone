@@ -19,7 +19,7 @@ const {width,height} = Dimensions.get('window');
 const ChatAiBot = () => {
   const [messages, setMessages] = useState([])
 
-  const chat_gpt_api = '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';
+  const chat_gpt_api = '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';
 
   const handleSend = async (newMessages = []) => {
     try {
@@ -34,9 +34,13 @@ const ChatAiBot = () => {
   
       setMessages(previousMessages => GiftedChat.append(previousMessages, userMessage));
       const messageText = userMessage.text.toLowerCase();
-      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep','hi','psychiatry',
-      'psychology','therapy/counceling','suicide','stigma','self-care','medication',
-      'trauma','prevention','crisis intervention'];
+      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep','hi',
+      'psychiatry','psychology','therapy/counceling','suicide','stigma',
+      'self-care','medication','trauma','prevention','crisis intervention',
+      'Psychiatrist','Well-being','Mindfulness','Mental illness','Mental health awareness',
+      'wellness','emotional health','Resilence','Self-esteem','Psychologist','shame','abuse',
+      'discrimination','isolation','humilation','physical torture','Pressure','creepy','Bipolar',
+      'introvert','meditation','anxiety disorders','stress disorders','depression disorders'];
   
       if (!keywords.some(keyword => messageText.includes(keyword))) {
         const botMessage = {
@@ -91,7 +95,7 @@ const ChatAiBot = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 5000); // Delay for 5 seconds (5000 milliseconds)
+    }, 6000); // Delay for 5 seconds (5000 milliseconds)
   }, []);
 
 
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     width:width,
     backgroundColor: 'white',
     paddingBottom:20,
-    borderBottomWidth:1,
+    borderBottomWidth:0.5,
     borderBottomColor:'black',
   },
   header: {
@@ -141,7 +145,8 @@ const styles = StyleSheet.create({
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 0.2,
+    borderBottomWidth:0.5,
+    borderColor:'black',
     marginBottom: 5,
   },
   headerIcon: {

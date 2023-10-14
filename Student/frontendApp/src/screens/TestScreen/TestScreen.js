@@ -6,15 +6,17 @@ const { width,height } = Dimensions.get('window');
 const TestScreen = () => {
   return (
    <ScrollView style={styles.main}>
+      <View style={{width:'100%',height:'100%',paddingBottom:10}}>
       <Question/>
+      </View>
    </ScrollView>
 );
 };
 
 const styles = StyleSheet.create({
       main:{
-          width: width * 1,
-          height : height * 1,
+          width: width,
+          height : height,
       },
 });
 

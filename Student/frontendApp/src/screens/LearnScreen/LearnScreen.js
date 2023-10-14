@@ -24,7 +24,7 @@ const LearnScreen = () => {
     <View style={styles.container}>
       <Searchbar
         style={styles.search}
-        placeholder="Search"
+        placeholder="Search Mental Health Book"
         onChangeText={(query) => setSearchQuery(query)}
         value={searchQuery}
         onIconPress={searchBook}

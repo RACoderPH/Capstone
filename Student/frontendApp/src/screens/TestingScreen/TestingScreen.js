@@ -45,7 +45,7 @@ const TestingScreen = () => {
             ),
           },
           {
-            backgroundColor: '#FBF0B2',
+            backgroundColor: '#FFEECC',
             image: (
               <View>
                 <LottieView
@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 14,
-    fontWeight:'100',
+    fontSize: 15,
+    fontWeight:'400',
     color: '#393E46',
     textAlign: 'justify',
     textAlign:'justify',

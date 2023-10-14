@@ -15,12 +15,8 @@ const Instruction = () => {
   };
 
   const MyComponent = () => (
-
-
-
     <Card style={styles.card}>
       <Card.Content>
-        <Text variant="titleMedium">DASS - 42 Mental Assessment</Text>
         <Text variant="bodyMedium" style={{textAlign:'justify'}}>
           The DASS-42 is a 42 item self-report scale designed to measure the negative emotional states of depression,
           anxiety, and stress. The principal value of the DASS in a clinical setting is to clarify the locus of
@@ -39,7 +35,7 @@ const Instruction = () => {
       <TouchableOpacity onPress={handleDone}>
         <CustomButton
         text="Proceed"
-        style={{width:150,}}/>
+        style={{width:200,}}/>
         </TouchableOpacity>
     </Card.Actions>
     </Card>
@@ -49,6 +45,7 @@ const Instruction = () => {
     <ScrollView style={{width:width * 1 , height: height* 1}}> 
     <View style={styles.container}>
       <View style={styles.centered}>
+      <Text variant="titleMedium" style={{textAlign:'center',marginTop:40,fontSize:18}}>DASS - 42 Mental Health Assessment</Text>
         <MyComponent />
       </View>
     </View>
@@ -61,7 +58,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 2, // Add padding to the outer container
+    padding: 5, // Add padding to the outer container
   },
   centered: {
     alignItems: 'center',
@@ -69,8 +66,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom:20,
     marginTop:20,
-    width: width * 0.95, // Make the card take up the entire width
-    padding: 0.5, // Add padding to the card content
+    width: width * 0.95, // Make the card take up the entire width// Add padding to the card content
   },
 });
 

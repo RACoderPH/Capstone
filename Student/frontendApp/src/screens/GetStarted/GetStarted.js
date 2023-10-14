@@ -12,7 +12,7 @@ const GetStarted = () => {
   const navigation = useNavigation();
 
   const onGetStartedPressed = () => {
-      navigation.navigate('Result');
+      navigation.navigate('Homes');
   };
 
   return (
