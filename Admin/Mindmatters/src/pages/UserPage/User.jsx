@@ -10,6 +10,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const User = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
@@ -152,7 +154,6 @@ const User = () => {
                 { field: 'username', headerName: 'Username', flex: 3 },
                 { field: 'Email', headerName: 'Email', flex: 5 },
                 { field: 'stud_no', headerName: 'Student ID', flex: 5 },
-                { field: 'staus', headerName: 'Status', flex: 2 },
                 { field: 'position', headerName: 'Position', flex: 3 },
                 {
                   field: 'actions',
@@ -160,9 +161,14 @@ const User = () => {
                   flex: 4,
                   renderCell: (params) => (
                     <div className="btns">
-                      <Button variant="outlined" onClick={() => handleOpen(params.row)}>
-                        Edit
-                      </Button>
+                      <IconButton>
+                        <VisibilityIcon></VisibilityIcon>
+                      </IconButton>
+
+                     <IconButton onClick={() => handleOpen(params.row)}>
+                        <EditIcon fontSize="inherit"/>
+                      </IconButton>
+                      
                       <IconButton
                         aria-label="delete"
                         size="large"

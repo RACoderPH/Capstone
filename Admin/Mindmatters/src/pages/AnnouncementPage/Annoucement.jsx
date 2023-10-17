@@ -65,6 +65,7 @@ const Annoucement = () => {
     <div className="announce" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Sidebar />
       <div className="announceContainer">
+      <h2>Mental Health</h2>
         <h2>Announcement Form</h2>
         <form className="announcementForm">
           <div className="form-group">

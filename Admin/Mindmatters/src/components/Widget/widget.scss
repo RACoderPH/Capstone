@@ -28,6 +28,18 @@
                 border-bottom: 1px solid black;
                 cursor: pointer;
             }
+            .link1{
+                width: max-content;
+                font-size: 15px;
+                border-bottom: 1px solid black;
+                cursor: pointer;
+            }
+            .link2{
+              width: max-content;
+              font-size: 15px;
+              border-bottom: 1px solid black;
+              cursor: pointer;
+          }
             .percentage{
                 display: flex;
                 align-items: center;
@@ -38,4 +50,39 @@
                 align-self: flex-end;
             }
     }
+
+    
 }
+
+/* Adjust the .listContainer to match the table width */
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%; /* Set the width to 100% to match the table */
+    margin: 0;
+    padding: 0;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tr:hover {
+    background-color: #e6e6e6;
+  }

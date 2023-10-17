@@ -82,6 +82,7 @@ const Profile = () => {
         .then((res) => {
           console.log(res);
           alert('Success');
+          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
