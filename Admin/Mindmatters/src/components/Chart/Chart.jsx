@@ -70,7 +70,7 @@ const Chart = () => {
               data={data1}
               cx={200}
               cy={200}
-              outerRadius={80}
+              outerRadius={100}
               fill="#8884d8"
               label
             />

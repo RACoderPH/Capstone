@@ -1,4 +1,4 @@
-import React,  { useEffect, useState } from "react";
+import React,  { useEffect, useState, useRef } from "react";
 import './profile.scss'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import TextField from '@mui/material/TextField';
@@ -6,12 +6,14 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import axios from "axios";
-
+import {ref,uploadBytesResumable,getDownloadURL} from "firebase/storage"
+import storage from "../../firebase";
 
 const Profile = () => {
-  const [localStorageValue, setLocalStorageValue] = useState('');
+
   const [userData, setUserData] = useState({});
-  
+  const [image, setImage] = useState('');
+
   const [values, setValues] = useState({
     fullname: "",
     username: "",
@@ -24,50 +26,55 @@ const Profile = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleFileChange =  (e) =>{
-    setUserData({...userData, image_file:  e.target.files[0]});
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setUserData({ ...userData, image_file: selectedFile, user_id: localStorage.getItem('ID') });
   };
+  
   //Fetch Id
   useEffect(() => {
-    const storedValue = localStorage.getItem('Username');
-    // Retrieve the value from localStorage
-    if (storedValue) {
-      setLocalStorageValue(storedValue); // Update the component state with the retrieved value
-    }
-  
     const userId = localStorage.getItem('ID');
     fetch(`https://mindmatters-ejmd.onrender.com/user/${userId}`)
       .then((response) => response.json())
       .then((data) => setUserData(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
+
   //Upload
   const Upload = async (e) => {
-    const userId = localStorage.getItem('ID');
     e.preventDefault();
+    const userId = localStorage.getItem('ID');
+    // Check if there is a selected file and user_id
+    if (userData.image_file && userId) {
+      const imagePath = `profileImages/${userId}/${userData.image_file.name}`;
+      const storageRef = ref(storage, imagePath);
+      const uploadTask = uploadBytesResumable(storageRef, userData.image_file);
   
-    // Create a FormData object to send both data and file
-    const formData = new FormData();
-    formData.append('image_file', userData.image_file); // Use the image_file from userData
+      uploadTask.on("state_changed", null, (error) => {
+        console.error("Error uploading image: ", error);
+      }, () => {
+        // Image uploaded successfully, now get the download URL
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            setImage(downloadURL);
+            console.log("Image uploaded to Firebase Storage:", downloadURL);
   
-    // Show a confirmation dialog
-    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
-  
-    if (confirmUpdate) {
-      axios
-        .put(`https://mindmatters-ejmd.onrender.com/Upload/${userId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          alert('Success');
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
+            // Update the user's profile image path in the database
+            axios
+              .put(`http://localhost:5000/Upload/${userId}`, { image: downloadURL })
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => console.log(err));
+            alert('Image uploaded successfully');
+            window.location.reload();
+          });
+      });
+    } else {
+      alert('No file selected');
     }
   };
+  
   //Update
   const Update = async (e) => {
     const userId = localStorage.getItem('ID');
@@ -78,15 +85,16 @@ const Profile = () => {
   
     if (confirmUpdate) {
       axios
-        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
+        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
-          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
   };
+
+
   return (
     <div className="profile">
         <Sidebar/>
@@ -97,18 +105,16 @@ const Profile = () => {
 
       <div className="UserContainer">
         <div className="userShow">
-        <div className="centerImage">
-               <img
-               src={`https://mindmatters-ejmd.onrender.com/images/${userData.image_file}`}
-               // Provide a default image URL
-                  alt=""
-                  className="userShowImg"
-                />
-              </div>
+      <div className="centerImage">
+      <img
+  alt="User Profile"
+  className="userShowImg"
+  src={userData.image_file} />
+
+</div>
             
               <p className="DisplayInfo">{userData.Fullname}</p>
               <p className="DisplayInfo">{userData.position}</p>
-              <p className="DisplayInfo">{userData.created_at}</p>
                
               <div className="centerButton">
               <div className="txtfield">
@@ -119,7 +125,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="userUpdate">
-          <span className="userUpdateTitle">Profile</span>
+          <span className="userUpdateTitle"></span>
           <span className="txt">The information can be edited</span>
           <div className="FormInput">
             <div className="txtfield">

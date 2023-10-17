@@ -20,11 +20,12 @@ const User = () => {
   const [searchInput, setSearchInput] = useState('');
 
   const [values, setValues] = useState({
-    fullname: null,
-    username: null,
-    email: null,
-    stud_no: null,
-    password: null,
+    fullname: '',
+    username: '',
+    email: '',
+    stud_no: '',
+    password: '',
+    phone: '',
   });
 
   const [open, setOpen] = React.useState(false);
@@ -44,6 +45,22 @@ const User = () => {
     setSelectedUser(null);
     setOpen1(false);
   };
+
+  const [open2, setOpen2] = React.useState(false);
+const [selectedUserForModal, setSelectedUserForModal] = React.useState(null);
+
+const handleOpen2 = (user) => {
+  setSelectedUserForModal(user);
+  console.log(user)
+
+  setOpen2(true);
+};
+
+
+const handleClose2 = () => {
+  setSelectedUserForModal(null);
+  setOpen2(false);
+};
 
   const handleClose = () => {
     setSelectedUser(null);
@@ -67,6 +84,8 @@ const User = () => {
     stud_no: user.stud_no,
     staus: user.staus,
     position: user.position,
+    address: user.address,
+    PhoneNumber: user.phone_number,
   }));
 
   const filteredRows = rows.filter((row) =>
@@ -124,6 +143,45 @@ const User = () => {
     }
   };
 
+  // View User Information
+const [userId, setUserId] = useState(null);
+const [userData, setUserData] = useState({
+  Fullname: '',
+  Username: '',
+  Email: '',
+  PhoneNumber: '',
+  Address: '',
+  StudentNo: '',
+});
+
+useEffect(() => {
+  // Assuming you have the user ID available in the `userId` state
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await axios.get(`https://mindmatters-ejmd.onrender.com/user/${userId}`);
+      const user = response.data;
+
+      setUserData({
+        Fullname: user.Fullname,
+        Username: user.user_name,
+        Email: user.Email,
+        PhoneNumber: user.phone_number,
+        Address: user.address,
+        StudentNo: user.stud_no,
+      });
+
+      console.log(user);
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+    }
+  };
+
+  if (userId) {
+    fetchUserData(userId); // Fetch user data if userId is available
+  }
+}, [userId]);
+  
+
   return (
     <div className="user">
       <Sidebar />
@@ -161,14 +219,14 @@ const User = () => {
                   flex: 4,
                   renderCell: (params) => (
                     <div className="btns">
-                      <IconButton>
-                        <VisibilityIcon></VisibilityIcon>
+                      <IconButton onClick={() => handleOpen2(params.row)}>
+                        <VisibilityIcon fontSize="inherit"/>
                       </IconButton>
 
                      <IconButton onClick={() => handleOpen(params.row)}>
                         <EditIcon fontSize="inherit"/>
                       </IconButton>
-                      
+
                       <IconButton
                         aria-label="delete"
                         size="large"
@@ -248,6 +306,8 @@ const User = () => {
             </Button>
           </Box>
         </Modal>
+
+        {/* Modals for editing users */}
         <Modal
           open={open}
           onClose={handleClose}
@@ -295,10 +355,65 @@ const User = () => {
                 onChange={(e) => setValues({ ...values, stud_no: e.target.value })}
               />
             </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Address"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, address: e.target.value })}
+              />
+            </div>
+            <div className="txtfield">
+              <TextField
+                className="textBox"
+                id="outlined-basic"
+                label="Phone Number"
+                variant="outlined"
+                onChange={(e) => setValues({ ...values, phone: e.target.value })}
+              />
+            </div>
             <br />
             <Button className="modalBtn" variant="outlined" onClick={Updateuser}>
               Save
             </Button>
+          </Box>
+        </Modal>
+
+        {/* Modals for viewing users */}
+        <Modal
+          open={open2}
+          onClose={handleClose2}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="box">
+           
+	        <span className="userUpdateTitle">User Information</span>
+          <span className="txt">The information can be edited</span>
+          <div className="FormInput">
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Fullname" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.Fullname : ''} InputLabelProps={{shrink: true,}} />
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Username" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.username : ''} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Email Address" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.Email : ''} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Phone number" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.PhoneNumber : ''} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Address" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.address : ''} InputLabelProps={{shrink: true,}}/>
+            </div>
+            <div className="txtfield">
+            <TextField id="outlined-basic" className="custom-width" label="Student No" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.stud_no : ''} InputLabelProps={{shrink: true,}}/>
+            </div>
+            
+          </div>
+
+
           </Box>
         </Modal>
       </div>
