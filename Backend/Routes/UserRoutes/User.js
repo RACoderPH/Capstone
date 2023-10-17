@@ -337,12 +337,12 @@ router.put("/profileUpdate/:id", (req, res) => {
   });
 });
 //Upload Image
-router.put("/Upload/:id",upload.single('image_file'), (req, res) => {
+router.put("/Upload/:id",(req, res) => {
   const UserId = req.params.id;
   const Updatequery = "UPDATE user_info SET `image_file`= ? WHERE id = ?";
 
   const values = [
-    req.file.filename
+    req.body.image,
   ];
 
   db.query(Updatequery, [...values,UserId], (err, data) => {
@@ -380,6 +380,7 @@ router.put("/userUpdate/:id", (req, res) => {
     return res.json(data);
   });
 });
+
 
   router.post('/logout', (req,res) => {
 
@@ -478,6 +479,7 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
+
   
   //Count the Student
   router.get('/student_count', (req, res) => {
