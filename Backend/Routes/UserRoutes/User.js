@@ -320,7 +320,7 @@ function generateVerificationToken() {
 
 router.put("/profileUpdate/:id", (req, res) => {
   const UserId = req.params.id;
-  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `phone_number`= ?, `address`= ?, WHERE id = ?";
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `phone_number`= ?, `address`= ? WHERE id = ?";
 
   const values = [
     req.body.fullname,
@@ -397,9 +397,34 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
-//Show all the Student AND ONLINE
+//Show all the Student Taken the assessment 
   router.get('/api/getuser', (req, res) => {
     const query = 'SELECT * FROM user_info WHERE IsAnswer = 1 AND position = "Student"';
+    db.query(query, (error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
+      }
+    });
+  });
+
+  //Show all the Student Not yet taken the assessment
+  router.get('/api/getuserNot', (req, res) => {
+    const query = 'SELECT * FROM user_info WHERE IsAnswer = 0 AND position = "Student"';
+    db.query(query, (error, result) => {
+      if (error) {
+        console.error('Failed to fetch data:', error);
+        res.sendStatus(500);
+      } else {
+        res.send(result); // Send the JSON data as the response
+      }
+    });
+  });
+
+  router.get('/getonline', (req, res) => {
+    const query = 'SELECT * FROM user_info WHERE status = "Online" AND position = "Student"';
     db.query(query, (error, result) => {
       if (error) {
         console.error('Failed to fetch data:', error);
