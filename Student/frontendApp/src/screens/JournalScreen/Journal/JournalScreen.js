@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import axios from 'axios';
 import { TextInput } from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,76 +49,83 @@ const JournalScreen = () => {
       description: description,
       user_id: user_id,
     };
-    if(title.trim() === "" || description === ""){
-      Alert.alert('Blank Field','Pleas Fill out the field');
-    }else{
+    if (title.trim() === '' || description === '') {
+      Alert.alert('Blank Field', 'Please fill out the field');
+    } else {
       axios
-      .post(apiUrl, requestBody)
-      .then((response) => {
-        // Handle the response from the backend
-        setInsertMessage(response.data.message);
-        navigation.navigate('Diary');
-      })
-      .catch((error) => {
-        console.log('Error inserting data:', error);
-      });
+        .post(apiUrl, requestBody)
+        .then((response) => {
+          // Handle the response from the backend
+          setInsertMessage(response.data.message);
+          navigation.navigate('Diary');
+        })
+        .catch((error) => {
+          console.log('Error inserting data:', error);
+        });
     }
     // Make a POST request to the backend API using Axios
-   
   };
 
   return (
-    <ScrollView
-      style={{ height: height * 1, width: width * 1 }}
-      keyboardShouldPersistTaps="handled"
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
     >
-      <View style={styles.container}>
-        <Text
-          style={{
-            color: 'black',
-            marginTop: height * 0.04,
-            alignSelf: 'flex-start',
-            marginLeft: width * 0.05,
-            fontSize: 20,
-            fontWeight: '400',
-          }}
-        >
-          How was your day?
-        </Text>
-        <View style={{ width: '100%', height: '100%', alignItems: 'center' }}>
+      <ScrollView
+        style={styles.scrollView}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Text style={styles.titleText}>How was your day?</Text>
+        <View style={styles.inputContainer}>
           <TextInput
             label="Title"
             multiline
             onChangeText={(text) => setTitle(text)}
-            style={{ width: width * 0.98, minHeight: 90, margin: 10 }}
+            style={styles.input}
+          
           />
           <TextInput
             label="Type here...."
             multiline
             onChangeText={(text) => setDescription(text)}
-            style={{ width: width * 0.98, minHeight: 200, margin: 10 }}
+            style={styles.input}
+          
           />
+        </View>
 
-          <View style={{ justifyContent: 'flex-end', marginBottom: 20 }}>
-          <TouchableOpacity onPress={handleInsertData}>
-            <CustomButton text="Entry" />
-          </TouchableOpacity>
-        </View>
-        </View>
-    
-      </View>
-    </ScrollView>
+        <TouchableOpacity onPress={handleInsertData}>
+          <CustomButton text="Entry" />
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: width,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    height: height,
-    padding: 10,
-    justifyContent: 'space-between', // Pushes the button to the bottom
+    flex: 1,
+    backgroundColor: 'lightyellow', // Background color set to light yellow
+    padding:30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollView: {
+    height: height * 1,
+    width: width * 1,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  input: {
+    width: width * 0.98,
+    minHeight: 90,
+    margin: 10,
   },
 });
 

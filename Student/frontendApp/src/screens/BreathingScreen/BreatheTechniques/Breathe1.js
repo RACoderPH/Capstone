@@ -1,25 +1,99 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import { View, 
+  Text,
+   StyleSheet,
+   Dimensions,
+   Animated, 
+  TouchableOpacity,
+  BackHandler } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 import Sound from 'react-native-sound'
+import {useNavigation} from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const circleWidth = width / 2;
 
 const Breathe1 = () => {
-  const totalTimeInSeconds = 4 * 60;
+  const totalTimeInSeconds = 5 * 60;
   const [isPlaying, setIsPlaying] = useState(false);
   const [soundDuration, setSoundDuration] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [timer, setTimer] = useState(totalTimeInSeconds);// Initial timer value in seconds
-  let timerInterval; // Define timerInterval here
+  const [timer, setTimer] = useState(totalTimeInSeconds);
+  const timerIntervalRef = useRef(null);
 
   const move = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   const animationInterval = useRef(null);
   const sound = useRef(null);
+  const [isTypingAnimation, setIsTypingAnimation] = useState(true);
+    //back button 
+
+    useEffect(() => {
+      // Add a back button listener to stop the sound when the back button is pressed
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        if (isPlaying) {
+          pauseSound();
+          setIsPlaying(false);
+          navigation.navigate('Breathe');
+          return true; // Prevent the default behavior of back button
+        }
+        return false;
+      });
   
+      return () => backHandler.remove(); // Remove the listener when the component unmounts
+    }, [isPlaying]);
+  
+
+    //end
+    //typing Animation
+    const AnimatedTypewriterText = ({ sentences, delay, speed, style }) => {
+      const [animatedText, setAnimatedText] = useState('');
+      const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+      const [showCursor, setShowCursor] = useState(true);
+    
+      useEffect(() => {
+        if (sentences.length !== currentSentenceIndex) startTypingAnimation();
+        else setCurrentSentenceIndex(0);
+      }, [currentSentenceIndex]);
+    
+      useEffect(() => {
+        const cursorInterval = setInterval(() => {
+          setShowCursor(prevState => !prevState);
+        }, 500);
+        return () => {
+          clearInterval(cursorInterval);
+        };
+      }, []);
+    
+      const startTypingAnimation = () => {
+        const currentSentence = sentences[currentSentenceIndex];
+        let index = 0;
+    
+        const typingInterval = setInterval(() => {
+          setAnimatedText(prevState => prevState + currentSentence[index]);
+          index++;
+    
+          if (index === currentSentence.length) {
+            clearInterval(typingInterval);
+            setTimeout(() => {
+              setCurrentSentenceIndex(prevState => prevState + 1);
+              setAnimatedText('');
+            }, delay);
+          }
+        }, speed);
+      };
+    
+    
+      return (
+        <View style={style}>
+          <Text style={styles.text}>{animatedText}</Text>
+          {showCursor && <Text style={styles.cursor}>|</Text>}
+        </View>
+      );
+    };
+    //End
+
 
   useEffect(() => {
     if (sound.current) {
@@ -27,17 +101,25 @@ const Breathe1 = () => {
     }
   }, [currentPosition]);
 
+  useEffect(() => {
+    return () => {
+      clearInterval(timerIntervalRef.current);
+    };
+  }, []);
+
   const togglePlayPause = () => {
     if (isPlaying) {
       setIsPlaying(false);
-      pauseTimer(); // Pause the timer
+      pauseTimer();
       pauseAnimation();
       pauseSound();
+      setIsTypingAnimation(true); // Re-enable typing animation
     } else {
       setIsPlaying(true);
-      startTimer(); // Start the timer
+      startTimer();
       startAnimation();
       playSound();
+      setIsTypingAnimation(false); // Disable typing animation
     }
   };
 
@@ -87,7 +169,7 @@ const Breathe1 = () => {
 
   const playSound = () => {
     if (!sound.current) {
-      sound.current = new Sound('breathe.mp3', Sound.MAIN_BUNDLE, (error) => {
+      sound.current = new Sound('breathe1.mp3', Sound.MAIN_BUNDLE, (error) => {
         if (error) {
           console.log('failed to load the sound', error);
           return;
@@ -104,8 +186,11 @@ const Breathe1 = () => {
   const playSoundAfterLoad = () => {
     sound.current.play((success) => {
       if (success) {
+        setTimer(0);
         console.log('successfully finished playing');
         setIsPlaying(false);
+        pauseTimer();
+        pauseAnimation();
       } else {
         console.log('playback failed due to audio decoding errors');
       }
@@ -130,18 +215,38 @@ const Breathe1 = () => {
     outputRange: [1, 0],
   });
 
- 
-
   const startTimer = () => {
-    timerInterval = setInterval(() => {
+    timerIntervalRef.current = setInterval(() => {
       if (timer > 0) {
-        setTimer((prevTimer) => prevTimer - 1); // Decrease timer by 1 second
+        setTimer((prevTimer) => prevTimer - 1);
+      } else {
+        clearInterval(timerIntervalRef.current); // Stop the timer when it reaches 0
+        setIsPlaying(false); // Pause the animation and sound
+        pauseAnimation();
+        pauseSound();
+        // Add the following code to ensure the timer stays at 00:00
+      setTimer(0);
       }
-    }, 1000); // Update timer every 1 second
+    }, 1000);
   };
 
   const pauseTimer = () => {
-    clearInterval(timerInterval);
+    clearInterval(timerIntervalRef.current);
+  };
+
+  //Route
+  const navigation = useNavigation();
+  const Breathe2 = () =>{
+    pauseSound();
+    setIsPlaying(false);
+  
+    navigation.navigate('Breathe2');
+  };
+
+  const Breathe3 = () =>{
+    pauseSound();
+    setIsPlaying(false);
+    navigation.navigate('Breathe3');
   };
   return (
     <View style={{ height: height * 0.7, width: width }}>
@@ -196,7 +301,7 @@ const Breathe1 = () => {
               key={item}
               style={{
                 opacity: 0.1,
-                backgroundColor: "#6499E9",
+                backgroundColor: "#F29727",
                 width: circleWidth,
                 height: circleWidth,
                 borderRadius: circleWidth / 2,
@@ -226,20 +331,42 @@ const Breathe1 = () => {
       </View>
 
       <View style={{ width: width, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly', padding: 10 }}>
+
+          <TouchableOpacity onPress={Breathe3}>
         <Text style={{ padding: 2, color: 'black' }}>
           <Icon name='play-back-outline' style={{ fontSize: 30 }} />
         </Text>
-        <Text style={{ padding: 2, color: 'white', backgroundColor: '#6499E9', borderRadius: width / 2, padding: 15 }}>
+        </TouchableOpacity>
+
+        <Text style={{ padding: 2, color: 'white', backgroundColor: '#F29727', borderRadius: width / 2, padding: 15 }}>
           <TouchableOpacity onPress={togglePlayPause}>
             <Icon name={isPlaying ? 'pause-outline' : 'play-outline'} style={{ fontSize: 30, color: 'white' }} />
           </TouchableOpacity>
         </Text>
+
+        <TouchableOpacity onPress={Breathe2}>
         <Text style={{ padding: 2, color: 'black' }}>
           <Icon name='play-forward-outline' style={{ fontSize: 30 }} />
         </Text>
-      </View>
-      </View>
+        </TouchableOpacity>
 
+      </View>
+      {isTypingAnimation && (
+          <AnimatedTypewriterText
+            sentences={[
+              'Procedure for Butterfly Hug Breathing',
+              '1.Create butterfly wings with your two hands by connecting your thumbs and your palms towards your chest',
+              '2.Take a deep breathe in when you reach the top hold for just a moment and then exhaling.',
+              '3.Give yourself a butterfly hug by alternating one tap of your right hand followed by one of your left hand.',
+              'Continue this movement slowly',
+            ]}
+            delay={1000}
+            speed={70}
+            style={styles.textContainer}
+          />
+        )}
+      </View>
+          
     </View>
   );
 }
@@ -266,7 +393,23 @@ const styles = StyleSheet.create({
   component:{
     flex:1,
     marginTop:100,
-  }
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign:'center',
+  },
+  cursor: {
+    fontSize: 18,
+    marginBottom: 10,
+    opacity: 0.6,
+    position: 'absolute',
+    right: -5
+  },
 });
 
 export default Breathe1;

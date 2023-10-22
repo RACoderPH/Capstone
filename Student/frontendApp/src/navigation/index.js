@@ -28,16 +28,25 @@ import Diary from '../screens/JournalScreen/UserDiary/Diary';
 import NotificationScreen from '../screens/NotificationScreen';
 import ChangePasswordScreen from '../screens/ChangePassword/ChangePasswordScreen';
 import userDiary from '../screens/JournalScreen/Journal/JournalScreen';
+import profileResult from '../screens/ProfileScreen/Result/Profileresult'
+import Breathe2 from '../screens/BreathingScreen/BreatheTechniques/Breathe2/Breathe2'
+import Breathe3 from '../screens/BreathingScreen/BreatheTechniques/Breathe3/Breathe3'
+
 
 
 const Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 3000); // Delay for 5 seconds (5000 milliseconds)
   }, []);
+
+  //Auto Logout
+  
+
 
   const Stack = createNativeStackNavigator();
 
@@ -49,10 +58,10 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
 
-     
-      <Stack.Screen name="Breathe1" component={Breathe1} />
+
+    
       <Stack.Screen name="Testing" component={TestingScreen} />
-      
+    
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="Forgot" component={ForgotScreens} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -60,7 +69,7 @@ const Navigation = () => {
         <Stack.Screen name="Started" component={GetStarted} />
         <Stack.Screen name="Breathe" component={BreathingScreens} />
         <Stack.Screen name="Profile" component={ProfileScreens} />
-        
+        <Stack.Screen name="ProfileResult" component={profileResult} />
       
         <Stack.Screen name="Journal" component={JournalScreens} />
         <Stack.Screen name="Diary" component={Diary} />
@@ -84,6 +93,12 @@ const Navigation = () => {
         
       <Stack.Screen name="otp" component={OTPscreen} /> 
       <Stack.Screen name="ChangePass" component={ChangePasswordScreen} /> 
+
+      {/* Breathing Technique*/}
+      <Stack.Screen name="Breathe3" component={Breathe3} /> 
+      <Stack.Screen name="Breathe1" component={Breathe1} />
+      <Stack.Screen name="Breathe2" component={Breathe2} />
+      
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -4,6 +4,7 @@ import { PieChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 const { width,height } = Dimensions.get('window');
 
 const Result = () => {
@@ -12,12 +13,12 @@ const Result = () => {
     const [userAnxiety, setUserAnxiety] = useState(0);
     const [userDepression, setUserDepression] = useState(0);
     const [isLoading, setIsLoading] = useState(true); // Add loading state
-
+    const [user,setUser] = useState ("");
     useEffect(() => {
       const fetchUserData = async () => {
         try {
           const userId = await AsyncStorage.getItem('id');
-  
+          setUser(userId);
           // Fetch Stress data
           const stressResponse = await fetch(`https://mindmatters-ejmd.onrender.com/stress/${userId}`);
           if (stressResponse.ok) {
@@ -56,6 +57,28 @@ const Result = () => {
       { name: "Stress", score: userStress, color: "red" },
     ];
     const recommendation = () => {
+      const requestData = {
+        user_id: user, // Replace with the actual user_id
+        depression: userDepression, // Replace with the actual depression value
+        anxiety: userAnxiety, // Replace with the actual anxiety value
+        stress: userStress, // Replace with the actual stress value
+      };
+      axios.post('https://mindmatters-ejmd.onrender.com/result', requestData)
+  .then(response => {
+    console.log('Response:', response.data);
+    // Handle the response data here, for example:
+    if (response.data.message === 'Inserted') {
+     console.log("Inserted");
+    } else {
+      // Handle any other response as needed
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Handle the error here
+  });
+
+
         navigation.navigate('recommendation');
     }
 

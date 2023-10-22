@@ -29,10 +29,24 @@ const ChangePasswordScreen = () => {
     navigation.navigate('Profile');
   };
 
+
+  const isPasswordStrong = (password) => {
+    // Define your password strength criteria (e.g., at least 8 characters, including numbers, uppercase, and lowercase letters)
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+
   const changePassword = async () => {
     if (pass.trim() === "" || Cpass === "") {
       Alert.alert('Change Password', 'Please fill out the field');
-    } else {
+    } 
+
+    if (!isPasswordStrong(pass  )) {
+      Alert.alert('Mind Matters', 'Password is not strong enough');
+      return;
+    }
+    
       if (pass === Cpass) {
         try {
           // Retrieve the userEmail value from AsyncStorage
@@ -71,7 +85,7 @@ const ChangePasswordScreen = () => {
       } else {
         Alert.alert('Change Password', 'Password and Confirm Password not match');
       }
-    }
+    
   };
 
   return (

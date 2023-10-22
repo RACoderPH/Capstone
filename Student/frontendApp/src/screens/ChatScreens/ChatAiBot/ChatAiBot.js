@@ -19,7 +19,7 @@ const {width,height} = Dimensions.get('window');
 const ChatAiBot = () => {
   const [messages, setMessages] = useState([])
 
-  const chat_gpt_api = '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';
+  const chat_gpt_api = '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';
 
   const handleSend = async (newMessages = []) => {
     try {
@@ -34,7 +34,7 @@ const ChatAiBot = () => {
   
       setMessages(previousMessages => GiftedChat.append(previousMessages, userMessage));
       const messageText = userMessage.text.toLowerCase();
-      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep','hi',
+      const keywords = ['depression', 'anxiety', 'stress','mental health','sleep','hard to sleep',
       'psychiatry','psychology','therapy/counceling','suicide','stigma',
       'self-care','medication','trauma','prevention','crisis intervention',
       'Psychiatrist','Well-being','Mindfulness','Mental illness','Mental health awareness',

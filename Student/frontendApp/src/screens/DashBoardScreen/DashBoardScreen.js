@@ -3,7 +3,8 @@ import { View ,StyleSheet,
   ScrollView,
   Dimensions,
   ImageBackground,
-  TouchableOpacity} from 'react-native'
+  TouchableOpacity,
+  RefreshControl,} from 'react-native'
 import React, 
 { useEffect, 
   useState } from 'react';
@@ -27,24 +28,13 @@ const DashBoardScreen = () => {
   const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [quoteData, setQuoteData] = useState({ quote: '', author: '' });
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-      // Fetch the quote data from your API using Axios
-      axios.get('https://mindmatters-ejmd.onrender.com/Quotes')
-        .then((response) => {
-          const data = response.data;
-          // Choose a random quote from the data
-          const randomIndex = Math.floor(Math.random() * data.length);
-          const randomQuote = data[randomIndex].quotes;
-          const randomAuthor = data[randomIndex].author;
-          
-          // Update the state with both the quote and author
-          setQuoteData({ quote: randomQuote, author: randomAuthor });
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }, []);
+
+    const onRefresh = () => {
+      retrieveData(); // Call retrieveData to initiate the data fetch
+    };
+
 
     useEffect(() => {
       retrieveData();
@@ -54,6 +44,20 @@ const DashBoardScreen = () => {
       try {
         const storedUser = await AsyncStorage.getItem('username');
           setUsername(storedUser)
+          axios.get('https://mindmatters-ejmd.onrender.com/Quotes')
+          .then((response) => {
+            const data = response.data;
+            // Choose a random quote from the data
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const randomQuote = data[randomIndex].quotes;
+            const randomAuthor = data[randomIndex].author;
+            
+            // Update the state with both the quote and author
+            setQuoteData({ quote: randomQuote, author: randomAuthor });
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          });
       } catch (error) {
         console.log("Axios Error");
       }
@@ -122,7 +126,7 @@ const DashBoardScreen = () => {
   const { open } = state;
 
   return (
-    <ScrollView style={styles.main}>
+    <ScrollView style={styles.main} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
        <Provider>
       <View style={styles.Topnav}>
     <View style={{ flexDirection: 'row', width: width, margin:4}}>

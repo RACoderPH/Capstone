@@ -23,9 +23,6 @@ const VerificationScreen = () => {
   const [username, setUsername] = useState(''); // State to store the username
 
   useEffect(() => {
-    // Fetch the verification code when the component mounts
-    fetchVerificationCodes();
-
     // Retrieve the username from AsyncStorage
     retrieveUsername();
   }, []);
@@ -41,21 +38,6 @@ const VerificationScreen = () => {
     }
   };
 
-  const fetchVerificationCodes = () => {
-    // Use the username as the ID for fetching user verification
-    axios
-      .get(`https://mindmatters-ejmd.onrender.com/verification?username=${username}`)
-      .then((response) => {
-        if (response.data) {
-          console.log(response.data);
-        } else {
-          console.error('No data or incorrect data structure in API response.');
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to fetch verification codes:', error);
-      });
-  };
 
   const SignIn = () => {
     navigation.navigate('SignIn');

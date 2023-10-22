@@ -12,15 +12,36 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-const socket = io.connect('https://mindmatters-ejmd.onrender.com/');
+const socket = io.connect('http://192.168.1.83:5000/');
 
 const RealtimeChat = () => {
+  const [userData, setUserData] = useState(null);
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
-  const [room, setRoom] = useState('12345');
+  const [room, setRoom] = useState('');
   const [username, setUsername] = useState('');
+
+  // Get fetch user
+  const retrieveData = async () => {
+    try {
+      const storedId = await AsyncStorage.getItem('id');
+      const response = await axios.get(`https://mindmatters-ejmd.onrender.com/user/${storedId}`);
+      setUserData(response.data);
+
+      // Automatically join the room after fetching user data
+      joinRoom(response.data.room_id);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
 
   useEffect(() => {
     AsyncStorage.getItem('username').then((value) => {
@@ -29,28 +50,29 @@ const RealtimeChat = () => {
       }
     });
     const handleReceiveMessage = (data) => {
-      // Set sentByUser to false for received messages
-      data.sentByUser = false;
-      setMessageList((list) => [...list, data]);
+      // Check if the room of the incoming message matches the current room ID
+      if (data.room === room) {
+        
+        data.sentByUser = false;
+        setMessageList((list) => [...list, data]);
+     
+      }
     };
-  
-    socket.on("receive_message", handleReceiveMessage);
-  
+
+    socket.on('receive_message', handleReceiveMessage);
+
     // Clean up the event listener when the component unmounts
     return () => {
-      socket.off("receive_message", handleReceiveMessage);
+      socket.off('receive_message', handleReceiveMessage);
     };
-  }, []);
+  }, [room]);
 
-  const joinRoom = () => {
-    if (room !== "") {
-      socket.emit("join_room", room);
+  const joinRoom = (room_id) => {
+    if (room_id !== '') {
+      setRoom(room_id);
+      socket.emit('join_room', room_id);
     }
-  }
-
-  useEffect(() => {
-    joinRoom();
-  }, []);
+  };
 
   const sendMessage = async () => {
     if (currentMessage !== '' && room && username && socket) {
@@ -59,46 +81,43 @@ const RealtimeChat = () => {
         author: username,
         message: currentMessage,
         time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sentByUser: true, // Sent by the user
+        sentByUser: true,
       };
-  
+
       await socket.emit('send_message', messageData);
       setMessageList((list) => [...list, messageData]);
-  
-      // Clear the input field
+
       setCurrentMessage('');
+    } else {
+      console.log('Room, currentMessage, username, or socket is null');
     }
   };
-  
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <FlatList
-       data={messageList}
-       keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => (
-         <View
-           style={[
-             styles.messageContainer,
-             item.sentByUser ? styles.sentMessage : styles.receivedMessage,
-           ]}
-         >
-           <Text style={styles.messageText}>{item.message}</Text>
-           <Text style={styles.from}>
-             {item.author}, {item.time}
-           </Text>
-         </View>
-       )}
-      />
-      <TextInput
-        style={{ display: 'none' }}
-        placeholder="Join room"
-        value={room}
-        onChangeText={(text) => setRoom(text)}
-      />
+   <FlatList
+  data={messageList} 
+  keyExtractor={(item, index) => index.toString()}
+  inverted={false} // Set inverted to true to start messages at the bottom
+  renderItem={({ item }) => (
+    <View
+      style={[
+        styles.messageContainer,
+        item.sentByUser ? styles.sentMessage : styles.receivedMessage,
+      ]}
+    >
+      <Text style={styles.messageText}>{item.message}</Text>
+      <Text style={styles.from}>
+        {item.author}, {item.time}
+      </Text>
+    </View>
+  )}
+/>
+
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -116,36 +135,35 @@ const RealtimeChat = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height:height,
+    height: height,
     backgroundColor: 'white',
   },
   messageContainer: {
     borderRadius: 5,
     padding: 5,
-    margin:10,
+    margin: 10,
     marginBottom: 8,
   },
   sentMessage: {
-    backgroundColor: 'gray',
-    alignSelf: 'flex-end', // Align to the right for user's own messages
+    backgroundColor: '#DFDFDF',
+    alignSelf: 'flex-end',
   },
   receivedMessage: {
-    backgroundColor: '#0084ff',
-    alignSelf: 'flex-start', // Align to the left for received messages
+    backgroundColor: '#3AB0FF', // Change to the desired background color
+    alignSelf: 'flex-start',
   },
   messageText: {
     fontSize: 16,
-    fontWeight:'500',
-    color: 'white', // Set text color for received messages
+    fontWeight: '500',
+    color: 'white',
   },
   inputContainer: {
-    width:width*1,
+    width: width * 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     backgroundColor: 'white',
     borderRadius: 8,
-    borderWidth: 1,
     marginLeft: 1,
     marginRight: 5,
     marginBottom: 20,
@@ -157,19 +175,19 @@ const styles = StyleSheet.create({
   sendButton: {
     padding: 15,
     backgroundColor: '#0084ff',
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
   },
   sendButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  from:{
-    fontSize:12,
-    color:'white',
-    fontWeight:'300'
-  }
+  from: {
+    fontSize: 12,
+    color: 'white',
+    fontWeight: '300',
+  },
 });
 
 export default RealtimeChat;

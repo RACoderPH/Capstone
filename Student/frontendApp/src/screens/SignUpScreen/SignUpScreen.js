@@ -34,45 +34,81 @@ const SignUpScreen = () => {
    const showModal = () => setVisible(true);
    const hideModal = () => setVisible(false);
    const containerStyle = {backgroundColor: 'white', width:'90%',height:'80%' ,padding: 11,margin:20,alignItems:'center',borderRadius:10};
+
+
+
+
+   const isEmailValid = (email) => {
+    // Regular expression for email validation
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return emailRegex.test(email);
+  };
+  
+  const isPasswordStrong = (password) => {
+    // Define your password strength criteria (e.g., at least 8 characters, including numbers, uppercase, and lowercase letters)
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+  
+  //const isPhoneNumberValid = (phoneNumber) => {
+    // Validate that the phone number has a length of 11
+    //return phoneNumber.length === 11;
+  //};
+  
    //BTN Function
    const onSignInPressed = () => {
-     if (Username.trim() === '' || Email.trim() === '' || password.trim() === '' || checked === false) {
-       ToastAndroid.show('Field must not be empty',ToastAndroid.SHORT);
-       return;
-     }
-   
-     if (password !== Cpassword) {
-       console.warn('Password not the same');
-     } else {
-       axios
-         .post('https://mindmatters-ejmd.onrender.com/register/app', {
-           fullname: Fullname,
-           username: Username,
-           email: Email,
-           password: password,
-           stud_no: StudID,
-         })
-         .then((response) => {
-           console.log(response.data.message);
-           // Check the response for the status code indicating username already exists
-           if (response.data.message === 'Username already exists') {
-             Alert.alert('Mind Matters','User Already Exists');
-           }else if(response.data.message === 'Email already exists'){
-            Alert.alert('Mind Matters','Email Already Exists');
-           }
-            else if (response.data.message === 'User registered successfully') {
-             AsyncStorage.setItem('username', Username);
-             ToastAndroid.show('Registered Successfully',ToastAndroid.SHORT);
-             setIsSubmitted(true);
-             navigation.navigate('verify');
-           }
-         })
-         .catch((error) => {
-           console.log(error);
-           // Handle other error scenarios if needed
-         });
-     }
-   };
+    if (Username.trim() === '' || Email.trim() === '' || password.trim() === '' || checked === false) {
+      ToastAndroid.show('Fields must not be empty', ToastAndroid.SHORT);
+      return;
+    }
+  
+    if (!isEmailValid(Email)) {
+      Alert.alert('Mind Matters', 'Please enter a valid email address');
+      return;
+    }
+  
+    if (!isPasswordStrong(password)) {
+      Alert.alert('Mind Matters', 'Password is not strong enough');
+      return;
+    }
+  
+   // if (!isPhoneNumberValid(PhoneNumber)) {
+      //Alert.alert('Mind Matters', 'Phone number must be 11 characters');
+      //return;
+    //}
+  
+    if (password !== Cpassword) {
+      console.warn('Password not the same');
+    } else {
+      axios
+        .post('https://mindmatters-ejmd.onrender.com/register/app', {
+          fullname: Fullname,
+          username: Username,
+          email: Email,
+          password: password,
+          stud_no: StudID,
+        })
+        .then((response) => {
+          console.log(response.data.message);
+          if (response.data.message === 'Username already exists') {
+            Alert.alert('Mind Matters', 'User Already Exists');
+          } else if (response.data.message === 'Email already exists') {
+            Alert.alert('Mind Matters', 'Email Already Exists');
+          } else if (response.data.message === 'User registered successfully') {
+            AsyncStorage.setItem('username', Username);
+            ToastAndroid.show('Registered Successfully', ToastAndroid.SHORT);
+            setIsSubmitted(true);
+            navigation.navigate('verify');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+
+
    const onCreate = () =>{
      navigation.navigate('SignIn');
    };

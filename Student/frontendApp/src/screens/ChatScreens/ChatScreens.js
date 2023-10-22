@@ -23,7 +23,7 @@ const ChatScreens = () => {
   }, []);
 
   return (
-    <View style={{width:width*1}}>
+    <View style={{width:width*1,height:height}}>
     {userdata.length > 0 ? (
       userdata.map((user, index) => (
         <View key={index} style={{width:width,height:height}}>

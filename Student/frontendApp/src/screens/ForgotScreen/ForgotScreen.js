@@ -32,7 +32,7 @@ const ForgotScreen = () => {
               await AsyncStorage.setItem('userEmail', Email);
               navigation.navigate('otp');
             } else {
-              Alert.alert("Forgot Password', 'Email Doesn't exist");
+              Alert.alert('Forgot Password', "Email Doesn't exist");
             }
           } else {
             ToastAndroid.show('Error: Unexpected server response', ToastAndroid.SHORT);
