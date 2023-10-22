@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef ,useState} from 'react';
 import './chat.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
@@ -10,20 +10,46 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+
 const socket = io.connect("https://mindmatters-ejmd.onrender.com");
 
 const Chat = () => {
   const [userList, setUserList] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
-  const [room, setRoom] = useState('12345'); // Set the default room ID to "12345"
+  const [room, setRoom] = useState(''); // Set the default room ID to an empty string
   const username = localStorage.getItem('Username');
 
-  const joinRoom = () => {
-    if (room !== "") {
-      socket.emit("join_room", room);
+  const roomRef = useRef(room);
+
+   // Updated joinRoom function
+   const joinRoom = (room_id) => {
+    if (room_id !== "") {
+      roomRef.current = room_id; // Update the mutable ref
+      setRoom(room_id); // Set the room with the selected room_id
+      socket.emit("join_room", room_id);
     }
   };
+
+  useEffect(() => {
+    // Handle incoming messages
+    const handleReceiveMessage = (data) => {
+      // Check if the room of the incoming message matches the current room ID
+      if (data.room === roomRef.current) {
+        // Access room value from the 
+        data.sentByUser = false;
+        setMessageList((list) => [...list, data]);
+      } 
+    };
+
+    socket.on("receive_message", handleReceiveMessage);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+    };
+  }, []);
+
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -43,24 +69,7 @@ const Chat = () => {
     }
   };
 
-  // Automatically join the room when the component mounts
-  useEffect(() => {
-    joinRoom();
-  }, []);
-
-  useEffect(() => {
-     // Handle incoming messages
-     const handleReceiveMessage = (data) => {
-      setMessageList((list) => [...list, data]);
-    };
-
-    socket.on("receive_message", handleReceiveMessage);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("receive_message", handleReceiveMessage);
-    };
-  }, [socket]);
+  
 
   useEffect(() => {
     // Fetch user data from the backend API
@@ -69,20 +78,31 @@ const Chat = () => {
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
+
+  const handleUserClick = (user) => {
+    const room_id = user.room_id;
+    joinRoom(room_id); // Automatically join the room
+  };
+
+
   const style = {
     width: '100%',
     maxWidth: 360,
     bgcolor: 'background.paper',
   };
-  
+
   return (
     <div className="chat">
       <Sidebar />
       <div className="userOnline">
         {userList.map((user) => (
           <List sx={style} component="nav" aria-label="mailbox folders" key={user.Fullname}>
-            <ListItem button alignItems="flex-start">
-              <Avatar src="/broken-image.jpg" alt={user.Fullname} className="user-profile-pic" />
+           <ListItem
+              button
+              alignItems="flex-start"
+              onClick={() => handleUserClick(user)} // Automatically join the room on user click
+            >
+              <Avatar src={user.image_file} alt={user.Fullname} className="user-profile-pic" />
               <div className="user-info">
                 <Typography
                   sx={{ display: 'inline' }}
@@ -101,22 +121,19 @@ const Chat = () => {
           </List>
         ))}
       </div>
+
       <div className="chatContainer">
         <div className="chatBox">
           <input
-            style={{ visibility: 'hidden' }}
+            style={{visibility:'hidden',display:'none'}}
             type="text"
             placeholder="Room ID..."
             value={room}
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
+            readOnly
           />
-          {/* The "Join A Room" button is removed since we're automatically joining */}
           <div className="messageContainer">
             <div className="scrollableMessages">
               {messageList.map((messageContent, index) => {
-                // Use the unique 'id' or 'key' of each message as the key in the map function
                 return (
                   <div
                     key={index}
@@ -155,4 +172,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;  
+export default Chat;

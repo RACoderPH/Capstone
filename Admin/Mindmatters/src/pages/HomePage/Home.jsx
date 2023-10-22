@@ -33,7 +33,7 @@ function Home() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    window.location.reload(); // Reload the page
+
   };
 
   // Create state variables for Stress, Anxiety, and Depression

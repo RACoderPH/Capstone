@@ -61,7 +61,7 @@ const Profile = () => {
   
             // Update the user's profile image path in the database
             axios
-              .put(`http://localhost:5000/Upload/${userId}`, { image: downloadURL })
+              .put(`https://mindmatters-ejmd.onrender.com/Upload/${userId}`, { image: downloadURL })
               .then((res) => {
                 console.log(res);
               })

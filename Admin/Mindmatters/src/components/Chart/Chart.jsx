@@ -35,11 +35,11 @@ const Chart = () => {
 
   return (
     <ResponsiveContainer width="100%" aspect={3}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex',justifyContent:'space-between',alignContent:'space-between',width:"100%"}}>
         <div style={{ flex: 1 }}>
           <BarChart
-            width={600}
-            height={300}
+            width={700}
+            height={500}
             data={[
               { name: 'Stress', Student: averages.avg_stress },
               { name: 'Anxiety', Student: averages.avg_anxiety },
@@ -63,14 +63,14 @@ const Chart = () => {
         </div>
 
         <div style={{ flex: 1 }}>
-          <PieChart width={400} height={400}>
+          <PieChart width={700} height={500}>
             <Pie
               dataKey="users" // Data key should match the property name in data1
               isAnimationActive={false}
               data={data1}
-              cx={200}
+              cx={400}
               cy={200}
-              outerRadius={100}
+              outerRadius={170}
               fill="#8884d8"
               label
             />
