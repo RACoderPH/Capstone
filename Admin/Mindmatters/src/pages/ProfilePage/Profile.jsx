@@ -8,11 +8,14 @@ import Box from '@mui/material/Box';
 import axios from "axios";
 import {ref,uploadBytesResumable,getDownloadURL} from "firebase/storage"
 import storage from "../../firebase";
-
+import { ToastContainer, toast } from 'react-toastify';
 const Profile = () => {
 
   const [userData, setUserData] = useState({});
   const [image, setImage] = useState('');
+
+  const input = () => toast.warn('Please Fill-out the Field', {
+  });
 
   const [values, setValues] = useState({
     fullname: "",
@@ -80,12 +83,19 @@ const Profile = () => {
     const userId = localStorage.getItem('ID');
     e.preventDefault();
 
+    
+    if (!values.fullname ||!values.username || !values.email || !values.phone || !values.address) {
+      input();
+       return;
+     }
+   
+
     // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to update this user?');
   
     if (confirmUpdate) {
       axios
-        .put(`http://localhost:5000/profileUpdate/${userId}`, values)
+        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
         .then((res) => {
           console.log(res);
           alert('Success');
@@ -101,7 +111,20 @@ const Profile = () => {
             <div className="profileContainer">
 
       <div className="containers">        
-     
+               {/*Warning Toast*/}
+   <ToastContainer
+  position="top-center"
+  autoClose={1000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+  className="warning" 
+/>
 
       <div className="UserContainer">
         <div className="userShow">

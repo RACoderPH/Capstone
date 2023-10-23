@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Button from '@mui/material/Button';
-
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Annoucement = () => {
@@ -18,9 +18,11 @@ const Annoucement = () => {
   const [where, setWhere] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17T15:30'));
 
+  const input = () => toast.warn('Please Fill-out the Field', {
+  });
   const Messagebtn = () => {
     if (Title === '' || what === '' || where == '') {
-      alert('Fill fields');
+      input();
     } else {
       const formattedDate = selectedDate.format('YYYY-MM-DD HH:mm:ss');
 
@@ -65,6 +67,22 @@ const Annoucement = () => {
     <div className="announce" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Sidebar />
       <div className="announceContainer">
+
+              {/*Warning Toast*/}
+   <ToastContainer
+  position="top-center"
+  autoClose={1000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+  className="warning" 
+/>
+      <h2>Mental Health</h2>
         <h2>Announcement Form</h2>
         <form className="announcementForm">
           <div className="form-group">

@@ -12,6 +12,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const User = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
@@ -26,8 +28,10 @@ const User = () => {
     stud_no: '',
     password: '',
     phone: '',
+    address: '',
   });
-
+  const input = () => toast.warn('Please Fill-out the Field', {
+  });
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = (user) => {
@@ -94,39 +98,51 @@ const handleClose2 = () => {
 
   const Updateuser = async (e) => {
     e.preventDefault();
-
-    const confirmUpdate = window.confirm('Are you sure you want to update this user?');
-
-    if (confirmUpdate) {
-      axios
-        .put(`https://mindmatters-ejmd.onrender.com/userUpdate/${selectedUser}`, values)
-        .then((res) => {
-          console.log(res);
-          alert('Success');
-          setIsUpdateConfirmed(true);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
+  
+    // Check if any of the fields are empty
+    if (!values.fullname || !values.username || !values.stud_no || !values.email || !values.phone ||!values.address) {
+      input();
+    } else {
+      const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+    
+      if (confirmUpdate) {
+        axios
+          .put(`https://mindmatters-ejmd.onrender.com/userUpdate/${selectedUser}`, values)
+          .then((res) => {
+            console.log(res);
+            alert('Success');
+            setIsUpdateConfirmed(true);
+            window.location.reload();
+          })
+          .catch((err) => console.log(err));
+      }
     }
   };
+  
 
   const Adduser = async (e) => {
     e.preventDefault();
-
-    const confirmUpdate = window.confirm('Are you sure you want to add this user?');
-
-    if (confirmUpdate) {
-      await axios
-        .post(`https://mindmatters-ejmd.onrender.com/register/app`, values)
-        .then((res) => {
-          console.log(res);
-          alert('Success');
-          setIsUpdateConfirmed(true);
-          window.location.reload();
-        })
-        .catch((err) => console.log(err));
+  
+    if (!values.username || !values.email || !values.stud_no || !values.password) {
+     input();
+      return;
+    }
+  
+    const userConfirmed = window.confirm('Are you sure you want to add this user?');
+    
+    if (userConfirmed) {
+      try {
+        const response = await axios.post(`https://mindmatters-ejmd.onrender.com/register/app`, values);
+        console.log(response);
+        alert('Success');
+        setIsUpdateConfirmed(true);
+        window.location.reload();
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
+  
 
   const Deleteuser = async (user) => {
     const confirmDelete = window.confirm('Are you sure you want to Delete this user?');
@@ -188,6 +204,20 @@ useEffect(() => {
       <div className="userContainer">
         <br/>
         <br/>
+           {/*Warning Toast*/}
+   <ToastContainer
+  position="top-center"
+  autoClose={1000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+  className="warning" 
+/>
         <Button className="modalBtn" variant="outlined" onClick={handleOpen1}>
           Add User
         </Button>
