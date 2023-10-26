@@ -2,22 +2,8 @@ const nodemailer = require('nodemailer');
 const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const multer = require('multer');
-const path = require('path');
 const db = require('../database'); 
 
-
-const storage = multer.diskStorage({
-  destination:(req, file, cb)=>{
-    cb(null,'public/images')
-  },
-  filename:(req, file, cb)=>{
-    cb(null,file.fieldname+"_"+Date.now()+path.extname(file.originalname));
-  }
-})
-const upload = multer({
-  storage:storage
-})
 
 // ...
 router.post('/register', (req, res) => {
@@ -140,7 +126,7 @@ function generateVerificationToken() {
     
           </div>
     <p>After verifying your email, you can set up your profile, add a profile picture, and start exploring MindMatters App.</br></br>If you didn't sign up for MindMatters App, please disregard this email. </br></br> If you need any assistance, feel free to reach out to our support team at <a href>mindmattersdominic@gmail.com</a>. We're here to help! </br> </br> Best regards,  </br> The MindMatters Team</p>
-        <img src="Logo.png" class="ImageLogo">
+        <img src="https://firebasestorage.googleapis.com/v0/b/mindmatters-f0c04.appspot.com/o/Mindmatters-removebg-preview.png?alt=media&token=12b639b7-3f66-4b70-96ab-2a9094895e1c&_gl=1*1alsdw8*_ga*MzE5MTg1MjcxLjE2OTcxMjE2MDk.*_ga_CW55HF8NVT*MTY5ODA4MTE0OC4xOC4xLjE2OTgwODEyMDMuNS4wLjA." class="ImageLogo">
     </div>
       </body>
     </html>`,
@@ -162,6 +148,9 @@ function generateVerificationToken() {
     const email = req.body.email;
     const password = req.body.password;
     const stud_no = req.body.stud_no;
+    const phone = req.body.phone;
+    const gradelvl = req.body.grade;
+    const section = req.body.section;
 
     // Check if the username already exists
     const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
@@ -196,8 +185,8 @@ function generateVerificationToken() {
                                     const status = 'Offline';
                                     const room_id = Math.floor(10000 + Math.random() * 90000);
                                     const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                                    const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, Password, created_at, position, status, verification_code,room_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                                    db.query(insertUserQuery, [fullname, username, email, stud_no, hashedPassword, createdAt, position, status, verificationToken, room_id], (insertErr, insertResult) => {
+                                    const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email, stud_no, phone_number,gradelvl,section,Password, created_at, position, status, verification_code,room_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                    db.query(insertUserQuery, [fullname, username, email, stud_no, phone,gradelvl,section,hashedPassword, createdAt, position, status, verificationToken, room_id], (insertErr, insertResult) => {
                                         if (insertErr) {
                                             console.error('Failed to register user:', insertErr);
                                             res.send({ message: 'Server error' });
@@ -364,7 +353,7 @@ router.delete("/userDelete/:id", (req, res) => {
 //Update User 
 router.put("/userUpdate/:id", (req, res) => {
   const UserId = req.params.id;
-  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `stud_no`= ? , `phone_number`= ? , `address`= ? WHERE id = ?";
+  const Updatequery = "UPDATE user_info SET `Fullname`= ?, `user_name`= ?, `Email`= ?, `stud_no`= ? , `phone_number`= ? ,`gradelvl`= ? ,`section`= ? , `address`= ? WHERE id = ?";
 
   const values = [
     req.body.fullname,
@@ -372,6 +361,8 @@ router.put("/userUpdate/:id", (req, res) => {
     req.body.email,
     req.body.stud_no,
     req.body.phone,
+    req.body.grade,
+    req.body.section,
     req.body.address,
   ];
 

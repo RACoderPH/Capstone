@@ -1,8 +1,58 @@
 
 const express = require("express");
 const router = express.Router();
+const moment = require('moment');
+const cron = require('node-cron');
 
-const db = require('../database'); 
+
+const db = require('../database');
+
+//Scheduler to auto delete result 
+cron.schedule('*/30 * * * *', () => {
+  const twoWeeksAgo = moment().subtract(2, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+
+  // Update IsAnswer in user_info table and delete student results older than 10 minutes ago
+  const updateIsAnswer = "UPDATE `user_info` SET `IsAnswer` = 0 WHERE `IsAnswer` = 1 AND `answer_at` < ?";
+  const deleteOldResults = "DELETE FROM `student_result` WHERE `created_at` < ?";
+
+  // Perform the update and delete operations within a transaction for consistency
+  db.beginTransaction((transactionErr) => {
+    if (transactionErr) {
+      console.error('Failed to start a transaction:', transactionErr);
+      return;
+    }
+
+    db.query(updateIsAnswer, [twoWeeksAgo], (updateErr, updateResult) => {
+      if (updateErr) {
+        console.error('Failed to update IsAnswer in user_info:', updateErr);
+        db.rollback(() => {
+          console.error('Transaction rolled back.');
+        });
+        return;
+      }
+
+      db.query(deleteOldResults, [twoWeeksAgo], (deleteErr, deleteResult) => {
+        if (deleteErr) {
+          console.error('Failed to delete old student results:', deleteErr);
+          db.rollback(() => {
+            console.error('Transaction rolled back.');
+          });
+          return;
+        }
+
+        db.commit((commitErr) => {
+          if (commitErr) {
+            console.error('Transaction commit failed:', commitErr);
+          } else {
+            console.log('Transaction committed.');
+          }
+        });
+      });
+    });
+  });
+});
+//end
+
 
 router.post('/submit_answer', (req, res) => {
   const answers = req.body.answers; // Assuming you are sending an array of answers from the frontend
@@ -92,24 +142,49 @@ router.get('/depression/:id', (req, res) => {
   });
 });
 
-router.post('/result', (req,res) =>{
+router.post('/result', (req, res) => {
   const user_id = req.body.user_id;
   const depression = req.body.depression;
   const anxiety = req.body.anxiety;
   const stress = req.body.stress;
+  const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    insertResult = "INSERT INTO `student_result`( `user_id`, `depression`, `anxiety`, `stress`) VALUES (?, ?, ?, ?)";
+  // Insert the result
+  const insertResult = "INSERT INTO `student_result`(`user_id`, `depression`, `anxiety`, `stress`, `created_at`) VALUES (?, ?, ?, ?, ?)";
 
-    db.query(insertResult, [user_id,depression,anxiety,stress], (insertErr, insertResult) => {
-      if (insertErr) {
-        console.error('Failed to insert Result:', insertErr);
-        res.send({ message: 'Server error' });
-      } 
-      else {
-        res.send({ message: 'Inserted' });
+  // Update the UpdateUser statement to insert created_at into answer_at
+  const UpdateUser = "UPDATE `user_info` SET `answer_at` = ? WHERE `id` = ?";
+
+  db.query(insertResult, [user_id, depression, anxiety, stress, created_at], (insertErr, insertResult) => {
+    if (insertErr) {
+      console.error('Failed to insert Result:', insertErr);
+      return res.send({ message: 'Server error' });
+    }
+
+    // Once the result is successfully inserted, update the answer_at in user_info
+    db.query(UpdateUser, [created_at, user_id], (updateUserErr, updateUserResult) => {
+      if (updateUserErr) {
+        console.error('Failed to update answer_at in user_info:', updateUserErr);
+        // Handle the error
+      } else {
+        // Handle the update success
+        // Now, proceed to delete the related answers
+        const deleteAnswers = "DELETE FROM `answer` WHERE `user_id` = ?";
+        db.query(deleteAnswers, [user_id], (deleteErr, deleteResult) => {
+          if (deleteErr) {
+            console.error('Failed to delete answers:', deleteErr);
+            return res.send({ message: 'Server error' });
+          }
+
+          // Respond with success message
+          res.send({ message: 'Result inserted, and related answers deleted' });
+        });
       }
     });
-})
+  });
+});
+
+
 
 router.get('/student_result/:id', (req,res) => {
   const userId = req.params.id;
@@ -118,7 +193,7 @@ router.get('/student_result/:id', (req,res) => {
 
   db.query(getAnxiety, userId, (error, result) => {
     if (error) {
-      console.error('Failed to fetch anxiety data:', error);
+      console.error('Failed to fetch student data:', error);
       res.status(500).json({ error: 'Failed to result data' });
     } else {
       
@@ -126,6 +201,8 @@ router.get('/student_result/:id', (req,res) => {
     }
   })
 });
+
+
 
 // for bar chart data
 router.get('/student_result', (req, res) => {
