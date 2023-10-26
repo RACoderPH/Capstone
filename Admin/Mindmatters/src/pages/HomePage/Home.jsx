@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import './home.scss';
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
@@ -22,8 +22,10 @@ import {
   Bar,
   Label,
 } from "recharts";
+import {useReactToPrint} from 'react-to-print';
 
 function Home() {
+
   const [userList, setUserList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null); // State to store the selected user's ID
   const [Stress, setStress] = useState(null);
@@ -93,7 +95,14 @@ function Home() {
         });
     }
   }, [selectedUserId]);
-  
+//Printing data
+  const componentRef = useRef();
+  const printData = useReactToPrint({
+   
+    content: () => componentRef.current,
+    documentTitle : "Mind Matters User List",
+    onAfterPrint : () => console.log('print success')
+  })
   return (
     <div className="home">
       <Sidebar />
@@ -149,10 +158,11 @@ function Home() {
           aria-describedby="modal-modal-description"
         >
           <Box className="box">
+          <div ref={componentRef}>
           <span className="userUpdateTitle">Mental Health Assesment Results</span>
           <span className="txt">The information can be edited</span>
-
-          <div className="chart">
+          
+          <div className="chart" >
           <PieChart className="PieChart" width={400} height={320}>
           <Pie
             dataKey="value"
@@ -172,14 +182,63 @@ function Home() {
         <div className="result-placeholder">
         <h2>Results</h2>
         <ul>
-          <li>Stress: {stressData}</li>
-          <li>Anxiety: {anxietyData}</li>
-          <li>Depression: {depressionData}</li>
+        <li>Stress: {stressData} : 
+    <span style={{fontSize:22,borderRadius:10,padding:4,color:'black', backgroundColor: stressData >= 34 ? "#F7A4A4" :
+                               stressData >= 26 ? "#F57328" :
+                               stressData >= 19 ? "#FFE9A0" :
+                               stressData >= 15 ? "#EFF669" :
+                               stressData >= 0 ? "#B6E2A1" :
+                               "white" }}>
+      {stressData >= 34 ? "Extreme Severe" :
+       stressData >= 26 ? "Severe" :
+       stressData >= 19 ? "Moderate" :
+       stressData >= 15 ? "Mild" :
+       stressData >= 0 ? "Normal" :
+       ''}
+    </span>
+  </li>
+  <li>Anxiety: {anxietyData} : 
+    <span style={{fontSize:22,borderRadius:10,padding:4,color:'black', backgroundColor: anxietyData >= 20 ? "#F7A4A4" :
+                               anxietyData >= 15 ? "#F57328" :
+                               anxietyData >= 10 ? "#FFE9A0" :
+                               anxietyData >= 8 ? "#EFF669" :
+                               anxietyData >= 0 ? "#B6E2A1" :
+                               "white" }}>
+      {anxietyData >= 20 ? "Extreme Severe" :
+       anxietyData >= 15 ? "Severe" :
+       anxietyData >= 10 ? "Moderate" :
+       anxietyData >= 8 ? "Mild" :
+       anxietyData >= 0 ? "Normal" :
+       ''}
+    </span>
+  </li>
+  <li>Depression: {depressionData} : 
+    <span style={{fontSize:22,borderRadius:10,padding:4,color:'black', backgroundColor: depressionData >= 28 ? "#F7A4A4" :
+                               depressionData >= 21 ? "#F57328" :
+                               depressionData >= 14 ? "#FFE9A0" :
+                               depressionData >= 10 ? "#EFF669" :
+                               depressionData>= 0 ? "#B6E2A1" :
+                               "white" }}>
+      {depressionData >= 28 ? "Extreme Severe" :
+      depressionData >= 21 ? "Severe" :
+      depressionData>= 14 ? "Moderate" :
+      depressionData >= 10 ? "Mild" :
+      depressionData>= 0 ? "Normal" :
+       ''}
+    </span>
+  </li>
         </ul>
+        <div>
+            <h4>Status: </h4>
+        </div>
+
+        </div>
         </div>
           
             <br/>
+            <button onClick={printData}>Generate Report</button>
           </Box>
+         
         </Modal>
     </div>
   );

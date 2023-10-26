@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import './user.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TextField from '@mui/material/TextField';
@@ -8,12 +8,9 @@ import Box from '@mui/material/Box';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ToastContainer, toast } from 'react-toastify';
-
+import {useReactToPrint} from 'react-to-print';
 
 const User = () => {
   const [localStorageValue, setLocalStorageValue] = useState('');
@@ -93,8 +90,10 @@ const handleClose2 = () => {
   }));
 
   const filteredRows = rows.filter((row) =>
-    row.stud_no.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  row.stud_no.toLowerCase().includes(searchInput.toLowerCase()) ||
+  row.Fullname.toLowerCase().includes(searchInput.toLowerCase())
+);
+
 
   const Updateuser = async (e) => {
     e.preventDefault();
@@ -198,6 +197,15 @@ useEffect(() => {
 }, [userId]);
   
 
+  //Printing the Documents
+  const componentRef = useRef();
+  const printData = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle : "Mind Matters User List",
+    onAfterPrint : () => console.log('print success')
+  })
+   
+
   return (
     <div className="user">
       <Sidebar />
@@ -232,9 +240,10 @@ useEffect(() => {
         />
         
 
-        <div style={{ width: '99%', padding: '10px' }}>
+        <div  style={{ width: '99%', padding: '10px' }}>
           <div style={{ height: 550, width: '100%' }}>
             <DataGrid
+              ref={componentRef}
               rows={filteredRows}
               columns={[
                 { field: 'id', headerName: 'ID', flex: 1 },
@@ -246,23 +255,11 @@ useEffect(() => {
                 {
                   field: 'actions',
                   headerName: 'Actions',
-                  flex: 4,
+                  flex: 2,
                   renderCell: (params) => (
                     <div className="btns">
                       <IconButton onClick={() => handleOpen2(params.row)}>
                         <VisibilityIcon fontSize="inherit"/>
-                      </IconButton>
-
-                     <IconButton onClick={() => handleOpen(params.row)}>
-                        <EditIcon fontSize="inherit"/>
-                      </IconButton>
-
-                      <IconButton
-                        aria-label="delete"
-                        size="large"
-                        onClick={() => Deleteuser(params.row)}
-                      >
-                        <DeleteIcon fontSize="inherit" />
                       </IconButton>
                     </div>
                   ),
@@ -271,6 +268,7 @@ useEffect(() => {
             />
           </div>
         </div>
+        <button onClick={printData}>Generate Report</button>
 
         {/* Modals for adding and editing users */}
         <Modal
@@ -338,7 +336,7 @@ useEffect(() => {
         </Modal>
 
         {/* Modals for editing users */}
-        <Modal
+        {/*<Modal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -347,7 +345,7 @@ useEffect(() => {
           <Box className="box">
             <span className="userUpdateTitle">Edit User Information</span>
             <span className="txt">The information can be edited</span>
-            {/* Edit user input fields */}
+            {/* Edit user input fields
             <div className="txtfield">
               <TextField
                 className="textBox"
@@ -408,7 +406,7 @@ useEffect(() => {
               Save
             </Button>
           </Box>
-        </Modal>
+        </Modal>/*}
 
         {/* Modals for viewing users */}
         <Modal
