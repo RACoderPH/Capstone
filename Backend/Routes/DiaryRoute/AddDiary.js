@@ -25,6 +25,7 @@ router.post('/AddDiary', (req, res) => {
   });
   });
 
+
  router.get('/MyDiary/:id', (req,res) => {
   const userId = req.params.id;
   const query = 'SELECT * FROM Diary WHERE user_id = ?';
@@ -37,6 +38,46 @@ router.post('/AddDiary', (req, res) => {
     }
   });
  }) ;
+
+router.post('/EditDiary/:id', (req,res) => {
+  const diary_id = req.params.diary_id;
+  const content = req.params.description;
+  const title = req.params.title;
+
+  const UpdateQuery = 'UPDATE Diary SET title = ?, description = ? WHERE diary_id = ?';
+
+  db.query(UpdateQuery, [title,content,diary_id], (err,result) => {
+    if (err) {
+      // Handle the error, e.g., send an error response
+      res.status(500).json({ error: 'Failed to update diary entry.' });
+    } else {
+      // Update was successful, send a success response or perform other actions
+      res.status(200).json({ message: 'Diary entry updated successfully.' });
+    }
+
+  });
+});
+
+router.delete('/DeleteDiary/:diary_id', (req, res) => {
+  const diaryId = req.params.diary_id;
+
+  const deleteQuery = 'DELETE FROM Diary WHERE diary_id = ?';
+
+  db.query(deleteQuery, diaryId, (err, result) => {
+    if (err) {
+      console.error('Error deleting diary entry: ' + err);
+      res.status(500).json({ message: 'Error deleting diary entry' });
+    } else if (result.affectedRows === 0) {
+      console.log('Diary entry not found.');
+      res.status(404).json({ message: 'Diary entry not found' });
+    } else {
+      console.log('Diary entry deleted successfully');
+      res.status(200).json({ message: 'Diary entry deleted successfully' });
+    }
+  });
+});
+
+
 
 
 router.get('/quotes', (req,res) => {

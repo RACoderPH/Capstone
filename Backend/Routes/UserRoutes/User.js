@@ -506,5 +506,21 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
+
+
+  //Upload Attachment
+router.put("/attachment/:id",(req, res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `attachment`= ? WHERE id = ?";
+
+  const values = [
+    req.body.image,
+  ];
+
+  db.query(Updatequery, [...values,UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
   
   module.exports = router;

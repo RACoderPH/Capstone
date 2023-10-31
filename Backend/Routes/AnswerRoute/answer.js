@@ -90,6 +90,7 @@ router.post('/submit_answer', (req, res) => {
   }
 });
 
+
 //For Stress Computation
 router.get('/stress/:id', (req, res) => {
   const userId = req.params.id;
@@ -106,7 +107,6 @@ router.get('/stress/:id', (req, res) => {
     }
   });
 });
-
 
     //For Anxiety Computation
 router.get('/anxiety/:id', (req, res) => {
@@ -141,6 +141,7 @@ router.get('/depression/:id', (req, res) => {
     }
   });
 });
+
 
 router.post('/result', (req, res) => {
   const user_id = req.body.user_id;
@@ -184,8 +185,6 @@ router.post('/result', (req, res) => {
   });
 });
 
-
-
 router.get('/student_result/:id', (req,res) => {
   const userId = req.params.id;
 
@@ -201,8 +200,6 @@ router.get('/student_result/:id', (req,res) => {
     }
   })
 });
-
-
 
 // for bar chart data
 router.get('/student_result', (req, res) => {
@@ -242,4 +239,8 @@ router.get('/count', (req, res) => {
     }
   });
 });
+
+
+
+
   module.exports = router;
