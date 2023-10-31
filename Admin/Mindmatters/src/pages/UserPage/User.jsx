@@ -438,6 +438,12 @@ useEffect(() => {
             <div className="txtfield">
             <TextField id="outlined-basic" className="custom-width" label="Student No" variant="outlined"   margin="normal" value={selectedUserForModal ? selectedUserForModal.stud_no : ''} InputLabelProps={{shrink: true,}}/>
             </div>
+            <div className="txtfield">
+            <span className="userUpdateTitle">Status: Pending</span>
+            </div>
+            <div className="txtfield">
+            <span className="userUpdateTitle"><a href="https://firebasestorage.googleapis.com/v0/b/mindmatters-f0c04.appspot.com/o/profileImages%2F1%2FBaji.jpg?alt=media&token=1cdf1f21-c91e-4c6e-bb1c-0feb1881702e">Click here to view attachment</a></span> 
+            </div>
             
           </div>
 
