@@ -7,7 +7,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import axios from "axios";
 import {ref,uploadBytesResumable,getDownloadURL} from "firebase/storage"
-import storage from "../../firebase";
+import { storage, store } from "../../firebase";
 import { ToastContainer, toast } from 'react-toastify';
 const Profile = () => {
 

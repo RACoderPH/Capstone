@@ -11,7 +11,21 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
-const socket = io.connect("https://mindmatters-ejmd.onrender.com");
+import {
+  doc,
+  setDoc,
+  collection,
+  serverTimestamp,
+  query,
+  onSnapshot,
+  orderBy,
+} from 'firebase/firestore';
+import { storage, store } from "../../firebase";
+
+
+
+
+const socket = io.connect("https://mindmatters-ejmd.onrender.com/");
 
 const Chat = () => {
   const [userList, setUserList] = useState([]);
@@ -19,8 +33,45 @@ const Chat = () => {
   const [messageList, setMessageList] = useState([]);
   const [room, setRoom] = useState(''); // Set the default room ID to an empty string
   const username = localStorage.getItem('Username');
+  
+  const chatsRef = collection(store, "Messages")
+
 
   const roomRef = useRef(room);
+
+
+  useEffect(()=>{
+
+    const q = query(chatsRef , orderBy('createdAt' , 'asc'))
+  
+    const unsub = onSnapshot(q, (querySnapshot) =>{
+      const fireChats =[]
+      querySnapshot.forEach(doc => {
+        fireChats.push(doc.data())
+      });
+     setMessageList([...fireChats])
+    })
+    return ()=> {
+      unsub()
+    }
+  
+  },[])
+
+  function addToFirebase(messageData) {
+    const newChat = {
+      createdAt: messageData.time,
+      user: messageData.author,
+      message: messageData.message,
+      room: room,
+    };
+
+    const chatRef = doc(chatsRef); // Assuming you have chatRef defined properly
+    setDoc(chatRef, newChat)
+      .then(() => console.log('Chat added successfully'))
+      .catch(console.error);
+  }
+
+
 
    // Updated joinRoom function
    const joinRoom = (room_id) => {
@@ -51,23 +102,43 @@ const Chat = () => {
   }, []);
 
 
-  const sendMessage = async () => {
-    if (currentMessage !== "") {
-      const messageData = {
-        room: room,
-        author: username,
-        message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
-        sentByUser: true, // Add a flag to identify user's own messages
-      };
+ // ...
 
-      await socket.emit("send_message", messageData);
-      setMessageList((list) => [...list, messageData]);
-    }
-  };
+ const sendMessage = async () => {
+  if (currentMessage !== '') {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours24 = now.getHours();
+    const hours12 = (hours24 % 12) || 12; // Convert to 12-hour format
+    const ampm = hours24 >= 12 ? 'PM' : 'AM';
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    const messageData = {
+      room: room,
+      author: username,
+      message: currentMessage,
+      time: `${year}-${month}-${day} ${hours12}:${minutes}:${seconds} ${ampm}`,
+      sentByUser: true,
+    };
+
+    // Add the message to Firebase
+    addToFirebase(messageData);
+
+    // Send the message through socket.io
+    await socket.emit('send_message', messageData);
+
+    setMessageList((list) => [...list, messageData]);
+    setCurrentMessage('');
+  }
+};
+
+
+
+// ...
+
 
   
 
@@ -131,29 +202,37 @@ const Chat = () => {
             value={room}
             readOnly
           />
-          <div className="messageContainer">
-            <div className="scrollableMessages">
-              {messageList.map((messageContent, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={`message ${
-                      messageContent.sentByUser ? 'userMessage' : 'otherMessage'
-                    }`} style={{flexWrap:'wrap'}}
-                  >
-                    <h3 className="messageText" style={{ fontSize: 25 }}>
-                      {messageContent.message}
-                    </h3>
-                    <div className="message-meta">
-                      <p id="time" style={{ fontSize: 20 }}>
-                        {messageContent.time} {messageContent.author}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+
+<div className="messageContainer">
+  <div className="scrollableMessages">
+  {messageList
+  .filter((message) => message.room === room) // Filter messages by room
+  .map((messageContent, index) => {
+    console.log("Message content:", messageContent); // Log message content
+    const isUserMessage = messageContent.user === username;
+    const messageStyle = isUserMessage ? 'userMessage' : 'otherMessage';
+
+    return (
+      <div
+        key={index}
+        className={`message ${messageStyle}`}
+        style={{ flexWrap: 'wrap' }}
+      >
+        <h3 className="messageText" style={{ fontSize: 25 }}>
+          {messageContent.message}
+        </h3>
+        <div className="message-meta">
+          <p id="time" style={{ fontSize: 20 }}>
+            {messageContent.user}, {messageContent.createdAt}
+          </p>
+        </div>
+      </div>
+    );
+  })}
+
+  </div>
+</div>
+
 
           <div className="messageInputContainer">
             <input
