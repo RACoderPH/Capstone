@@ -155,3 +155,9 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.messageContainers {
+  max-height: 800px;
+  overflow-y: auto;
+}
+

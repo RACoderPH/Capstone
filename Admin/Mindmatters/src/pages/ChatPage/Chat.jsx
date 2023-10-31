@@ -25,7 +25,7 @@ import { storage, store } from "../../firebase";
 
 
 
-const socket = io.connect("https://mindmatters-ejmd.onrender.com/");
+const socket = io.connect("http://localhost:5000/");
 
 const Chat = () => {
   const [userList, setUserList] = useState([]);
@@ -138,10 +138,6 @@ const Chat = () => {
 
 
 // ...
-
-
-  
-
   useEffect(() => {
     // Fetch user data from the backend API
     fetch('https://mindmatters-ejmd.onrender.com/getonline')
@@ -204,33 +200,35 @@ const Chat = () => {
           />
 
 <div className="messageContainer">
-  <div className="scrollableMessages">
-  {messageList
-  .filter((message) => message.room === room) // Filter messages by room
-  .map((messageContent, index) => {
-    console.log("Message content:", messageContent); // Log message content
-    const isUserMessage = messageContent.user === username;
-    const messageStyle = isUserMessage ? 'userMessage' : 'otherMessage';
+<div className="scrollableMessages">
+  <div className="messageContainers">
+    {messageList
+      .filter((message) => message.room === room) // Filter messages by room
+      .map((messageContent, index) => {
+        console.log("Message content:", messageContent); // Log message content
+        const isUserMessage = messageContent.user === username;
+        const messageStyle = isUserMessage ? 'userMessage' : 'otherMessage';
 
-    return (
-      <div
-        key={index}
-        className={`message ${messageStyle}`}
-        style={{ flexWrap: 'wrap' }}
-      >
-        <h3 className="messageText" style={{ fontSize: 25 }}>
-          {messageContent.message}
-        </h3>
-        <div className="message-meta">
-          <p id="time" style={{ fontSize: 20 }}>
-            {messageContent.user}, {messageContent.createdAt}
-          </p>
-        </div>
-      </div>
-    );
-  })}
-
+        return (
+          <div
+            key={index}
+            className={`message ${messageStyle}`}
+            style={{ flexWrap: 'wrap' }}
+          >
+            <h3 className="messageText" style={{ fontSize: 25 }}>
+              {messageContent.message}
+            </h3>
+            <div className="message-meta">
+              <p id="time" style={{ fontSize: 20 }}>
+                {messageContent.user}, {messageContent.createdAt}
+              </p>
+            </div>
+          </div>
+        );
+      })}
   </div>
+</div>
+
 </div>
 
 
