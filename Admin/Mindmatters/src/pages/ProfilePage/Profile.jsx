@@ -136,6 +136,7 @@ const Profile = () => {
 
 </div>
             
+            <br />
               <p className="DisplayInfo">{userData.Fullname}</p>
               <p className="DisplayInfo">{userData.position}</p>
                
