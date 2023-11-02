@@ -103,7 +103,7 @@ function Home() {
   
   const convertImageToBase64 = (imageSrc, callback) => {
     const img = new Image();
-    img.crossOrigin = "Anonymous"; // To enable cross-origin loading of images
+    img.crossOrigin = "*"; // To enable cross-origin loading of images
     img.onload = function () {
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
