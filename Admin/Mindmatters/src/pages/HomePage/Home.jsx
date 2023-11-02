@@ -18,9 +18,8 @@ import {
 } from "recharts";
 import { useReactToPrint } from 'react-to-print';
 import html2canvas from 'html2canvas';
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from "pdfmake/build/vfs_fonts";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import  pdfMake from "pdfmake/build/pdfmake";
+import  pdfFonts from "pdfmake/build/vfs_fonts";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
@@ -33,7 +32,7 @@ function Home() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
   const [selectedMood, setSelectedMood] = useState(localStorage.getItem('selectedMood') || 'normal');
   const [userMoods, setUserMoods] = useState({}); // Object to store user-specific moods
 
