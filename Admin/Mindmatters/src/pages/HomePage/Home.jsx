@@ -19,7 +19,7 @@ import { useReactToPrint } from 'react-to-print';
 import html2canvas from 'html2canvas';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 function Home() {
   const [userList, setUserList] = useState([]);
