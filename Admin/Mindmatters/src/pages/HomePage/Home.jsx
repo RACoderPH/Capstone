@@ -20,15 +20,8 @@ import html2canvas from 'html2canvas';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 
-
-pdfMake.vfs = {
-  // ... (other fonts)
-  'Roboto-Medium.ttf': 'fonts/Roboto-Medium.ttf', // Specify the correct path
-};
-
-
+// Then set vfs_fonts in pdfMake
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 
 
 function Home() {
