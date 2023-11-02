@@ -522,5 +522,38 @@ router.put("/attachment/:id",(req, res) => {
     return res.json(data);
   });
 });
+
+//Verified the user
+router.put("/VerifyUser/:id",(req,res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Verified`= 1 WHERE id = ?";
+
+  db.query(Updatequery, [UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+//Not Verified the user
+router.put("/NotVerifyUser/:id",(req,res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Verified`= 2 WHERE id = ?";
+
+  db.query(Updatequery, [UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+//Chnage to 0 the user
+router.put("/Change/:id",(req,res) => {
+  const UserId = req.params.id;
+  const Updatequery = "UPDATE user_info SET `Verified`= 0 WHERE id = ?";
+
+  db.query(Updatequery, [UserId], (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
   
-  module.exports = router;
+module.exports = router;
