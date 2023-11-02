@@ -21,6 +21,16 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 
+pdfMake.vfs = {
+  // ... (other fonts)
+  'Roboto-Medium.ttf': 'fonts/Roboto-Medium.ttf', // Specify the correct path
+};
+
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+
 function Home() {
   const [userList, setUserList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
