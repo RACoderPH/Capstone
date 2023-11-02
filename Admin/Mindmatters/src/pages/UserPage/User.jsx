@@ -15,7 +15,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 
 const User = () => {
@@ -397,7 +397,7 @@ useEffect(() => {
       content,
       styles,
       pageSize: 'A4', // Set the paper size (A4 or other standard sizes)
-      pageMargins: [40, 60, 40, 60], // Set page margins [left, top, right, bottom]
+      pageMargins: [20, 60, 20, 60], // Set page margins [left, top, right, bottom]
     };
     
   
