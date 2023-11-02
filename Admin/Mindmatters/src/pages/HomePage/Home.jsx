@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import {
   PieChart,
   Pie,
@@ -19,10 +20,8 @@ import { useReactToPrint } from 'react-to-print';
 import html2canvas from 'html2canvas';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
-// Then set vfs_fonts in pdfMake
+import DeleteIcon from '@mui/icons-material/Delete';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 
 function Home() {
   const [userList, setUserList] = useState([]);
@@ -33,6 +32,10 @@ function Home() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [selectedMood, setSelectedMood] = useState(localStorage.getItem('selectedMood') || 'normal');
+  const [userMoods, setUserMoods] = useState({}); // Object to store user-specific moods
+
 
   const [stressData, setStressData] = useState(0);
   const [anxietyData, setAnxietyData] = useState(0);
@@ -103,7 +106,7 @@ function Home() {
   
   const convertImageToBase64 = (imageSrc, callback) => {
     const img = new Image();
-    img.crossOrigin = "*"; // To enable cross-origin loading of images
+    img.crossOrigin = "Anonymous"; // To enable cross-origin loading of images
     img.onload = function () {
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
@@ -190,6 +193,25 @@ const createPdf = () => {
             alignment: 'center',
           },
           {
+            text: ' ', // Add a blank line for margin
+          },
+          {
+            text: ' ', // Add a blank line for margin
+          },
+          {
+            text: ' ', // Add a blank line for margin
+          },
+          {
+            text: `Fullname: ${Fullname}`,
+            style: 'dataList',
+            alignment: 'left',
+          },
+          {
+            text: `Student ID: ${stud_no}`,
+            style: 'dataList',
+            alignment: 'left',
+          },
+          {
             image: chartImage,
             width: 400,
             alignment: 'center',
@@ -197,10 +219,24 @@ const createPdf = () => {
           {
             text: ' ', // Add a blank line for margin
           },
+           // Add a section for notes
+    {
+      text: 'Notes:',
+      style: 'header', // You can define a new style for the header if needed
+    },
+    {
+      ul: notes.map((note) => ({
+        text: note.notes,
+        style: 'noteItem', // You can define a new style for note items
+      })),
+    },
+    {
+      text: 'Results:',
+      style: 'header', // You can define a new style for the header if needed
+    },
           {
             ul: [
-              `Fullname: ${Fullname}`,
-              `Student ID: ${stud_no}`,
+              
               {
                 text: `Stress: ${stressData} : ${getSeverity(stressData, 'stress')}`,
                 style: { background: getBackgroundColor(stressData, 'stress') },
@@ -217,6 +253,7 @@ const createPdf = () => {
             style: 'dataList',
           },
         ];
+          
 
         const styles = {
           header: {
@@ -242,8 +279,9 @@ const createPdf = () => {
           styles,
         };
 
+        const pdfName = `Mind_Matters_Report_${stud_no}.pdf`;
         // Create and download the PDF
-        pdfMake.createPdf(docDefinition).download('Mind_Matters_Report.pdf');
+        pdfMake.createPdf(docDefinition).download(pdfName);
       }
     }
   });
@@ -302,6 +340,110 @@ function getBackgroundColor(value, type) {
   }
 }
   
+  // for adding note
+  const [note, setNote] = useState(''); // Step 1: Add a state variable for the note
+  const handleNoteChange = (e) => {
+    setNote(e.target.value);
+  };
+
+  const addNote = async (e) => {
+    e.preventDefault();
+
+    const noteConfirmed = window.confirm('Are you sure you want to add this note?');
+
+    if (noteConfirmed) {
+      try {
+        // Send the note data to the server
+        const response = await axios.post('http://localhost:5000/addNote', {
+          notes: note, // Send the note from the state variable
+          user_id: selectedUserId, // Assuming you have a selectedUserId
+        });
+
+        console.log(response);
+        alert('Success');
+        window.location.reload();
+        setNotes((prevNotes) => [...prevNotes, { notes: note }]);
+        setNote('');
+        // After adding a note, re-fetch the notes
+      fetchNotes(selectedUserId); // Make sure to call the fetchNotes function
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  // for fetching note
+  const [notes, setNotes] = useState([]); // Step 1: Create a state variable for notes
+  const handleViewClickNote = (userId) => {
+    setSelectedUserId(userId);
+    handleOpen();
+    
+  };
+
+  useEffect(() => {
+    if (selectedUserId !== null) {
+      axios
+        .get(`http://localhost:5000/getNotes/${selectedUserId}`)
+        .then((response) => {
+          setNotes(response.data); // Set the notes in the state
+          console.log("Fetched Notes:", response.data); // Log the notes here
+        })
+        .catch((error) => {
+          console.error('Failed to fetch notes:', error);
+        });
+    }
+  }, [selectedUserId]);
+
+  //for deleting notes
+  const handleDeleteNote = async (noteId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this note?');
+  
+    if (confirmDelete) {
+      try {
+        // Send a DELETE request to the server to delete the note
+        const response = await axios.delete(`http://localhost:5000/deleteNote/${noteId}`);
+  
+        if (response.status === 200) {
+          // Remove the deleted note from the state
+          setNotes((prevNotes) => prevNotes.filter((note) => note.notes_id !== noteId)); // Use the correct property for filtering
+          console.log('Note deleted successfully');
+        } else {
+          console.log('Failed to delete the note');
+        }
+      } catch (error) {
+        console.error('Error deleting note:', error);
+      }
+    }
+  };
+
+  // for span of notes
+  const listItemStyles = {
+    fontSize: '20px', // Adjust the font size as needed
+  };
+
+
+  // When a user selects a mood, store it in localStorage
+const handleMoodChange = (event, userId) => {
+  const newMood = event.target.value;
+
+  // Update the state to reflect the new mood
+  setUserMoods((prevMoods) => ({
+    ...prevMoods,
+    [userId]: newMood,
+  }));
+
+  // Store the updated userMoods in localStorage
+  const userMoodsFromLocalStorage = JSON.parse(localStorage.getItem('userMoods')) || {};
+  userMoodsFromLocalStorage[userId] = newMood;
+  localStorage.setItem('userMoods', JSON.stringify(userMoodsFromLocalStorage));
+};
+
+useEffect(() => {
+  // Retrieve userMoods from localStorage
+  const storedUserMoods = JSON.parse(localStorage.getItem('userMoods')) || {};
+  setUserMoods(storedUserMoods);
+}, []);
+
   return (
     <div className="home">
       <Sidebar />
@@ -327,6 +469,7 @@ function getBackgroundColor(value, type) {
                 <th>Status</th>
                 <th>Position</th>
                 <th>Actions</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -341,6 +484,12 @@ function getBackgroundColor(value, type) {
                   <td className="btns">
                     <Button variant="outlined" onClick={() => handleViewClick(user.id)}>View</Button>
                   </td>
+                  <td><select value={userMoods[user.id] || 'normal'} onChange={(event) => handleMoodChange(event, user.id)}>
+        <option value="normal">Normal</option>
+        <option value="stressed">Stressed</option>
+        <option value="anxiety">Anxious</option>
+        <option value="depressed">Depressed</option>
+      </select></td>
                 </tr>
               ))}
             </tbody>
@@ -352,6 +501,7 @@ function getBackgroundColor(value, type) {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        className="custom-modal" // Add a class for styling
       >
         <Box className="box">
           <div ref={componentRef}>
@@ -440,12 +590,48 @@ function getBackgroundColor(value, type) {
                 </li>
               </ul>
               <div>
-                <h4>Status: </h4>
+                <h4>Notes: </h4>
+                   
+        <ul style={{ listStyleType: 'none', padding: 0 }}>
+  {notes.map((note, index) => (
+    <li key={index} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', maxWidth: '100%', marginBottom: '8px', padding: '8px' }}>
+      <span style={{ overflow: 'hidden', fontSize: '24px', wordWrap: 'break-word', flex: 1, paddingLeft: '20px', position: 'relative' }}>
+        <span style={{ position: 'absolute', left: '0', top: '0', fontSize: '24px', lineHeight: '24px' }}>
+          &#8226;
+        </span>
+        {note.notes}
+      </span>
+      <IconButton
+        edge="end"
+        aria-label="delete"
+        onClick={() => handleDeleteNote(note.notes_id)}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </li>
+  ))}
+</ul>
+
               </div>
             </div>
           </div>
-          <br />
-          <button onClick={printData}>Generate Report</button>
+
+            <div className="txtfield" >
+            <TextField
+              className="textBox"
+              id="outlined-multiline-static"
+              label="Add Note"
+              multiline={true} // Set to true to make it multi-line
+              rows={4} // Specify the number of rows
+              variant="outlined"
+              value={note}
+              onChange={handleNoteChange}
+            />
+          </div>
+
+
+          <br/>
+          <button onClick={addNote}>Add Note</button>
           <button onClick={createPdf}>Download PDF</button>
         </Box>
       </Modal>
