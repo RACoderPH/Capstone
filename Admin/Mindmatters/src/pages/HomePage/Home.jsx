@@ -20,8 +20,6 @@ import { useReactToPrint } from 'react-to-print';
 import  html2canvas  from 'html2canvas';
 import  pdfMake  from 'pdfmake/build/pdfmake';
 import DeleteIcon from '@mui/icons-material/Delete';
-import vfsFonts from 'pdfmake/build/vfs_fonts';
-const pdfFonts = vfsFonts.pdfMake;
 
 
 function Home() {
