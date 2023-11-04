@@ -206,7 +206,7 @@ useEffect(() => {
     const confirmVerify = window.confirm('Are you sure you want to verify this user?');
     if (confirmVerify) {
       axios
-        .put(`http://localhost:5000/VerifyUser/${userId}`)
+        .put(`https://mindmatters-ejmd.onrender.com/VerifyUser/${userId}`)
         .then((res) => {
           console.log(res);
           // Handle success (e.g., show a success message)
@@ -227,7 +227,7 @@ useEffect(() => {
     const confirmVerify = window.confirm('Are you sure you want to Declined this user?');
     if (confirmVerify) {
       axios
-        .put(`http://localhost:5000/NotVerifyUser/${userId}`)
+        .put(`https://mindmatters-ejmd.onrender.com/NotVerifyUser/${userId}`)
         .then((res) => {
           console.log(res);
           // Handle success (e.g., show a success message)
@@ -248,7 +248,7 @@ useEffect(() => {
     const confirmVerify = window.confirm('Are you sure you want to Change this user?');
     if (confirmVerify) {
       axios
-        .put(`http://localhost:5000/Change/${userId}`)
+        .put(`https://mindmatters-ejmd.onrender.com/Change/${userId}`)
         .then((res) => {
           console.log(res);
           // Handle success (e.g., show a success message)

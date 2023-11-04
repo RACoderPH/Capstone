@@ -18,10 +18,10 @@ import {
 } from "recharts";
 import { useReactToPrint } from 'react-to-print';
 import html2canvas from 'html2canvas';
-import  pdfMake from "pdfmake/build/pdfmake";
-import  pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 function Home() {
   const [userList, setUserList] = useState([]);
@@ -32,10 +32,9 @@ function Home() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
-  const [selectedMood, setSelectedMood] = useState(localStorage.getItem('selectedMood') || 'normal');
-  const [userMoods, setUserMoods] = useState({}); // Object to store user-specific moods
 
+  const [selectedMood, setSelectedMood] = useState("Select");
+  const [userMoods, setUserMoods] = useState({});
 
   const [stressData, setStressData] = useState(0);
   const [anxietyData, setAnxietyData] = useState(0);
@@ -354,7 +353,7 @@ function getBackgroundColor(value, type) {
     if (noteConfirmed) {
       try {
         // Send the note data to the server
-        const response = await axios.post('http://localhost:5000/addNote', {
+        const response = await axios.post('https://mindmatters-ejmd.onrender.com/addNote', {
           notes: note, // Send the note from the state variable
           user_id: selectedUserId, // Assuming you have a selectedUserId
         });
@@ -383,7 +382,7 @@ function getBackgroundColor(value, type) {
   useEffect(() => {
     if (selectedUserId !== null) {
       axios
-        .get(`http://localhost:5000/getNotes/${selectedUserId}`)
+        .get(`https://mindmatters-ejmd.onrender.com/getNotes/${selectedUserId}`)
         .then((response) => {
           setNotes(response.data); // Set the notes in the state
           console.log("Fetched Notes:", response.data); // Log the notes here
@@ -401,7 +400,7 @@ function getBackgroundColor(value, type) {
     if (confirmDelete) {
       try {
         // Send a DELETE request to the server to delete the note
-        const response = await axios.delete(`http://localhost:5000/deleteNote/${noteId}`);
+        const response = await axios.delete(`https://mindmatters-ejmd.onrender.com/deleteNote/${noteId}`);
   
         if (response.status === 200) {
           // Remove the deleted note from the state
@@ -422,27 +421,58 @@ function getBackgroundColor(value, type) {
   };
 
 
-  // When a user selects a mood, store it in localStorage
-const handleMoodChange = (event, userId) => {
-  const newMood = event.target.value;
+  // Function to handle mood change
+  const handleMoodChange = (event, selectedUserId) => {
+    const newMood = event.target.value;
+    console.log(newMood); // Add this line to log the selected mood
+    console.log('Selected Mood:', newMood); // Add this line
+  
+    // Update the user's mood in the database
+    console.log('Selected Mood (Before Request):', newMood); // Add this line
+    updateMoodStatus(selectedUserId, newMood);
+  
+    // Store the selected mood in localStorage
+    localStorage.setItem(`selectedMood-${selectedUserId}`, newMood);
+    console.log(`Stored mood for user ${selectedUserId}: ${newMood}`);
 
-  // Update the state to reflect the new mood
-  setUserMoods((prevMoods) => ({
-    ...prevMoods,
-    [userId]: newMood,
-  }));
+  
+    // Update the local state
+    setUserMoods((prevMoods) => ({
+      ...prevMoods,
+      [selectedUserId]: newMood,
+    }));
+    // Update the local state
+  setSelectedMood(newMood); // Update the selectedMood state variable
+  
+  };
 
-  // Store the updated userMoods in localStorage
-  const userMoodsFromLocalStorage = JSON.parse(localStorage.getItem('userMoods')) || {};
-  userMoodsFromLocalStorage[userId] = newMood;
-  localStorage.setItem('userMoods', JSON.stringify(userMoodsFromLocalStorage));
-};
 
-useEffect(() => {
-  // Retrieve userMoods from localStorage
-  const storedUserMoods = JSON.parse(localStorage.getItem('userMoods')) || {};
-  setUserMoods(storedUserMoods);
-}, []);
+  const updateMoodStatus = (selectedUserId, newMood) => {
+    axios
+      .put(`https://mindmatters-ejmd.onrender.com/updateMoodStatus/${selectedUserId}`, {
+        mood: newMood, // Use the newMood variable instead of selectedMood
+      })
+      .then((response) => {
+        console.log("Mood status updated:", response.data.message);
+      })
+      .catch((error) => {
+        console.error('Failed to update mood status:', error);
+      });
+  };
+
+  useEffect(() => {
+    // After the component mounts, check localStorage for selected moods
+    const userMoodFromLocalStorage = localStorage.getItem(`selectedMood-${selectedUserId}`);
+    console.log(`Retrieved mood for user ${selectedUserId}: ${userMoodFromLocalStorage}`);
+    if (userMoodFromLocalStorage) {
+      setUserMoods((prevMoods) => ({
+        ...prevMoods,
+        [selectedUserId]: userMoodFromLocalStorage,
+      }));
+      setSelectedMood(userMoodFromLocalStorage); // Update the selectedMood state variable
+    }
+  }, [selectedUserId]);
+
 
   return (
     <div className="home">
@@ -484,12 +514,17 @@ useEffect(() => {
                   <td className="btns">
                     <Button variant="outlined" onClick={() => handleViewClick(user.id)}>View</Button>
                   </td>
-                  <td><select value={userMoods[user.id] || 'normal'} onChange={(event) => handleMoodChange(event, user.id)}>
-        <option value="normal">Normal</option>
-        <option value="stressed">Stressed</option>
-        <option value="anxiety">Anxious</option>
-        <option value="depressed">Depressed</option>
-      </select></td>
+                  <td><select
+  value={userMoods[user.id] || 'Select'}
+  onChange={(event) => handleMoodChange(event, user.id)}
+>
+  <option value="Select">Select</option>
+  <option value="normal">Normal</option>
+  <option value="stressed">Stressed</option>
+  <option value="anxious">Anxious</option>
+  <option value="depressed">Depressed</option>
+</select>
+</td>
                 </tr>
               ))}
             </tbody>

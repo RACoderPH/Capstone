@@ -97,24 +97,56 @@ router.delete('/deleteNote/:noteId', (req, res) => {
 });
 
 // for Mental Health Status
-router.post("/addStatus", (req, res) => {
-  const insertStatus = "INSERT INTO user_info (mh_status, user_id) VALUES (?, ?)";
+router.put('/updateMoodStatus/:userId', (req, res) => {
+  const userId = req.params.userId; // Use req.params to get userId from the route parameters
+  const newMood = req.body.mood;
 
-  const values = [
-    req.body.mh_status, // Assuming "mh_status" is in the request body
-    req.body.user_id, // Assuming "user_id" is in the request body
-  ];
+  // Determine the mh_status based on the selected mood
+  let mhStatus;
+  if (newMood === 'stressed') {
+    mhStatus = 'Stressed';
+  } else if (newMood === 'anxious') {
+    mhStatus = 'Anxious';
+  } else if (newMood === 'depressed') {
+    mhStatus = 'Depressed';
+  } else {
+    mhStatus = 'Normal';
+  }
 
-  db.query(insertStatus, values, (insertErr, data) => {
-    if (insertErr) {
-      console.error('Failed to insert status:', insertErr);
+  // Update the mh_status in the database for the specific user
+  console.log('mhStatus Before Update:', mhStatus); 
+  const updateStatusQuery = 'UPDATE user_info SET mh_status = ? WHERE id = ?';
+console.log('Received Mood:', mhStatus); // Add this line
+console.log('User ID:', userId); // Add this line
+console.log('SQL Query:', updateStatusQuery); // Add this line
+  db.query(updateStatusQuery, [mhStatus, userId], (err, result) => {
+    if (err) {
+      console.error('Failed to update mh_status:', err);
       res.status(500).json({ message: 'Server error' });
     } else {
-      res.status(200).json({ message: 'Status inserted' });
+      res.status(200).json({ message: 'Mood status updated successfully' });
     }
   });
 });
 
+// for counting mh_status
+router.get('/countAssessmentStatus', (req, res) => {
+  const query = `
+    SELECT mh_status, COUNT(*) as count
+    FROM user_info
+    GROUP BY mh_status;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Failed to fetch assessment status:', err);
+      res.status(500).json({ message: 'Server error' });
+    } else {
+      // Send the assessment status as a JSON response
+      res.status(200).json(results);
+    }
+  });
+});
 
 
   module.exports = router;
