@@ -454,6 +454,8 @@ function getBackgroundColor(value, type) {
       })
       .then((response) => {
         console.log("Mood status updated:", response.data.message);
+        window.location.reload();
+
       })
       .catch((error) => {
         console.error('Failed to update mood status:', error);
@@ -515,10 +517,10 @@ function getBackgroundColor(value, type) {
                     <Button variant="outlined" onClick={() => handleViewClick(user.id)}>View</Button>
                   </td>
                   <td><select
-  value={userMoods[user.id] || 'Select'}
+  value={user.mh_status}
   onChange={(event) => handleMoodChange(event, user.id)}
 >
-  <option value="Select">Select</option>
+  <option value="Select">{user.mh_status}</option>
   <option value="normal">Normal</option>
   <option value="stressed">Stressed</option>
   <option value="anxious">Anxious</option>
