@@ -555,5 +555,69 @@ router.put("/Change/:id",(req,res) => {
     return res.json(data);
   });
 });
-  
+
+router.delete("/DeleteAccount/:id", (req, res) => {
+  const userId = req.params.id;
+  const password = req.body.password; // Assuming you send the password in the request body
+
+  // Query to retrieve the hashed password from the user_info table
+  const getPasswordQuery = "SELECT password FROM user_info WHERE id = ?";
+  const deleteUserInfoQuery = "DELETE FROM user_info WHERE id = ?";
+  const deleteDiaryQuery = "DELETE FROM Diary WHERE user_id = ?";
+  const deleteStudentResultQuery = "DELETE FROM student_result WHERE user_id = ?";
+
+  db.query(getPasswordQuery, [userId], (err, passwordResult) => {
+    if (err) {
+      console.error('Error retrieving password: ' + err.message);
+      res.status(500).json({ error: 'Failed to retrieve password' });
+    } else {
+      if (passwordResult.length === 0) {
+        res.status(400).json({ error: 'User not found' });
+      } else {
+        const storedHashedPassword = passwordResult[0].password;
+        console.log('Provided Password:', password);
+        console.log('Stored Hashed Password:', storedHashedPassword);
+
+        // Compare the provided password with the stored hashed password
+        bcrypt.compare(password, storedHashedPassword, (err, passwordMatch) => {
+          if (err) {
+            console.error('Error comparing passwords: ' + err.message);
+            res.status(500).json({ error: 'Failed to compare passwords' });
+          } else if (passwordMatch) {
+            // Passwords match, proceed with account deletion
+            db.query(deleteUserInfoQuery, [userId], (err, userInfoResult) => {
+              if (err) {
+                console.error('Error deleting user_info: ' + err.message);
+                res.status(500).json({ error: 'Failed to delete user_info' });
+              } else {
+                // After deleting user_info, proceed to delete diary
+                db.query(deleteDiaryQuery, [userId], (err, diaryResult) => {
+                  if (err) {
+                    console.error('Error deleting diary: ' + err.message);
+                    res.status(500).json({ error: 'Failed to delete diary' });
+                  } else {
+                    // After deleting diary, proceed to delete student_result
+                    db.query(deleteStudentResultQuery, [userId], (err, studentResultResult) => {
+                      if (err) {
+                        console.error('Error deleting student_result: ' + err.message);
+                        res.status(500).json({ error: 'Failed to delete student_result' });
+                      } else {
+                        console.log(`User account with ID ${userId} has been deleted.`);
+                        res.status(200).json({ message: 'User account deleted successfully' });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          } else {
+            res.status(400).json({ error: 'Password does not match' });
+          }
+        });
+      }
+    }
+  });
+});
+
+
 module.exports = router;

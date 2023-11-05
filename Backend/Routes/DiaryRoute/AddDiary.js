@@ -39,14 +39,13 @@ router.post('/AddDiary', (req, res) => {
   });
  }) ;
 
-router.post('/EditDiary/:id', (req,res) => {
-  const diary_id = req.params.diary_id;
-  const content = req.params.description;
-  const title = req.params.title;
+ router.put('/EditDiary/:id', (req, res) => {
+  const diary_id = req.params.id; // Use req.params.id to get the diary ID from the URL
+  const { title, description } = req.body; // Get title and description from the request body
 
   const UpdateQuery = 'UPDATE Diary SET title = ?, description = ? WHERE diary_id = ?';
 
-  db.query(UpdateQuery, [title,content,diary_id], (err,result) => {
+  db.query(UpdateQuery, [title, description, diary_id], (err, result) => {
     if (err) {
       // Handle the error, e.g., send an error response
       res.status(500).json({ error: 'Failed to update diary entry.' });
@@ -54,9 +53,9 @@ router.post('/EditDiary/:id', (req,res) => {
       // Update was successful, send a success response or perform other actions
       res.status(200).json({ message: 'Diary entry updated successfully.' });
     }
-
   });
 });
+
 
 router.delete('/DeleteDiary/:diary_id', (req, res) => {
   const diaryId = req.params.diary_id;
