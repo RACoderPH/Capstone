@@ -104,6 +104,8 @@ const Annoucement = () => {
               margin="normal"
               className="txtWidth"
               value={what}
+              multiline={true} // Set to true to make it multi-line
+              rows={4} // Specify the number of rows
               onChange={handleMessageChange}
             />
           </div>

@@ -140,9 +140,12 @@ const Chat = () => {
 // ...
   useEffect(() => {
     // Fetch user data from the backend API
-    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+    fetch('https://mindmatters-ejmd.onrender.com/Student')
       .then((response) => response.json())
-      .then((data) => setUserList(data))
+      .then((data) => {
+        console.log('User data:', data); // Log the user data
+        setUserList(data);
+      })
       .catch((error) => console.error('Failed to fetch data:', error));
   }, []);
 

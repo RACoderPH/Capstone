@@ -517,8 +517,14 @@ function getBackgroundColor(value, type) {
                     <Button variant="outlined" onClick={() => handleViewClick(user.id)}>View</Button>
                   </td>
                   <td><select
-  value={user.mh_status}
-  onChange={(event) => handleMoodChange(event, user.id)}
+                      value={user.mh_status}
+                      onChange={(event) => handleMoodChange(event, user.id)}
+                style={{
+                background: 'none',  // Set the background to none (transparent)
+                border: 'none',      // Remove the border
+                outline: 'none',     // Remove the outline     // Change the text color
+                padding: '5px',      // Add padding for spacing
+             }}
 >
   <option value="Select">{user.mh_status}</option>
   <option value="normal">Normal</option>
@@ -653,9 +659,9 @@ function getBackgroundColor(value, type) {
             </div>
           </div>
 
-            <div className="txtfield" >
+            <div className="form-group" >
             <TextField
-              className="textBox"
+              className="txtWidth"
               id="outlined-multiline-static"
               label="Add Note"
               multiline={true} // Set to true to make it multi-line
@@ -663,6 +669,7 @@ function getBackgroundColor(value, type) {
               variant="outlined"
               value={note}
               onChange={handleNoteChange}
+              style={{ width: '100%' }}
             />
           </div>
 

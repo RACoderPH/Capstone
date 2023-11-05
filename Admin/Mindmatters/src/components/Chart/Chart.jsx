@@ -78,7 +78,7 @@ const Chart = () => {
               left: 80,
               bottom: 5,
             }}
-            barSize={30}
+            barSize={40}
           >
             <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
             <YAxis />
