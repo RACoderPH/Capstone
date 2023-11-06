@@ -29,7 +29,14 @@ pdfMake.fonts = {
     italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
     bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
   },
+  LogoImage: {
+    normal: logoImage, // Replace with the base64 image data for your logo
+  },
+  MoFranciscaImage: {
+    normal: moFranciscaImage, // Replace with the base64 image data for moFrancisca
+  },
 };
+
 
 
 
