@@ -1,19 +1,5 @@
 {
-  "routes": [
-    {
-      "src": "/images/(.*)",
-      "headers": {
-        "Cache-Control": "public, max-age=604800, s-maxage=604800"
-      },
-      "continue": true,
-      "dest": "/public/images/$1"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ]
-}
+    "rewrites":  [
+      {"source": "/(.*)", "destination": "/"}
+    ]
+  }

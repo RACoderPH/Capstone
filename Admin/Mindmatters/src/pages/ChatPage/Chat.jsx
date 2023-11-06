@@ -3,7 +3,7 @@ import './chat.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Navbar from '../../components/Navbar/Navbar';
 import io from "socket.io-client";
-import avatar from "../../../public/images/blank.png"
+import avatar from "../../images/blank.png"
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
