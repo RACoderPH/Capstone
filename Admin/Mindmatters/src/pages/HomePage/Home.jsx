@@ -22,23 +22,6 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-pdfMake.fonts = {
-  Roboto: {
-    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
-    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
-    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
-    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
-  },
-  LogoImage: {
-    normal: logoImage, // Replace with the base64 image data for your logo
-  },
-  MoFranciscaImage: {
-    normal: moFranciscaImage, // Replace with the base64 image data for moFrancisca
-  },
-};
-
-
-
 
 function Home() {
   const [userList, setUserList] = useState([]);
@@ -135,21 +118,37 @@ function Home() {
   };
 
   const [logoImage, setLogoImage] = useState(null);
+  const [moFranciscaImage, setMoFranciscaImage] = useState(null);
 
 useEffect(() => {
   // Convert the logo image to base64
   convertImageToBase64('src/images/sdalogo.png', (logoImageDataUrl) => {
     setLogoImage(logoImageDataUrl);
+
+    convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
+      setMoFranciscaImage(moFranciscaImageDataUrl);
+
+      pdfMake.fonts = {
+        Roboto: {
+          normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+          bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+          italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+          bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
+        },
+        LogoImage: {
+          normal: logoImage,
+        },
+        MoFranciscaImage: {
+          normal: moFranciscaImage,
+        },
+      }; 
+
+
   });
 }, []); // Use an empty dependency array to ensure it runs only once
 
-const [moFranciscaImage, setMoFranciscaImage] = useState(null);
 
-useEffect(() => {
-  // Convert the moFrancisca image to base64
-  convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
-    setMoFranciscaImage(moFranciscaImageDataUrl);
-  });
+
 }, []);
 
 const createPdf = () => {
