@@ -23,6 +23,17 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import DeleteIcon from '@mui/icons-material/Delete';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+pdfMake.fonts = {
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
+  },
+};
+
+
+
 function Home() {
   const [userList, setUserList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
