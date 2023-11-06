@@ -122,10 +122,10 @@ function Home() {
 
 useEffect(() => {
   // Convert the logo image to base64
-  convertImageToBase64('src/images/sdalogo.png', (logoImageDataUrl) => {
+  convertImageToBase64('public/images/sdalogo.png', (logoImageDataUrl) => {
     setLogoImage(logoImageDataUrl);
 
-    convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
+    convertImageToBase64('public/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
       setMoFranciscaImage(moFranciscaImageDataUrl);
 
       pdfMake.fonts = {
