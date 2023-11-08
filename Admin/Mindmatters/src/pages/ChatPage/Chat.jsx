@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import logo from '../../images/sdalogo.png';
 
 import {
   doc,
@@ -21,8 +22,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { storage, store } from "../../firebase";
-
-
+import addNotification from 'react-push-notification'
 
 
 const socket = io.connect("https://mindmatters-ejmd.onrender.com/");
@@ -36,6 +36,7 @@ const Chat = () => {
   
   const chatsRef = collection(store, "Messages")
 
+  
 
   const roomRef = useRef(room);
 
@@ -71,8 +72,6 @@ const Chat = () => {
       .catch(console.error);
   }
 
-
-
    // Updated joinRoom function
    const joinRoom = (room_id) => {
     if (room_id !== "") {
@@ -90,6 +89,20 @@ const Chat = () => {
         // Access room value from the 
         data.sentByUser = false;
         setMessageList((list) => [...list, data]);
+
+          // Add push notification when a new message is received
+          addNotification({
+            title: 'New Message',
+            message: `${data.author}: ${data.message}`,
+            duration: 10000, // Duration in milliseconds
+            native: true,
+            icon: logo, // Path to a custom icon
+            style: {
+              backgroundColor: 'white', // Background color of the notification
+              color: 'white', // Text color
+              fontSize: '16px', // Text size
+            },
+          });
       } 
     };
 
@@ -134,8 +147,6 @@ const Chat = () => {
     setCurrentMessage('');
   }
 };
-
-
 
 // ...
   useEffect(() => {
@@ -233,7 +244,6 @@ const Chat = () => {
 </div>
 
 </div>
-
 
           <div className="messageInputContainer">
             <input

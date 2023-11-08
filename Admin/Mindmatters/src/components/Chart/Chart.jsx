@@ -54,23 +54,22 @@ const Chart = () => {
   // Define a color mapping for each category
   const categoryColors = {
     Normal: '#98D8AA',
-    Stressed: '#F3E99F',
+    Stressed: '#ABC2E8',
     Anxious: '#F7D060',
     Depressed: '#FF6D60',
-    'Not yet taken': '#534340',
+    'Not yet taken': '#FEBF63',
   };
-
   return (
     <ResponsiveContainer width="100%" aspect={3}>
       <div style={{ display: 'flex',justifyContent:'space-between',alignContent:'space-between',width:"100%"}}>
         <div style={{ flex: 1 }}>
           <BarChart
-            width={700}
+            width={800}
             height={500}
             data={[
-              { name: 'Stress', Student: averages.avg_stress },
-              { name: 'Anxiety', Student: averages.avg_anxiety },
-              { name: 'Depression', Student: averages.avg_depression },
+              { name: 'Stress', Student: averages.avg_stress,fill: '#ABC2E8' },
+              { name: 'Anxiety', Student: averages.avg_anxiety , fill: '#82ca9d'},
+              { name: 'Depression', Student: averages.avg_depression, fill: '#ffc658' },
             ]}
             margin={{
               top: 5,
@@ -78,15 +77,16 @@ const Chart = () => {
               left: 80,
               bottom: 5,
             }}
-            barSize={40}
+            barSize={50}
           >
-            <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
+            <XAxis dataKey="name" scale="point" padding={{ left: 30, right: 10 }} />
             <YAxis />
             <Tooltip />
             <Legend />
             <CartesianGrid strokeDasharray="3 3" />
-            <Bar dataKey="Student" fill="#8884d8" background={{ fill: '#eee' }} />
+            <Bar dataKey="Student" fill="#8884d8" />
           </BarChart>
+          
         </div>
 
         <div style={{ flex: 1 }}>
@@ -111,16 +111,16 @@ const Chart = () => {
           <div style={{ flex: 1 }}>
           <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                 <li>
-                  <span style={{ color: 'black', background: '#98D8AA', fontSize: '22px' }}>Normal:</span> {normalCount}
+                  <span style={{ color: 'black', background: '#98D8AA', fontSize: '16px' }}>Normal:</span> {normalCount}
                 </li>
                 <li>
-                  <span style={{ color: 'black', background: '#F3E99F', fontSize: '22px' }}>Stressed:</span> {stressedCount}
+                  <span style={{ color: 'black', background: '#F3E99F', fontSize: '16px' }}>Stressed:</span> {stressedCount}
                 </li>
                 <li>
-                  <span style={{ color: 'black', background: '#F7D060', fontSize: '22px' }}>Anxious:</span> {anxiousCount}
+                  <span style={{ color: 'black', background: '#F7D060', fontSize: '16px' }}>Anxious:</span> {anxiousCount}
                 </li>
                 <li>
-                  <span style={{ color: 'black', background: '#FF6D60', fontSize: '22px' }}>Depressed:</span> {depressedCount}
+                  <span style={{ color: 'black', background: '#FF6D60', fontSize: '16px' }}>Depressed:</span> {depressedCount}
                 </li>
               </ul>
           </div>

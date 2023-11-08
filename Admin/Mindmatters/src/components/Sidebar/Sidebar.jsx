@@ -63,6 +63,12 @@ function Sidebar() {
               <span>User</span>
             </li>
           </Link>
+          <Link to="/admin" style={{ textDecoration: "none" }}>
+            <li>
+              <Person3Icon className="icon" />
+              <span>Admin</span>
+            </li>
+          </Link>
           <p className="title">TOOLS</p>
           <Link to="/announce" style={{ textDecoration: "none" }}>
           <li>

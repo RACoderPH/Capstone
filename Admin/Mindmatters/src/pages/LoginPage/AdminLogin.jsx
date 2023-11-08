@@ -105,7 +105,7 @@ const login = () =>{
         // Store the username in localStorage
         localStorage.setItem('ID', userId);
         localStorage.setItem('Username', username);
-  
+        
         // Redirect to the homepage or desired page
         window.location.href = '/home';
       }else{
@@ -141,19 +141,20 @@ const login = () =>{
   theme="light"
   className="warning" 
 />
-{/*Successfull Toast*/}
+
 <ToastContainer
 position="top-center"
 autoClose={1000}
 hideProgressBar={false}
-newestOnTop
+newestOnTop={false}
 closeOnClick
 rtl={false}
 pauseOnFocusLoss
 draggable
 pauseOnHover
-theme="light"
+theme="colored"
 />
+
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
     <br/>
       <br/>
@@ -162,7 +163,7 @@ theme="light"
       <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
         <MDBTabsItem>
           <MDBTabsLink >
-            Login as Admin
+            Login
           </MDBTabsLink>
         </MDBTabsItem>
       </MDBTabs>

@@ -11,8 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ToastContainer, toast } from 'react-toastify';
 import {useReactToPrint} from 'react-to-print';
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 
@@ -96,11 +94,13 @@ const handleClose2 = () => {
     PhoneNumber: user.phone_number,
     attachment: user.attachment,
     Verified:user.Verified,
+    grade:user.gradelvl,
   }));
 
   const filteredRows = rows.filter((row) =>
   row.stud_no.toLowerCase().includes(searchInput.toLowerCase()) ||
   row.Fullname.toLowerCase().includes(searchInput.toLowerCase()) ||
+  row.grade.toLowerCase().includes(searchInput.toLowerCase()) ||
   (row.Verified === 0 && searchInput.toLowerCase() === 'pending') ||
   (row.Verified === 1 && searchInput.toLowerCase() === 'verified') ||
   (row.Verified === 2 && searchInput.toLowerCase() === 'not verified')
@@ -142,11 +142,23 @@ const handleClose2 = () => {
     
     if (userConfirmed) {
       try {
-        const response = await axios.post(`https://mindmatters-ejmd.onrender.com/register/app`, values);
-        console.log(response);
-        alert('Success');
-        setIsUpdateConfirmed(true);
-        window.location.reload();
+        axios.post(`https://mindmatters-ejmd.onrender.com/register/app`, values).then((response) => {
+          console.log(response.data); // Debugging: Check what the server sends
+  
+          if (response.data.message === 'Username already exists') {
+            alert('Username Already Exists');
+          } else if (response.data.message === 'Email already exists') {
+            alert('Email Already Exists');
+          } else if (response.data.message === 'User registered successfully') {
+            alert('Success Registered');
+            setIsUpdateConfirmed(true);
+            window.location.reload();
+          } else {
+            // Handle any other response cases here
+            console.log('Unexpected response:', response.data);
+            alert('Unexpected response');
+          }
+        });
       } catch (err) {
         console.error(err);
       }
@@ -439,6 +451,7 @@ useEffect(() => {
         <TextField
           className="search-bar"
           label="Search"
+          placeholder='Search User here..'
           variant="standard"
           style={{width:500}}
           value={searchInput}
@@ -677,9 +690,15 @@ useEffect(() => {
           </div>
             <div className="txtfield">
             <span className="userUpdateTitle">
-  <a href={selectedUserForModal ? selectedUserForModal.attachment : ''} target="_blank">
+            {selectedUserForModal && selectedUserForModal.attachment ? (
+  <a href={selectedUserForModal.attachment} target="_blank">
     Click here to view attachment
   </a>
+) : (
+  <p style={{fontSize:20,color:'black',fontWeight:'500'}}>No attachment file</p>
+)}
+
+
 </span>
 
             </div>

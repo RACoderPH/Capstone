@@ -23,6 +23,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import DeleteIcon from '@mui/icons-material/Delete';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+
+
 function Home() {
   const [userList, setUserList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -558,11 +560,12 @@ function getBackgroundColor(value, type) {
                   data={data}
                   cx={200}
                   cy={200}
-                  outerRadius={80}
+                  outerRadius={110}
                   fill="#8884d8"
                   label
                 />
                 <Tooltip />
+                
               </PieChart>
             </div>
             <div className="result-placeholder">

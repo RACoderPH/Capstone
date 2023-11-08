@@ -11,7 +11,7 @@ import Annoucement from './pages/AnnouncementPage/Annoucement';
 import Chat from './pages/ChatPage/Chat';
 import Profile from './pages/ProfilePage/Profile';
 import Notify from './pages/NotificationPage/Notify';
-
+import Admin from './pages/AdminPage/admin'
 function App() {
     //const { darkMode } = useContext(DarkModeContext);
   
@@ -22,6 +22,7 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="home" element={<Home />} />
               <Route path="user"  element={<User />} />
+              <Route path="admin"  element={<Admin />} />
               <Route path="assessment"  element={<Assessment />} />
               <Route path="announce"  element={<Annoucement />} />
               <Route path="chat"  element={<Chat />} />

@@ -79,26 +79,33 @@ const Profile = () => {
   };
   
   //Update
-  const Update = async (e) => {
+  const Update = async (updatedFullname, updatedUsername,UpdatedEmail,UpdatedPhone,UpdatedAddress) => {
     const userId = localStorage.getItem('ID');
-    e.preventDefault();
+
+    const data = {
+      fullname: updatedFullname, 
+      username: updatedUsername,
+      email: UpdatedEmail, 
+      phone: UpdatedPhone, 
+      address: UpdatedAddress,  
+    };
 
     
-    if (!values.fullname ||!values.username || !values.email || !values.phone || !values.address) {
+    if (!data.fullname ||!data.username || !data.email || !data.phone || !data.address) {
       input();
        return;
      }
    
-
     // Show a confirmation dialog
     const confirmUpdate = window.confirm('Are you sure you want to update this user?');
   
     if (confirmUpdate) {
       axios
-        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, values)
+        .put(`https://mindmatters-ejmd.onrender.com/profileUpdate/${userId}`, data)
         .then((res) => {
           console.log(res);
           alert('Success');
+          window.location.reload();
         })
         .catch((err) => console.log(err));
     }
@@ -172,45 +179,95 @@ const Profile = () => {
           </div>
           <Button onClick={handleOpen}>Edit Info</Button>         
           <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+>
+  <Box className="box">
+    <span className="userUpdateTitle">Update Profile</span>
+    <span className="txt">The information can be edited</span>
+    <div className="txtfield-container">
+      {userData && (
+        <>
+         <div className="txtfield">
+  <TextField
+    className="textBox"
+    id="outlined-basic"
+    label="Full Name"
+    variant="outlined"
+    defaultValue={userData.Fullname}
+    onChange={(e) => setUserData({ ...userData, Fullname: e.target.value })}
+  />
+</div>
+
+<div className="txtfield">
+  <TextField
+    className="textBox"
+    id="outlined-basic"
+    label="Username"
+    variant="outlined"
+    name="user_name"
+    defaultValue={userData.user_name}
+    onChange={(e) => setUserData({ ...userData, user_name: e.target.value })}
+  />
+</div>
+
+<div className="txtfield">
+  <TextField
+    className="textBox"
+    id="outlined-basic"
+    label="Email"
+    variant="outlined"
+    name="Email"
+    defaultValue={userData.Email}
+    onChange={(e) => setUserData({ ...userData, Email: e.target.value })}
+  />
+</div>
+
+<div className="txtfield">
+  <TextField
+    className="textBox"
+    id="outlined-basic"
+    label="Phone Number"
+    variant="outlined"
+    defaultValue={userData.phone_number}
+    onChange={(e) => setUserData({ ...userData, phone_number: e.target.value })}
+  />
+</div>
+
+<div className="txtfield">
+  <TextField
+    className="textBox"
+    id="outlined-basic"
+    label="Address"
+    variant="outlined"
+    defaultValue={userData.address}
+    onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+  />
+</div>
+          <br />
+          <Button
+            className="modalBtn"
+            variant="outlined"
+            onClick={() =>
+              Update(
+                userData.Fullname,
+                userData.user_name,
+                userData.Email,
+                userData.phone_number,
+                userData.address
+              )
+            }
           >
-            <Box className="box" >
-            <span className="userUpdateTitle">Update Profile</span>
-          <span className="txt">The information can be edited</span>
-              <div className="txtfield-container">
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Full Name" variant="outlined" 
-              onChange={(e) => setValues({ ...values, fullname: e.target.value })}/>
-            </div>
+            Save
+          </Button>
+        </>
+      )}
+    </div>
+  </Box>
+</Modal>
 
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Username" variant="outlined" name="user_name" 
-              onChange={(e) => setValues({ ...values, username: e.target.value })}/>
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Email" variant="outlined" name="Email"
-              onChange={(e) => setValues({ ...values, email: e.target.value })}/>
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Phone Number" variant="outlined"
-              onChange={(e) => setValues({ ...values, phone: e.target.value })} />
-            </div>
-
-            <div className="txtfield">
-            <TextField className="textBox" id="outlined-basic" label="Address" variant="outlined" 
-              onChange={(e) => setValues({ ...values, address: e.target.value })}/>
-            </div>
-            
-            <br/>
-            <Button className="modalBtn" variant="outlined" onClick={Update}>Save</Button>
-            </div>
-              </Box>
-          </Modal>
               
         </div>      
       </div>
