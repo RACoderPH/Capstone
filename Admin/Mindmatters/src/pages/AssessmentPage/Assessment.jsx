@@ -39,7 +39,11 @@ const Assessment = () => {
   const [Option4, setOption4] = useState(' ');
   const [question, setQuestion] = useState(' ');
   const [Category, setCategory] = useState(' ');
-
+  useEffect(() => {
+    if(!localStorage.getItem('Username')){
+      window.location.href = '/';
+    }
+},[]);
   useEffect(() => {
     // Fetch user data from the backend API
     fetch('https://mindmatters-ejmd.onrender.com/Questions')

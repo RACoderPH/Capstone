@@ -54,6 +54,13 @@ const User = () => {
 const [open2, setOpen2] = React.useState(false);
 const [selectedUserForModal, setSelectedUserForModal] = React.useState(null);
 
+
+useEffect(() => {
+  if(!localStorage.getItem('Username')){
+    window.location.href = '/';
+  }
+},[]);
+
 const handleOpen2 = (user) => {
   setSelectedUserForModal(user);
   console.log(user)

@@ -39,7 +39,11 @@ const Chat = () => {
   
 
   const roomRef = useRef(room);
-
+  useEffect(() => {
+    if(!localStorage.getItem('Username')){
+      window.location.href = '/';
+    }
+},[]);
 
   useEffect(()=>{
 

@@ -14,6 +14,12 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   const [image, setImage] = useState('');
 
+  useEffect(() => {
+    if(!localStorage.getItem('Username')){
+      window.location.href = '/';
+    }
+},[]);
+
   const input = () => toast.warn('Please Fill-out the Field', {
   });
 

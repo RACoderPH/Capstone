@@ -34,6 +34,12 @@ const Annoucement = () => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    if(!localStorage.getItem('Username')){
+      window.location.href = '/';
+    }
+},[]);
+
 const handleClose = () => {
     setOpen(false);
   };

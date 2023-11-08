@@ -48,6 +48,13 @@ function Home() {
     { name: "Depression", value: Depression },
   ]);
 
+  useEffect(() => {
+      if(!localStorage.getItem('Username')){
+        window.location.href = '/';
+      }
+  },[]);
+
+
   const handleViewClick = (userId) => {
     setSelectedUserId(userId);
     handleOpen();

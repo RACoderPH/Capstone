@@ -36,6 +36,12 @@ const admin = () => {
 
   const [open1, setOpen1] = React.useState(false);
 
+  useEffect(() => {
+    if(!localStorage.getItem('Username')){
+      window.location.href = '/';
+    }
+},[]);
+
   const handleOpen1 = () => {
     setOpen1(true);
   };
