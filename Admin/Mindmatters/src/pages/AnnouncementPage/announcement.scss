@@ -1,27 +1,83 @@
-.announce
-{
+.announce {
     display: flex;
-    .announceContainer{
-        flex: 6;
-        text-align: center;
-        
+    .announceContainer {
+      flex: 6;
+      text-align: center;
+      overflow: auto;
+      max-height: 80vh;
     }
     .announcementForm {
-        border: 1px solid #bbb5b5; /* Black border */
-        padding: 20px; /* Adjust padding as needed */
-        margin: 0 auto; /* Center the container */
-        width: 70%; /* Adjust the width as needed */
-        border-radius: 10px;
-        box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
-      }
-    .txtWidth{
-        padding: 10px; 
-        margin: 15px 12px; 
+      border: 1px solid #bbb5b5;
+      padding: 20px;
+      margin: 0 auto;
+      width: 70%;
+      border-radius: 10px;
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
+      .txtWidth {
+        padding: 10px;
+        margin: 15px 12px;
         width: 70%;
         height: 50%;
-    }
-
-    .form-group .MuiButton-root:hover {
+      }
+      .form-group .MuiButton-root:hover {
         color: #6373cf;
       }
+    }
+    .announcementsContainer {
+      border: 1px solid #bbb5b5;
+      padding: 20px;
+      margin: 20px auto;
+      width: 70%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: left;
+      background-color: #f7f7f7;
+      
+      h2 {
+        margin-bottom: 10px;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
+      }
+    }
+    .announcementRows {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      
+      .announcementContainer {
+        border: 1px solid #bbb5b5;
+        padding: 20px;
+        width: calc(33.33% - 20px); /* Adjust width and margin as needed for 3 items per row */
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        overflow: auto;
+        max-height: 400px;
+      }
+      
+      .rowDivider {
+        width: 100%;
+        margin: 20px 0;
+      }
+      
+  }
+  .deleteIcon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  .iconContainer {
+    display: flex;
+    align-items: center; /* Center vertically */
+  }
+  
+  .editIcon {
+    margin-right: 10px; /* Adjust the margin as needed to separate the icons */
+    transform: translateY(2px); 
   }
