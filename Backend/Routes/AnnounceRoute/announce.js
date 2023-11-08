@@ -134,7 +134,7 @@ console.log('SQL Query:', updateStatusQuery); // Add this line
 router.get('/countAssessmentStatus', (req, res) => {
   const query = `
     SELECT mh_status, COUNT(*) as count
-    FROM user_info
+    FROM user_info WHERE position = "Student"
     GROUP BY mh_status;
   `;
 
@@ -147,6 +147,55 @@ router.get('/countAssessmentStatus', (req, res) => {
       res.status(200).json(results);
     }
   });
+});
+
+
+// for deleting an announcement
+router.delete('/announcement/:id', (req, res) => {
+  const announcementId = req.params.id;
+
+  const deleteAnnouncement = 'DELETE FROM `announcement` WHERE id = ?';
+
+  db.query(deleteAnnouncement, [announcementId], (error, result) => {
+    if (error) {
+      console.error('Failed to delete announcement:', error);
+      res.status(500).json({ message: 'Failed to delete announcement' });
+    } else {
+      if (result.affectedRows > 0) {
+        console.log('Announcement deleted:', announcementId);
+        res.json({ message: 'Deleted' });
+      } else {
+        console.log('Announcement not found:', announcementId);
+        res.status(404).json({ message: 'Announcement not found' });
+      }
+    }
+  });
+});
+
+
+// for edit announcement
+router.put('/announcementEdit/:id', (req, res) => {
+  const announcementId = req.params.id;
+  const { title, what_announce, where_announce, when_announce } = req.body;
+
+  const updateAnnouncement = 'UPDATE `announcement` SET title = ?, what_announce = ?, where_announce = ?, when_announce = ? WHERE id = ?';
+
+  db.query(
+    updateAnnouncement,
+    [title, what_announce, where_announce, when_announce, announcementId],
+    (error, result) => {
+      if (error) {
+        console.error('Failed to update announcement:', error);
+        res.status(500).json({ message: 'Failed to update announcement', error: error.message });
+      } else {
+        if (result.affectedRows > 0) {
+          res.json({ message: 'Updated' });
+        } else {
+          res.status(404).json({ message: 'Announcement not found' });
+        }
+      }
+    }
+  );
 });
 
 
