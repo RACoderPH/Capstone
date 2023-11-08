@@ -23,6 +23,7 @@ router.post('/announce', (req,res) =>{
       }
     });
   });
+  
 router.get('/announcement',(req,res) =>{
 
   const announce = 'SELECT * FROM `announcement`';
@@ -36,7 +37,7 @@ router.get('/announcement',(req,res) =>{
         res.json(result); // Send the JSON data as the response
     }
   })
-})
+});
 
 // for adding note
 router.post("/addNote", (req, res) => {

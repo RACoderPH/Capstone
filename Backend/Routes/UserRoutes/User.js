@@ -13,40 +13,55 @@ router.post('/register', (req, res) => {
   const password = req.body.password;
 
   const checkUsernameQuery = 'SELECT * FROM user_info WHERE user_name = ?';
-  db.query(checkUsernameQuery, [username], (err, result) => {
+  const checkEmailQuery = 'SELECT * FROM user_info WHERE Email = ?';
+
+  db.query(checkUsernameQuery, [username], (err, usernameResult) => {
     if (err) {
       console.error('Failed to check username:', err);
       res.send({ message: 'Server error' });
     } else {
-      if (result.length > 0) {
-        // User already exists
+      if (usernameResult.length > 0) {
+        // Username already exists
         res.send({ message: 'Username already exists' });
       } else {
-        // Username is available, proceed with registration
-        bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
-          if (hashErr) {
-            console.error('Failed to hash password:', hashErr);
-            res.send({ message: 'Server errorr' });
+        // Check if email exists
+        db.query(checkEmailQuery, [email], (err, emailResult) => {
+          if (err) {
+            console.error('Failed to check email:', err);
+            res.send({ message: 'Server error' });
           } else {
-            const position = 'Admin';
-            const status = 'Offline';
-            const emp_id = "";
-            const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,stud_no,Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?, ?, ?)';
-            db.query(insertUserQuery, [fullname,username, email,emp_id, hashedPassword, createdAt,position,status], (insertErr, insertResult) => {
-              if (insertErr) {
-                console.error('Failed to register user:', insertErr);
-                res.send({ message: 'Server error' });
-              } else {
-                res.send({ message: 'User registered successfully' });
-              }
-            });
+            if (emailResult.length > 0) {
+              // Email already exists
+              res.send({ message: 'Email already exists' });
+            } else {
+              // Username and email are available, proceed with registration
+              bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
+                if (hashErr) {
+                  console.error('Failed to hash password:', hashErr);
+                  res.send({ message: 'Server error' });
+                } else {
+                  const position = 'Admin';
+                  const status = 'Offline';
+                  const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                  const insertUserQuery = 'INSERT INTO user_info (Fullname,user_name, Email,Password, created_at,position,status) VALUES (?, ?, ?,?, ?, ?, ?)';
+                  db.query(insertUserQuery, [fullname, username, email, hashedPassword, createdAt, position, status], (insertErr, insertResult) => {
+                    if (insertErr) {
+                      console.error('Failed to register user:', insertErr);
+                      res.send({ message: 'Server error' });
+                    } else {
+                      res.send({ message: 'User registered successfully' });
+                    }
+                  });
+                }
+              });
+            }
           }
         });
       }
     }
   });
 });
+
 
 function generateVerificationToken() {
     // Generate a random token
@@ -317,7 +332,6 @@ router.put("/profileUpdate/:id", (req, res) => {
     req.body.email,
     req.body.phone,
     req.body.address,
-  
   ];
 
   db.query(Updatequery, [...values,UserId], (err, data) => {
@@ -325,6 +339,7 @@ router.put("/profileUpdate/:id", (req, res) => {
     return res.json(data);
   });
 });
+
 //Upload Image
 router.put("/Upload/:id",(req, res) => {
   const UserId = req.params.id;
@@ -439,6 +454,7 @@ router.put("/userUpdate/:id", (req, res) => {
       }
     });
   });
+
 
   //Get Admin Info
   router.get('/admin', (req, res) => {
