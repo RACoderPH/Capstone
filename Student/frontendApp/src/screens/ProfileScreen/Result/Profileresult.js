@@ -14,47 +14,39 @@ const Profileresult = () => {
     const [userDepression, setUserDepression] = useState(0);
     const [isLoading, setIsLoading] = useState(true); // Add loading state
     const [user,setUser] = useState ("");
+    const [resultData, setResultData] = useState(null);
+
+
+
+
+
     useEffect(() => {
       const fetchUserData = async () => {
         try {
           const userId = await AsyncStorage.getItem('id');
           setUser(userId);
-          // Fetch Stress data
-          const stressResponse = await fetch(`https://mindmatters-ejmd.onrender.com/stress/${userId}`);
-          if (stressResponse.ok) {
-            const stressData = await stressResponse.json();
-            setUserStress(parseInt(stressData[0]?.total_stress_value) || 0);
-          }
-  
-          // Fetch Anxiety data
-          const anxietyResponse = await fetch(`https://mindmatters-ejmd.onrender.com/anxiety/${userId}`);
-          if (anxietyResponse.ok) {
-            const anxietyData = await anxietyResponse.json();
-            setUserAnxiety(parseInt(anxietyData[0]?.total_anxiety_value) || 0);
-          }
-  
-          // Fetch Depression data
-          const depressionResponse = await fetch(`https://mindmatters-ejmd.onrender.com/depression/${userId}`);
+
+          const depressionResponse = await fetch(`https://mindmatters-ejmd.onrender.com/student_result/${userId}`);
           if (depressionResponse.ok) {
             const depressionData = await depressionResponse.json();
-            setUserDepression(parseInt(depressionData[0]?.total_depress_value) || 0);
+            setUserDepression(parseInt(depressionData[0]?.depression) || 0);
+            setUserAnxiety(parseInt(depressionData[0]?.anxiety) || 0);
+            setUserStress(parseInt(depressionData[0]?.stress) || 0);
           }
-
           setIsLoading(false); // Set loading to false when data is fetched
         } catch (error) {
           console.error('Failed to fetch data:', error);
           setIsLoading(false); // Set loading to false even on error
         }
       };
-  
       fetchUserData();
     }, []);
-  
+ 
     // Data for the Pie Chart
     const pieChartData = [
-      { name: "Depression", score: userDepression, color: "yellow" },
-      { name: "Anxiety", score: userAnxiety, color: "orange" },
-      { name: "Stress", score: userStress, color: "red" },
+      { name: "Depression", score: userDepression, color: "#D9534F" },
+      { name: "Anxiety", score: userAnxiety, color: "#FFAD60" },
+      { name: "Stress", score: userStress, color: "#FFEEAD" },
     ];
     const recommendation = () => {
         navigation.navigate('recommendation');
@@ -87,18 +79,7 @@ const Profileresult = () => {
           <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{color:'black',}}>{userDepression}</Text>
           <Text style={{color:'black',}}>Depression</Text>
-          </View>
-          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{color:'black',}}>{userAnxiety}</Text>
-          <Text style={{color:'black',}}>Anxiety</Text>
-          </View>
-          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{color:'black',}}>{userStress}</Text>
-          <Text style={{color:'black',}}>Stress</Text>
-        </View>
-        </View>
-        <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:"space-evenly" }}>
-        <Text>
+          <Text style={{fontSize:10}}>(
           {userDepression >= 28
       ? "Extreme Severe"
       : userDepression >= 21
@@ -110,9 +91,12 @@ const Profileresult = () => {
       : userDepression >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          <Text >
+          )</Text>
+          </View>
+          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{color:'black',}}>{userAnxiety}</Text>
+          <Text style={{color:'black',}}>Anxiety</Text>
+          <Text style={{fontSize:10}}>(
           {userAnxiety >= 20
       ? "Extreme Severe"
       : userAnxiety >= 15
@@ -124,9 +108,12 @@ const Profileresult = () => {
       : userAnxiety >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          <Text >
+          )</Text>
+          </View>
+          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{color:'black',}}>{userStress}</Text>
+          <Text style={{color:'black',}}>Stress</Text>
+          <Text style={{fontSize:10}}>(
           {userStress >= 34
       ? "Extreme Severe"
       : userStress >= 26
@@ -138,9 +125,14 @@ const Profileresult = () => {
       : userStress >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          
+          )</Text>
+        </View>
+        </View>
+        <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:"space-evenly" }}>
+        <Text style={{textAlign:'center',fontSize:12,}}>The DASS-42 assessment, based on the Depression, Anxiety, and Stress Scale, evaluates your emotional state over the past week. 
+            It's important to note that this assessment is not intended for diagnosing any specific mental health conditions. Instead,
+             it provides insights into the extent to which your thoughts and emotions have been affecting you.
+             </Text>
         </View>
         <TouchableOpacity onPress={recommendation}>
             <CustomButton text="Next"/>
@@ -158,7 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   chartTitle: {
     fontSize: 18,

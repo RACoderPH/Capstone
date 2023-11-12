@@ -7,6 +7,7 @@ import { View,
  Dimensions,
  KeyboardAvoidingView,
  Alert,
+ ActivityIndicator
 } from 'react-native'
 import Logo from '../../../assets/images/Mindmatters.png'
 import React, {useState} from 'react'
@@ -19,23 +20,28 @@ import { Checkbox, Modal, Portal,Button, PaperProvider } from 'react-native-pape
 
  const {width,height} = Dimensions.get('window');
 const SignUpScreen = () => {
- const [Fullname, setFullname] = useState('');
+  //Input Variable
+  const [Fullname, setFullname] = useState('');
    const [Username, setUsername] = useState('');
    const [Email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [Cpassword, setCPassword] = useState('');
    const [StudID, setStudID] = useState('');
+   const [phone,setPhone] = useState('');
+   const [grade,setGrade] = useState('');
+   const [section,setSection] = useState('');
+  //End
+
    const navigation = useNavigation();
    const [isSubmitted,setIsSubmitted] = useState(false);
    const [checked, setChecked] = React.useState(false);
+   const [isLoading, setIsLoading] = useState(false); 
 
    const [visible, setVisible] = React.useState(false);
 
    const showModal = () => setVisible(true);
    const hideModal = () => setVisible(false);
    const containerStyle = {backgroundColor: 'white', width:'90%',height:'80%' ,padding: 11,margin:20,alignItems:'center',borderRadius:10};
-
-
 
 
    const isEmailValid = (email) => {
@@ -50,14 +56,14 @@ const SignUpScreen = () => {
     return passwordRegex.test(password);
   };
   
-  //const isPhoneNumberValid = (phoneNumber) => {
-    // Validate that the phone number has a length of 11
-    //return phoneNumber.length === 11;
-  //};
+  const isPhoneNumberValid = (phone) => {
+    //Validate that the phone number has a length of 11
+    return phone.length === 11;
+  };
   
    //BTN Function
    const onSignInPressed = () => {
-    if (Username.trim() === '' || Email.trim() === '' || password.trim() === '' || checked === false) {
+    if (Fullname.trim() === '' ||Username.trim() === '' || StudID.trim() === '' || phone.trim() === '' || grade.trim() === '' || section.trim() === '' ||Email.trim() === '' || password.trim() === '' || checked === false) {
       ToastAndroid.show('Fields must not be empty', ToastAndroid.SHORT);
       return;
     }
@@ -72,14 +78,16 @@ const SignUpScreen = () => {
       return;
     }
   
-   // if (!isPhoneNumberValid(PhoneNumber)) {
-      //Alert.alert('Mind Matters', 'Phone number must be 11 characters');
-      //return;
-    //}
+    if (!isPhoneNumberValid(phone)) {
+      Alert.alert('Mind Matters', 'Phone number must be 11 characters');
+      return;
+    }
   
     if (password !== Cpassword) {
-      console.warn('Password not the same');
+      Alert.alert('Mind Matters', 'Password not the same');
     } else {
+      setIsLoading(true);
+
       axios
         .post('https://mindmatters-ejmd.onrender.com/register/app', {
           fullname: Fullname,
@@ -87,8 +95,12 @@ const SignUpScreen = () => {
           email: Email,
           password: password,
           stud_no: StudID,
+          phone: phone,
+          grade: grade,
+          section: section,
         })
         .then((response) => {
+          setIsLoading(false);
           console.log(response.data.message);
           if (response.data.message === 'Username already exists') {
             Alert.alert('Mind Matters', 'User Already Exists');
@@ -123,12 +135,29 @@ const SignUpScreen = () => {
    <KeyboardAvoidingView style={{flex:1}}
    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust behavior as needed
    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0} >
-   <ScrollView style={{height:height}}>
+   <ScrollView style={{height:height,backgroundColor:'white'}}>
    <View style={styles.root}>
    <View style={styles.circle} />
    <View style={styles.circle2} />
    <Text style={styles.title}>Sign Up</Text>
-   
+   {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: '100%',
+            justifyContent: 'center',
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)', // Transparent background
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#FBD148"
+            style={{ marginTop: 20 }}
+          />
+        </View>
+      )}
    <CustomInputs 
    onChangeText={(e) => setFullname(e)}
     mode="outlined"
@@ -152,16 +181,42 @@ const SignUpScreen = () => {
      onChangeText={(e) => setStudID(e)}
     mode="outlined"
     label="Student ID"
+    inputMode="numeric"
     placeholder="Enter Student ID"
   />
+   <CustomInputs 
+    onChangeText={(e) => setPhone(e)}
+    mode="outlined"
+    label="Phone"
+    inputMode="numeric"
+    placeholder="Contact Number"
+    maxLength={11}
+  />
+<View style={{ flexDirection: 'row', width: '50%',justifyContent:'center',alignItems:'center' }}>
+  <CustomInputs
+    onChangeText={(e) => setGrade(e)}
+    mode="outlined"
+    label="Grade"
+    inputMode="numeric"
+    placeholder="Grade Level"
+    style={{ width: 40 }}
+  />
+  <CustomInputs
+    onChangeText={(e) => setSection(e)}
+    mode="outlined"
+    label="Section"
+    placeholder="Section"
+    style={{ width: 40 }}
+  />
+</View>
+
+
 <CustomInputs
    onChangeText={(e) => setPassword(e)}
     mode="outlined"
     label="Password"
     placeholder="Enter Password"
     secureTextEntry={true}/>
-
-
 <CustomInputs
     onChangeText={(e) => setCPassword(e)}
     mode="outlined"
@@ -309,11 +364,11 @@ const styles = StyleSheet.create({
    letterSpacing:1.2,
    },
    title:{
-       fontFamily:'poppins',
-       fontSize:30,
+       fontFamily:'sans-serif',
+       fontSize:35,
        letterSpacing:1.5,
        marginVertical:15,
-       fontWeight:'bold',
+       fontWeight:'600',
        color:'black',
        margin:10,
    },

@@ -3,15 +3,18 @@ import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const TestingScreen = () => {
   const navigation = useNavigation();
 
-  const handleDone = () => {
+  const handleDone = async () => { // Make the function async
+    await AsyncStorage.setItem('onboardingComplete', 'true'); // Use await to ensure the item is set before navigation
     navigation.navigate('SignIn');
   };
+
 
   return (
     <View style={styles.container}>

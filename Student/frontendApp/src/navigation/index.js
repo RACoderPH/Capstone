@@ -31,8 +31,12 @@ import userDiary from '../screens/JournalScreen/Journal/JournalScreen';
 import profileResult from '../screens/ProfileScreen/Result/Profileresult'
 import Breathe2 from '../screens/BreathingScreen/BreatheTechniques/Breathe2/Breathe2'
 import Breathe3 from '../screens/BreathingScreen/BreatheTechniques/Breathe3/Breathe3'
-
-
+import AnnouncementScreen from '../screens/Announcement/AnnouncementScreen'
+import ButterFly from '../screens/BreathingScreen/Demonstrations/Demo1/ButterFly'
+import PursedLip from '../screens/BreathingScreen/Demonstrations/Demo2/PursedLip'
+import Resonant from '../screens/BreathingScreen/Demonstrations/Demo3/Resonant'
+import Verify from '../screens/VerifyingUser/VerifyUser'
+import DeleteUser from '../screens/ProfileScreen/DeleteAccount/DeleteUser'
 
 const Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -45,9 +49,6 @@ const Navigation = () => {
   }, []);
 
   //Auto Logout
-  
-
-
   const Stack = createNativeStackNavigator();
 
   if (isLoading) {
@@ -57,7 +58,6 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>  
-
 
     
       <Stack.Screen name="Testing" component={TestingScreen} />
@@ -75,10 +75,13 @@ const Navigation = () => {
         <Stack.Screen name="Diary" component={Diary} />
         <Stack.Screen name="UserDiary" component={userDiary} />
         <Stack.Screen name="Announce" component={NotificationScreen} />
-      
+        <Stack.Screen name="Announcement" component={AnnouncementScreen} />
+     
+        <Stack.Screen name="verified" component={Verify} />
         <Stack.Screen name="verify" component={VerificationScreen} /> 
         
         <Stack.Screen name="Edit" component={EditProfile} />
+        <Stack.Screen name="Delete" component={DeleteUser} />
         <Stack.Screen name="ChatBot" component={Chat} />
         <Stack.Screen name="Ai" component={ChatAi} />
 
@@ -99,6 +102,10 @@ const Navigation = () => {
       <Stack.Screen name="Breathe1" component={Breathe1} />
       <Stack.Screen name="Breathe2" component={Breathe2} />
       
+      {/* Demonstration Breathing */}
+      <Stack.Screen name="Butterfly" component={ButterFly} />
+      <Stack.Screen name="PursedLip" component={PursedLip} />
+      <Stack.Screen name="Resonant" component={Resonant} />
       </Stack.Navigator>
     </NavigationContainer>
   );

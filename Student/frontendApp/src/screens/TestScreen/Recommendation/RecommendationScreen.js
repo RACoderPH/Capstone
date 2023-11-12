@@ -27,26 +27,14 @@ const RecommendationScreen = () => {
         const userId = await AsyncStorage.getItem('id');
           setID(userId);
         // Fetch Stress data
-        const stressResponse = await fetch(`https://mindmatters-ejmd.onrender.com/stress/${userId}`);
-        if (stressResponse.ok) {
-          const stressData = await stressResponse.json();
-          setUserStress(parseInt(stressData[0]?.total_stress_value) || 0);
-        }
-
-        // Fetch Anxiety data
-        const anxietyResponse = await fetch(`https://mindmatters-ejmd.onrender.com/anxiety/${userId}`);
-        if (anxietyResponse.ok) {
-          const anxietyData = await anxietyResponse.json();
-          setUserAnxiety(parseInt(anxietyData[0]?.total_anxiety_value) || 0);
-        }
-
-        // Fetch Depression data
-        const depressionResponse = await fetch(`https://mindmatters-ejmd.onrender.com/depression/${userId}`);
+       
+        const depressionResponse = await fetch(`https://mindmatters-ejmd.onrender.com/student_result/${userId}`);
         if (depressionResponse.ok) {
           const depressionData = await depressionResponse.json();
-          setUserDepression(parseInt(depressionData[0]?.total_depress_value) || 0);
+          setUserDepression(parseInt(depressionData[0]?.depression) || 0);
+          setUserAnxiety(parseInt(depressionData[0]?.anxiety) || 0);
+          setUserStress(parseInt(depressionData[0]?.stress) || 0);
         }
-
         setIsLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -126,19 +114,19 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     alignItems: 'center',
-    backgroundColor: '#ECF9FF',
+   
   },
   text: {
     fontSize: 25,
     color: '#161a1d',
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginTop: 10,
   },
   contentText: {
     color: '#161a1d',
     fontSize: 16,
     textAlign: 'justify',
-    fontWeight: 'bold',
+    fontWeight: '400',
     padding: 15,
   },
 })

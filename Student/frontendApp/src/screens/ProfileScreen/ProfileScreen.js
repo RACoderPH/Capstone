@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
   RefreshControl,
+ 
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -21,7 +22,6 @@ const ProfileScreen = () => {
   const [userId, setUserId] = useState(null);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
-
   // Define the retrieveData function
   const retrieveData = async () => {
     try {
@@ -84,6 +84,14 @@ const ProfileScreen = () => {
     navigation.navigate('ChangePass');
   };
 
+  const Verify = () => {
+    navigation.navigate('verified');
+  }
+
+  const Delete = () => { 
+    navigation.navigate('Delete');
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.main}
@@ -103,8 +111,49 @@ const ProfileScreen = () => {
       </View>
 
       <TouchableOpacity onPress={edit}><CustomButton text="Edit Profile" style={styles.btn} /></TouchableOpacity>
+      <View style={{ width: '100%', alignItems: 'center' }}>
+  {userData?.attachment ? (
+    <TouchableOpacity onPress={Verify}>
+      <Text style={styles.link2}>Verify: Pending</Text>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity onPress={Verify}>
+      <Text style={styles.link}>Verify your account</Text>
+    </TouchableOpacity>
+  )}
+
+  {userData?.attachment ? (
+    <Text>
+      Status: {(() => {
+        switch (userData.Verified) {
+          case 1:
+            return <Text style={styles.verifiedStatus}>Verified</Text>;
+          case 2:
+            return (
+              <TouchableOpacity onPress={Verify}>
+                <Text style={styles.notVerifiedLink}>Not Verified</Text>
+              </TouchableOpacity>
+            );
+          case 0:
+            return 'Pending';
+          default:
+            return 'Unknown';
+        }
+      })()}
+    </Text>
+  ) : null}
+</View>
+
       <View style={styles.line} />
       <View style={styles.information}>
+      <View style={styles.container}>
+  <Text style={styles.pageTitle}>Personal Information</Text>
+  <Text style={styles.userInfoText}>Username: {userData ? userData.user_name : 'Loading..'}</Text>
+  <Text style={styles.userInfoText}>Phone Number: {userData ? userData.phone_number : 'null'}</Text>
+  <Text style={styles.userInfoText}>Address: {userData ? userData.address : 'null'} </Text>
+  <Text style={styles.userInfoText}>Grade & Section: {userData ? userData.gradelvl : 'null'} - {userData ? userData.section : 'null'} </Text>
+</View>
+
         <TouchableOpacity onPress={result}>
           <Text style={{ fontSize: 18, fontWeight: '300', color: 'black', margin: 15 }}>
             <Icon name="document-outline" style={styles.icons} />
@@ -133,6 +182,13 @@ const ProfileScreen = () => {
           </Text>
           <View style={styles.line} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={Delete}>
+          <Text style={{ fontSize: 18, fontWeight: '300', color: '#E25E3E', margin: 15 }}>
+            <Icon name="person-outline" style={styles.icons} />
+            Account Delete
+          </Text>
+          <View style={styles.line} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={logout}>
           <Text style={{ fontSize: 18, fontWeight: '300', color: 'black', margin: 15 }}>
             <Icon name="log-out-outline" style={styles.icons} />
@@ -146,8 +202,7 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   main: {
-    width: width * 1,
-    height: height * 1,
+    flex: 1, 
     backgroundColor: 'white',
   },
   icons: {
@@ -169,6 +224,10 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     margin: 10,
+  },
+  Txtinfo:{
+    fontSize:16,
+    fontWeight:'400'
   },
   value: {
     fontSize: 16,
@@ -222,6 +281,39 @@ const styles = StyleSheet.create({
   },
   information: {
     margin: 20,
+    height:'100%'
+  },
+  link: {
+    fontSize:18,
+    color: 'blue',
+  },
+  link2: {
+    fontSize:18,
+    color: 'blue',
+    textDecorationLine: 'underline',
+    display:'none'
+  },
+  verifiedStatus: {
+    fontSize:18,
+    color: 'green', // Green color for verified status
+  },
+  notVerifiedLink: {
+    fontSize: 18,
+    color: 'red', // Red color for not verified link
+  },
+  pageTitle: {
+    fontSize: 18,
+    fontWeight: '200',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: 'black', // Title text color
+    textTransform: 'uppercase',
+  },
+  userInfoText: {
+    fontSize: 18,
+    textAlign: 'left',
+    marginBottom: 10,
+    color: 'black', // User info text color
   },
 });
 

@@ -334,7 +334,8 @@ const Breathe3 = () => {
 
       <TouchableOpacity onPress={Breathe1}> 
         <Text style={{ padding: 2, color: 'black' }}>
-          <Icon name='play-back-outline' style={{ fontSize: 30 }} />
+          {/*  <Icon name='play-back-outline' style={{ fontSize: 30 }} /> */}
+        
         </Text>
         </TouchableOpacity>
 
@@ -346,7 +347,8 @@ const Breathe3 = () => {
 
         <TouchableOpacity onPress={Breathe2}> 
         <Text style={{ padding: 2, color: 'black' }}>
-          <Icon name='play-forward-outline' style={{ fontSize: 30 }} />
+          {/*   <Icon name='play-back-outline' style={{ fontSize: 30 }} />*/}
+        
         </Text>
         </TouchableOpacity>
 

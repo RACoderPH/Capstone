@@ -105,16 +105,16 @@ const ChangePasswordScreen = () => {
         <Text style={styles.text}>Change Password</Text>
         <CustomInputs
           mode="outlined"
-          label="Password"
+          label="New Password"
           placeholder="New Password"
           secureTextEntry={true}
           onChangeText={(e) => setPass(e)}
         />
         <CustomInputs
           mode="outlined"
-          label="Confirm Password"
+          label="Re-type Password"
           secureTextEntry={true}
-          placeholder="Confirm Password"
+          placeholder="Re-type Password"
           onChangeText={(e) => setCpass(e)}
         />
 

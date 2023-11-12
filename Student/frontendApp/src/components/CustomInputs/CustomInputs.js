@@ -4,7 +4,7 @@ import React ,{useState}from 'react'
 
 
 
-const CustomInputs = ({value,setValue,placeholder,label,mode,secureTextEntry,onChangeText}) => {
+const CustomInputs = ({value,setValue,placeholder,label,mode,inputMode,secureTextEntry,onChangeText,length,Inputstyle}) => {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -18,9 +18,11 @@ const CustomInputs = ({value,setValue,placeholder,label,mode,secureTextEntry,onC
       value={value}
       onChange={setValue}
       mode={mode}
+      inputMode={inputMode}
+      maxLength={length}
       label={label}
       placeholder={placeholder}
-      style={styles.input}
+      style={[styles.input, Inputstyle]}
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry && !isPasswordVisible}
       right={

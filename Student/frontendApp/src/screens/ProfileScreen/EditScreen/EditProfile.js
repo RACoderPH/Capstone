@@ -6,6 +6,7 @@ import { View, Text,
   ScrollView, 
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
     RefreshControl,} from 'react-native'
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native-paper';
@@ -14,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import ImagePicker ,{launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import storage from "../../../firebase";
+import { storage, store } from "../../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import avatar from '../../../../assets/images/avatar.png'
 
@@ -30,11 +31,15 @@ const EditProfile = () => {
   const [email, setEmail] = useState('');
   const [userData, setUserData] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [grade,setGrade] = useState('');
+  const [section,setSection] = useState('');
 
   const navigation = useNavigation();
   
   const [refreshing, setRefreshing] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false); 
 
   const [galleryPhoto, setGalleryPhoto] = useState();
   let options = {
@@ -43,6 +48,7 @@ const EditProfile = () => {
     aspect: [4, 3],
     quality: 1,
   };
+  
   //Upload Images
   const selectImage = async () => {
       const result = await launchImageLibrary(options);
@@ -65,6 +71,8 @@ const EditProfile = () => {
   }
 
   const Upload = async () => {
+    setIsLoading(true); // Show the activity indicator
+
     if (galleryPhoto) {
       const imagePath = `profileImages/${userId}/${galleryPhoto.fileName}`;
       const storageRef = ref(storage, imagePath);
@@ -85,6 +93,7 @@ const EditProfile = () => {
             axios
               .put(`https://mindmatters-ejmd.onrender.com/Upload/${userId}`, { image: downloadURL })
               .then((res) => {
+                setIsLoading(false); // Hide the activity indicator
                 console.log(res);
               })
               .catch((err) => console.log(err));
@@ -96,6 +105,7 @@ const EditProfile = () => {
         console.error("Error while processing the image: ", error);
       }
     } else {
+      setIsLoading(false); // Hide the activity indicator
       alert('No file selected or userData.image_file is null');
     }
   };
@@ -136,6 +146,8 @@ const handleUpdate = () => {
       phone:phone,
       email:email,
       stud_no:stud_no,
+      grade:grade,
+      section:section,
     })
     .then((res) => {
       Alert.alert(
@@ -156,7 +168,7 @@ const handleUpdate = () => {
 
 const confirmUpdate = () =>
  {
-  if (fullname.trim() === '' || username === '' || address === '' || phone === '') {
+  if (fullname.trim() === '' || username.trim() === '' || address.trim() === '' || phone.trim() === '' || grade.trim() === '' || section.trim() === '') {
     Alert.alert('Blank Field', 'Please fill out all fields');
   } else {
     Alert.alert(
@@ -183,6 +195,24 @@ const confirmUpdate = () =>
     
     <KeyboardAvoidingView style={styles.main} behavior="padding" enabled >
     <ScrollView contentContainerStyle={styles.scrollViewContent}  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+    {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: height,
+            justifyContent: 'center',
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)', // Transparent background
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#FBD148"
+            style={{ marginTop: 20 }}
+          />
+        </View>
+      )}
     <View style={styles.container}>
   <Text style={{ color: 'black', fontSize: 20, textAlign: 'center', fontWeight: '500' }}>User Information</Text>
   <TouchableOpacity onPress={selectImage}>
@@ -228,6 +258,19 @@ const confirmUpdate = () =>
       onChangeText={(e) => setphone(e)}
       left={<TextInput.Icon icon="mail"/>}
     />
+    <View style={{ flexDirection: 'row', width: '100%',justifyContent:'center',alignItems:'center' }}>
+    <TextInput style={{backgroundColor:'white',width:150}}
+      label="Grade lvl"
+      onChangeText={(e) => setGrade(e)}
+     
+    />
+     <TextInput style={{backgroundColor:'white',margin:5,width:150}}
+      label="Section"
+      onChangeText={(e) => setSection(e)}
+    
+    />
+    </View>
+
       <TouchableOpacity onPress={confirmUpdate}>
         <CustomButton text={"Submit"} style={{ margin: 8, borderRadius: 5 }} />
       </TouchableOpacity>

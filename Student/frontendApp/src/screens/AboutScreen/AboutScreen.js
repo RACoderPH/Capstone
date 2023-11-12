@@ -15,16 +15,15 @@ const AboutScreen = () => {
                 </View>
            
                     <Text style={styles.text}>
-                    Mind Matters is a mental health support that build by the students of Bulacan state University as a Capstone project the app goal is to  prevent and help the students who's in depression, anxiety  and stress. The app was developed to help the students in dominic
+                    Mind Matters is a mental health Assessment that build by the students of Bulacan state University as a Capstone project the app goal is to  prevent and help the students who's in depression, anxiety  and stress. The app was developed to help the students in dominic
                     </Text>
                </View>
                <View style={styles.features}>
                     <Text style={styles.head}>The App Features:</Text>
                     <Text style={styles.text}>Assessment</Text>
                     <Text style={styles.text}>Diary</Text>
-                    <Text style={styles.text}>Breathing techniques</Text>
-                    <Text style={styles.text}>Chat</Text>
-                    <Text style={styles.text}>Chat bot</Text>
+                    <Text style={styles.text}>Breathing Techniques</Text>
+                    <Text style={styles.text}>Chat/Chat bot</Text>
                </View>
                <View style={styles.features}>
                     <Text style={styles.head}>Connect With Us:</Text>

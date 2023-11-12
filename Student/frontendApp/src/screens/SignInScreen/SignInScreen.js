@@ -4,26 +4,29 @@ import {
   Text,
   Image,
   StyleSheet,
-  useWindowDimensions,
+  Dimensions,
   ToastAndroid,
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Logo from '../../../assets/images/Mindmatters.png';
+import Logo from '../../../assets/images/school_logo.png';
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
+const {width,height} = Dimensions.get('window');
+const apiUrl = 'https://mindmatters-ejmd.onrender.com';
+
 const SignInScreen = () => {
-  const { height } = useWindowDimensions();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const navigation = useNavigation();
 
@@ -32,19 +35,21 @@ const SignInScreen = () => {
       ToastAndroid.show('Please Enter Username and Password', ToastAndroid.SHORT);
       return;
     } else {
+      setIsLoading(true); // Show the activity indicator
+
       axios
-        .post('https://mindmatters-ejmd.onrender.com/login/app', {
+        .post(`${apiUrl}/login/app`, {
           username: username,
           password: password,
         })
         .then((response) => {
+          setIsLoading(false); // Hide the activity indicator
           console.log(response.data.message);
           if (response.data.message === 'User found') {
             AsyncStorage.setItem('username', username);
             AsyncStorage.setItem('id', response.data.id.toString());
             setUsername(''); // Clear the username input
             setPassword(''); // Clear the password input
-            setIsSubmitted(true);
             navigation.navigate('Started');
           } else {
             Alert.alert('Mind Matters', 'Please Check Username and Password');
@@ -71,10 +76,29 @@ const SignInScreen = () => {
         <View style={styles.circle} />
         <View style={styles.circle2} />
         <Image source={Logo} style={[styles.logo, { height: height * 0.3 }]} resizeMode="contain" />
-        <CustomInputs mode="outlined" label="Username" placeholder="Enter Username" onChangeText={(e) => setUsername(e)} />
+        {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: '100%',
+            justifyContent: 'center',
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)', // Transparent background
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#FBD148"
+            style={{ marginTop: 20 }}
+          />
+        </View>
+      )}
+        <CustomInputs mode="outlined" label="Username" placeholder="Enter Username"  value={username} onChangeText={(e) => setUsername(e)} />
         <CustomInputs
           mode="outlined"
           label="Password"
+          value={password}
           placeholder="Enter Password"
           onChangeText={(e) => setPassword(e)}
           secureTextEntry={true}
@@ -118,6 +142,15 @@ const styles = StyleSheet.create({
     borderRadius: 110,
     backgroundColor: 'rgba(241, 204, 74, 0.45)',
   },
+  title:{
+    fontFamily:'sans-serif',
+    fontSize:32,
+    letterSpacing:1.1,
+    textAlign:'left',
+    fontWeight:'600',
+    color:'black',
+    margin:10,
+},
   circle2: {
     position: 'absolute',
     top: -30,

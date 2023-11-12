@@ -14,8 +14,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import io from 'socket.io-client';
 import axios from 'axios';
 
+
+import {
+  doc,
+  setDoc,
+  collection,
+  serverTimestamp,
+  query,
+  onSnapshot,
+  orderBy,
+} from 'firebase/firestore';
+import { storage, store } from "../../../firebase";
+
+
+
 const { width, height } = Dimensions.get('window');
-const socket = io.connect('http://192.168.1.83:5000/');
+const socket = io.connect('https://mindmatters-ejmd.onrender.com/');
 
 const RealtimeChat = () => {
   const [userData, setUserData] = useState(null);
@@ -23,6 +37,42 @@ const RealtimeChat = () => {
   const [messageList, setMessageList] = useState([]);
   const [room, setRoom] = useState('');
   const [username, setUsername] = useState('');
+
+
+  const chatsRef = collection(store, "Messages")
+
+  useEffect(()=>{
+
+    const q = query(chatsRef , orderBy('createdAt' , 'asc'))
+  
+    const unsub = onSnapshot(q, (querySnapshot) =>{
+      const fireChats =[]
+      querySnapshot.forEach(doc => {
+        fireChats.push(doc.data())
+      });
+     setMessageList([...fireChats])
+    })
+    return ()=> {
+      unsub()
+    }
+  
+  },[])
+
+  function addToFirebase(messageData) {
+  
+    const newChat = {
+      createdAt: messageData.time,
+      user: messageData.author,
+      message: messageData.message,
+      room: room,
+    };
+  
+    const chatRef = doc(chatsRef);
+    setDoc(chatRef, newChat)
+      .then(() => console.log('Chat added successfully'))
+      .catch(console.error);
+  }
+  
 
   // Get fetch user
   const retrieveData = async () => {
@@ -76,46 +126,69 @@ const RealtimeChat = () => {
 
   const sendMessage = async () => {
     if (currentMessage !== '' && room && username && socket) {
-      const messageData = {
-        room: room,
-        author: username,
-        message: currentMessage,
-        time: new Date().getHours() + ':' + new Date().getMinutes(),
-        sentByUser: true,
-      };
+      const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours24 = now.getHours();
+    const hours12 = (hours24 % 12) || 12; // Convert to 12-hour format
+    const ampm = hours24 >= 12 ? 'PM' : 'AM';
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
 
+    const messageData = {
+      room: room,
+      author: username,
+      message: currentMessage,
+      time: `${year}-${month}-${day} ${hours12}:${minutes}:${seconds} ${ampm}`,
+      sentByUser: true,
+    };
+
+  
+      console.log("Sending message:", messageData); 
+      // Add the message to Firebase
+      await addToFirebase(messageData);
+  
+      // Send the message through socket.io
       await socket.emit('send_message', messageData);
+  
       setMessageList((list) => [...list, messageData]);
-
       setCurrentMessage('');
     } else {
       console.log('Room, currentMessage, username, or socket is null');
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-   <FlatList
-  data={messageList} 
+<FlatList
+  data={messageList.filter((message) => message.room === room)}
   keyExtractor={(item, index) => index.toString()}
-  inverted={false} // Set inverted to true to start messages at the bottom
-  renderItem={({ item }) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.sentByUser ? styles.sentMessage : styles.receivedMessage,
-      ]}
-    >
-      <Text style={styles.messageText}>{item.message}</Text>
-      <Text style={styles.from}>
-        {item.author}, {item.time}
-      </Text>
-    </View>
-  )}
+  inverted={false}
+  renderItem={({ item }) => {
+    const isSentMessage = item.user === username; // Check if the message is sent by the user
+
+    return (
+      <View
+        style={[
+          styles.messageContainer,
+          isSentMessage ? styles.sentMessage : styles.receivedMessage,
+        ]}
+      >
+        <Text style={styles.messageText}>{item.message}</Text>
+        <Text style={styles.from}>
+          {item.user}, {item.createdAt}
+        </Text>
+      </View>
+    );
+  }}
 />
+
+
 
 
       <View style={styles.inputContainer}>
@@ -145,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sentMessage: {
-    backgroundColor: '#DFDFDF',
+    backgroundColor: 'gray',
     alignSelf: 'flex-end',
   },
   receivedMessage: {

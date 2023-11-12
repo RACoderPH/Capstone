@@ -1,6 +1,6 @@
 
 import React ,{useState}from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert} from 'react-native'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert,ActivityIndicator} from 'react-native'
 import CustomInputs from '../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -10,15 +10,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width,height} = Dimensions.get('window');
 const ForgotScreen = () => {
-  const [Email,setEmail] = useState("");
+    const [Email,setEmail] = useState("");
     const navigation = useNavigation();
-   
+    const [isLoading, setIsLoading] = useState(false); 
+
 
     const SubmitEmail = async () => {
 
       if(Email.trim() === ""){
         Alert.alert('Forgot Password', 'Please input your Email');
       }else{
+        setIsLoading(true);
         try {
           const response = await axios.post('https://mindmatters-ejmd.onrender.com/forgot', {
             email: Email, // Pass the email to the server
@@ -26,8 +28,10 @@ const ForgotScreen = () => {
       
           // Check the response status
           if (response.status === 200) {
+            
                 console.log(response.data.message);
             if (response.data.message === 'exists') {
+              setIsLoading(false); 
               ToastAndroid.show('Email exists', ToastAndroid.SHORT);
               await AsyncStorage.setItem('userEmail', Email);
               navigation.navigate('otp');
@@ -56,6 +60,25 @@ const ForgotScreen = () => {
           loop
           style={{ width: width, height: width }}
         />
+         {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: height,
+            justifyContent: 'center',
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)', // Transparent background
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#FBD148"
+            style={{ marginTop: 20 }}
+          />
+        </View>
+      )}
+
           <Text>Forgot Password</Text>
       <CustomInputs 
        mode="outlined"

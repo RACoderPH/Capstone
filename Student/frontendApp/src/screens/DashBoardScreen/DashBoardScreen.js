@@ -4,7 +4,9 @@ import { View ,StyleSheet,
   Dimensions,
   ImageBackground,
   TouchableOpacity,
-  RefreshControl,} from 'react-native'
+  RefreshControl,
+  Alert,
+  BackHandler} from 'react-native'
 import React, 
 { useEffect, 
   useState } from 'react';
@@ -23,28 +25,99 @@ import {
 import {useNavigation} from '@react-navigation/native';
 //Screen route
 const { width, height } = Dimensions.get('window');
+const apiUrl = 'https://mindmatters-ejmd.onrender.com';
+
 
 const DashBoardScreen = () => {
   const navigation = useNavigation();
+    const [id,setUserId] = useState('');
     const [username, setUsername] = useState('');
     const [quoteData, setQuoteData] = useState({ quote: '', author: '' });
     const [refreshing, setRefreshing] = useState(false);
+    const [userData,setUserData] = useState(null);
 
+
+    const showExitAlert = () => {
+      Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit the app?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Exit',
+            onPress: handleExit, // Call your custom exit event
+          },
+        ]
+      );
+    };
+  const handleExit =  async () => {
+    try {
+      const userId = await AsyncStorage.getItem('id');
+      const response = await axios.post('https://mindmatters-ejmd.onrender.com/logout', { userId });
+
+      if (response.status === 200) {
+        await AsyncStorage.clear();
+        navigation.navigate('SignIn');
+        console.log('Logout Properly');
+      } else {
+        console.log('Failed to update status:', response.status);
+        // Handle the error case accordingly
+      }
+    } catch (error) {
+      console.log('Failed to update status:', error);
+      // Handle the error case accordingly
+    }
+  };
+
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        if (navigation.isFocused()) {
+          // Only show the exit alert if the specific screen is focused
+          showExitAlert();
+          return true; // Prevent default back button behavior
+        }
+        return false;
+      });
+  
+      return () => backHandler.remove(); // Remove the event listener when the component unmounts
+    }, [navigation]);
+  
 
     const onRefresh = () => {
-      retrieveData(); // Call retrieveData to initiate the data fetch
+      retrieveData(); 
+      UserData();// Call retrieveData to initiate the data fetch
     };
 
 
     useEffect(() => {
       retrieveData();
+      UserData();
     }, []);
-    
+
+
+const UserData = async () => {
+  try {
+    const storedId = await AsyncStorage.getItem('id');
+    setUserId(storedId);
+    setRefreshing(true); // Set refreshing to true when data retrieval starts
+    const response = await axios.get(`${apiUrl}/user/${storedId}`);
+    setUserData(response.data);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setRefreshing(false); // Set refreshing to false when data retrieval is complete
+  }
+};
+
+
     const retrieveData = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('username');
           setUsername(storedUser)
-          axios.get('https://mindmatters-ejmd.onrender.com/Quotes')
+          axios.get(`${apiUrl}/Quotes`)
           .then((response) => {
             const data = response.data;
             // Choose a random quote from the data
@@ -62,6 +135,7 @@ const DashBoardScreen = () => {
         console.log("Axios Error");
       }
     };
+    
     const Journal = () =>{
       //console.warn('Sign Up');
 
@@ -74,11 +148,39 @@ const DashBoardScreen = () => {
       navigation.navigate('Breathe');
     };
 
-    const Assessment = () =>{
-      //console.warn('Sign Up');
-      navigation.navigate('Instruction');
+    const Assessment = async () => {
+      // Check if the user is verified here
+      if (userData && userData.Verified === 0) {
+        // Show an alert if the user is not verified
+        Alert.alert(
+          'Verification Required',
+          'You need to verify your account to access this feature.\n Go to Profile > click verify account',
+          [
+            {
+              text: 'OK',
+              style: 'cancel',
+            },
+          ]
+        );
+      } else if (userData.Verified === 2) {
+        // Show a different alert if the user's verification is in progress
+        Alert.alert(
+          'Verification In Progress',
+          'Please check your response and submit again to verify your account.',
+          [
+            {
+              text: 'OK',
+              style: 'cancel',
+            },
+          ]
+        );
+      } else {
+        // User is verified, navigate to the Assessment screen
+        navigation.navigate('Instruction');
+      }
     };
-
+    
+    
     const MyComponent = () => {
       return (
         <TouchableOpacity>
@@ -119,7 +221,7 @@ const DashBoardScreen = () => {
 
 
 
-    const [state, setState] = React.useState({ open: false });
+  const [state, setState] = React.useState({ open: false });
 
   const onStateChange = ({ open }) => setState({ open });
 
@@ -139,7 +241,7 @@ const DashBoardScreen = () => {
   <ImageBackground source={{ uri: 'https://picsum.photos/700' }} style={{ width: width * 0.9, height: 200 }}>
     {/* Semi-transparent background */}
     <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)',width:'100%',height:'100%',justifyContent:'center' }}>
-      <Text style={{ color: 'white', fontSize: 16, fontWeight: '300', margin: 5 ,padding:2 ,textAlign:'center'}}>{quoteData.quote}</Text>
+      <Text style={{ color: 'white', fontSize: 18, fontWeight: '500', margin: 5 ,padding:2 ,textAlign:'center'}}>{quoteData.quote}</Text>
       <Text style={{ color: 'white', fontSize: 14, marginLeft: 5 }}>- {quoteData.author}</Text>
     </View>
   </ImageBackground>

@@ -4,9 +4,10 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  ToastAndroid,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import CustomInputs from '../../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../../components/CustomButton/CustomButton';
@@ -16,6 +17,7 @@ import axios from 'axios';
 import LottieView from 'lottie-react-native';
 
 const { width, height } = Dimensions.get('window');
+
 const VerificationScreen = () => {
   const navigation = useNavigation();
 
@@ -38,29 +40,26 @@ const VerificationScreen = () => {
     }
   };
 
-
   const SignIn = () => {
     navigation.navigate('SignIn');
-}
+  };
 
   const SubmitCode = async () => {
-    if(verificationCodes.trim() === ""){
+    if (verificationCodes.trim() === '') {
       Alert.alert('Verification', 'Please input Verification Code');
-    }else
-    {
+    } else {
       try {
         const response = await axios.post('https://mindmatters-ejmd.onrender.com/verification', {
           verificationCodes: verificationCodes, // Pass the email to the server
         });
-    
+
         // Check the response status
         if (response.status === 200) {
-              console.log(response.data.message);
+          console.log(response.data.message);
           if (response.data.message === 'match') {
-         
             Alert.alert(
               'Verified User',
-              'Verification Success ',
+              'Verification Success',
               [
                 {
                   text: 'OK',
@@ -80,38 +79,45 @@ const VerificationScreen = () => {
       }
     }
   };
-  
 
   return (
-    <View style={styles.root}>
-      <View style={styles.circle} />
-      <View style={styles.circle2} />
-      <View
-        style={{
-          width: width,
-          height: height,
-          alignItems: 'center',
-          marginVertical: 60,
-        }}
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior="padding"
+    >
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
-        <LottieView
-          source={require('../../../../assets/animation/verification.json')}
-          autoPlay
-          loop
-          style={{ width: width, height: width }}
-        />
-        <Text style={{ color: 'black', fontSize: 20 }}>Verification Code</Text>
-        <CustomInputs
-          mode="outlined"
-          label="Code"
-          placeholder="Enter Code "
-          onChangeText={(e) => setVerificationCodes(e)}
-        />
-        <TouchableOpacity onPress={SubmitCode}>
-          <CustomButton mode="elevated" text="Submit" />
-        </TouchableOpacity>
-      </View>
-    </View>
+        <View style={styles.circle} />
+        <View style={styles.circle2} />
+        <View
+          style={{
+            width: width,
+            height: height,
+            alignItems: 'center',
+            marginVertical: 60,
+          }}
+        >
+          <LottieView
+            source={require('../../../../assets/animation/verification.json')}
+            autoPlay
+            loop
+            style={{ width: width, height: width }}
+          />
+          <Text style={{ color: 'black', fontSize: 20 }}>Verification Code</Text>
+          <CustomInputs
+            mode="outlined"
+            label="Code"
+            placeholder="Enter Code "
+            onChangeText={(e) => setVerificationCodes(e)}
+          />
+          <TouchableOpacity onPress={SubmitCode}>
+            <CustomButton mode="elevated" text="Submit" />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -119,6 +125,9 @@ const styles = StyleSheet.create({
   root: {
     width: width,
     height: height,
+  },
+  container: {
+    height: height, // Use height to ensure full screen scroll
   },
   circle: {
     position: 'absolute',

@@ -14,7 +14,7 @@ const ChatSplash = () => {
        loop
        style={{ width: width, height: width }}
      />
-      <Text style={styles.text}>MiMa Ai Bot</Text>
+      <Text style={styles.text}>MiMa Bot</Text>
   </View>
   )
 }

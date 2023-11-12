@@ -1,5 +1,5 @@
 import React ,{useState,useEffect}from 'react'
-import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert} from 'react-native'
+import { View, Text ,Image, StyleSheet, Dimensions,ToastAndroid, TouchableOpacity,Alert,ActivityIndicator} from 'react-native'
 import CustomInputs from '../../../components/CustomInputs/CustomInputs';
 import CustomButton from '../../../components/CustomButton/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -11,13 +11,14 @@ const OTPscreen = () => {
 
   const [otp,setOtp] = useState("");
   const navigation = useNavigation();
-
+  const [isLoading, setIsLoading] = useState(false); 
   const SubmitOTP = async () => {
 
     if(otp.trim() === ""){
       Alert.alert('One Time Password', 'Please input One Time Password');
     }else
     {
+      setIsLoading(true);
       try {
         const response = await axios.post('https://mindmatters-ejmd.onrender.com/otp', {
           otp: otp, // Pass the email to the server
@@ -27,7 +28,7 @@ const OTPscreen = () => {
         if (response.status === 200) {
               console.log(response.data.message);
           if (response.data.message === 'match') {
-         
+            setIsLoading(false);
             Alert.alert(
               'One Time Password',
               'Verification Success ',
@@ -40,6 +41,7 @@ const OTPscreen = () => {
               { cancelable: false }
             );
           } else {
+            setIsLoading(false);
             Alert.alert('One Time Password', 'OTP code is Invalid ');
           }
         } else {
@@ -67,6 +69,25 @@ const OTPscreen = () => {
        loop
        style={{ width: width, height: width }}
      />
+
+      {isLoading && (
+        <View
+          style={{
+            position: 'absolute',
+            width: width,
+            height: height,
+            justifyContent: 'center',
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.1)', // Transparent background
+          }}
+        >
+          <ActivityIndicator
+            size="large"
+            color="#FBD148"
+            style={{ marginTop: 20 }}
+          />
+        </View>
+      )}
        <Text styles={styles.text}>One Time Password</Text>
    <CustomInputs 
     mode="outlined"

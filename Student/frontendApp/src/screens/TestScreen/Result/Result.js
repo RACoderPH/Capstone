@@ -51,11 +51,14 @@ const Result = () => {
     }, []);
   
     // Data for the Pie Chart
-    const pieChartData = [
-      { name: "Depression", score: userDepression, color: "yellow" },
-      { name: "Anxiety", score: userAnxiety, color: "orange" },
-      { name: "Stress", score: userStress, color: "red" },
-    ];
+   const pieChartData = [
+  { name: "Depression", score: userDepression, color: "#D9534F" },
+  { name: "Anxiety", score: userAnxiety, color: "#FFAD60" },
+  { name: "Stress", score: userStress, color: "#FFEEAD" },
+];
+
+
+
     const recommendation = () => {
       const requestData = {
         user_id: user, // Replace with the actual user_id
@@ -108,18 +111,7 @@ const Result = () => {
           <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{color:'black',}}>{userDepression}</Text>
           <Text style={{color:'black',}}>Depression</Text>
-          </View>
-          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{color:'black',}}>{userAnxiety}</Text>
-          <Text style={{color:'black',}}>Anxiety</Text>
-          </View>
-          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{color:'black',}}>{userStress}</Text>
-          <Text style={{color:'black',}}>Stress</Text>
-        </View>
-        </View>
-        <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:"space-evenly" }}>
-        <Text>
+          <Text style={{fontSize:10}}>(
           {userDepression >= 28
       ? "Extreme Severe"
       : userDepression >= 21
@@ -131,9 +123,12 @@ const Result = () => {
       : userDepression >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          <Text >
+          )</Text>
+          </View>
+          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{color:'black',}}>{userAnxiety}</Text>
+          <Text style={{color:'black',}}>Anxiety</Text>
+          <Text style={{fontSize:10}}>(
           {userAnxiety >= 20
       ? "Extreme Severe"
       : userAnxiety >= 15
@@ -145,9 +140,12 @@ const Result = () => {
       : userAnxiety >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          <Text >
+          )</Text>
+          </View>
+          <View style={{ backgroundColor:"#F7F7F7",width: "30%", height: 100, borderRadius: 50, margin: 10, borderWidth: 1, borderColor: "#F9D949", alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{color:'black',}}>{userStress}</Text>
+          <Text style={{color:'black',}}>Stress</Text>
+          <Text style={{fontSize:10}}>(
           {userStress >= 34
       ? "Extreme Severe"
       : userStress >= 26
@@ -159,9 +157,14 @@ const Result = () => {
       : userStress >= 0
       ? "Normal"
       : ''}
-          </Text>
-
-          
+          )</Text>
+        </View>
+        </View>
+        <View style={{ width: "100%", padding: 5, flexDirection: 'row', justifyContent:"space-evenly" }}>
+          <Text style={{textAlign:'center',fontSize:12,}}>The DASS-42 assessment, based on the Depression, Anxiety, and Stress Scale, evaluates your emotional state over the past week. 
+            It's important to note that this assessment is not intended for diagnosing any specific mental health conditions. Instead,
+             it provides insights into the extent to which your thoughts and emotions have been affecting you.
+             </Text>
         </View>
         <TouchableOpacity onPress={recommendation}>
             <CustomButton text="Next"/>
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   chartTitle: {
     fontSize: 18,

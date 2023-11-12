@@ -57,6 +57,8 @@ const JournalScreen = () => {
         .then((response) => {
           // Handle the response from the backend
           setInsertMessage(response.data.message);
+          setTitle('');
+          setDescription('');
           navigation.navigate('Diary');
         })
         .catch((error) => {
@@ -71,32 +73,31 @@ const JournalScreen = () => {
       style={styles.container}
       behavior="padding"
     >
-      <ScrollView
-        style={styles.scrollView}
-        keyboardShouldPersistTaps="handled"
-      >
+        <View  style={styles.scrollView}>
         <Text style={styles.titleText}>How was your day?</Text>
-        <View style={styles.inputContainer}>
+        <ScrollView style={{ maxHeight: 90 }}>
           <TextInput
             label="Title"
+            placeholder='Diary Title'
             multiline
             onChangeText={(text) => setTitle(text)}
             style={styles.input}
-          
           />
+           </ScrollView>
+            <ScrollView style={{ maxHeight: 200}}>
           <TextInput
-            label="Type here...."
+           placeholder='Type here'
             multiline
             onChangeText={(text) => setDescription(text)}
-            style={styles.input}
-          
+            style={styles.input2}
           />
-        </View>
-
-        <TouchableOpacity onPress={handleInsertData}>
-          <CustomButton text="Entry" />
-        </TouchableOpacity>
-      </ScrollView>
+          </ScrollView>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleInsertData}>
+              <CustomButton text="Entry" />
+            </TouchableOpacity>
+          </View>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -104,28 +105,40 @@ const JournalScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightyellow', // Background color set to light yellow
-    padding:30,
+    backgroundColor: 'white',
+    padding: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
   scrollView: {
-    height: height * 1,
-    width: width * 1,
+    height: '100%',
+    width: width,
   },
   titleText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
+    marginLeft:20,
   },
   inputContainer: {
-    width: '100%',
     alignItems: 'center',
+    margin: 20,
   },
   input: {
-    width: width * 0.98,
+    width: width * 0.90,
+    minHeight: 50,
+    margin: 10,
+    backgroundColor:'white',
+    marginBottom:20,
+  },
+  input2: {
+    width: width * 0.90,
     minHeight: 90,
     margin: 10,
+    backgroundColor:'white',
+  },
+  buttonContainer: {
+    alignItems: 'center', // Center the button horizontally
   },
 });
 

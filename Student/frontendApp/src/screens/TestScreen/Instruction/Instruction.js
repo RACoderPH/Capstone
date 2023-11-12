@@ -76,7 +76,7 @@ const Instruction = () => {
       <Text variant="titleMedium" style={{textAlign:'center',marginTop:40,fontSize:18}}>DASS - 42 Mental Health Assessment</Text>
       {userData && userData.IsAnswer === 1 ? (
             <Text variant="titleMedium" style={{ textAlign: 'center', marginTop: 40, fontSize: 18 }}>
-              You have already responded.
+              You have already responded, Wait for two weeks to take again. 
             </Text>
           ) : (
             <Card style={styles.card}>
@@ -90,8 +90,8 @@ const Instruction = () => {
           settings, the scales should meet the needs of both researchers and clinicians who wish to measure current
           state or change in state over time (e.g., in the course of treatment).
         </Text>
-        <Text variant="bodyMedium"  style={{textAlign:'justify'}}>
-          Please read each statement and choose a number <Text style={{fontWeight:'bold'}}>0, 1, 2 or 3</Text> that indicates how much the statement applied to you over the past week.
+        <Text variant="bodyMedium"  style={{textAlign:'justify',marginTop:30}}>
+          Please read each statement and choose a number <Text style={{fontWeight:'bold',fontSize:18}}>0, 1, 2 or 3</Text> that indicates how much the statement applied to you over the past week.
          There are no right or wrong answers. Do not spend too much time on any statement.
         </Text>
               </Card.Content>
@@ -102,8 +102,6 @@ const Instruction = () => {
               </Card.Actions>
             </Card>
           )}
-     
-   
       </View>
     </View>
     </ScrollView>

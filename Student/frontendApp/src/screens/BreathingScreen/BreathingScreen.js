@@ -15,19 +15,19 @@ const BreathingScreen = () => {
   const Breathe1 = () =>{
     //console.warn('Sign Up');
 
-    navigation.navigate('Breathe1');
+    navigation.navigate('Butterfly');
   };
 
   const Breathe2 = () =>{
     //console.warn('Sign Up');
 
-    navigation.navigate('Breathe2');
+    navigation.navigate('PursedLip');
   };
 
   const Breathe3 = () =>{
     //console.warn('Sign Up');
 
-    navigation.navigate('Breathe3');
+    navigation.navigate('Resonant');
   };
   return (
     <ScrollView style={{marginTop:20}}>
