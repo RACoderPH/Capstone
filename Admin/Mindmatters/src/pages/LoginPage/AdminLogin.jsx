@@ -3,6 +3,8 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Chat from '../ChatPage/Chat';
 import Axios from "axios";
+import sdalogo from '../../images/doms.jpg';
+import backgroundImg from '../../images/SDA.jpg';
 
 import {
   MDBContainer,
@@ -154,7 +156,28 @@ draggable
 pauseOnHover
 theme="colored"
 />
-
+<style>
+        {`
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url(${backgroundImg});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8; // Adjust the opacity as needed (0.0 to 1.0)
+            z-index: -1;
+          }
+        `}
+      </style>
+    <div className="background-container"></div>
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
     <br/>
       <br/>
@@ -163,7 +186,12 @@ theme="colored"
       <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
         <MDBTabsItem>
           <MDBTabsLink >
-            Login
+          <img
+            src={sdalogo}
+            alt="SDA Logo"
+            className="mb-4"
+            style={{ width: '300px', height: '300px', borderRadius: '50%' }}
+          />
           </MDBTabsLink>
         </MDBTabsItem>
       </MDBTabs>
@@ -173,7 +201,7 @@ theme="colored"
         <MDBTabsPane show={justifyActive === 'tab1'}>
 
 
-          <MDBInput wrapperClass='mb-4' label='Email address' id='form1' type='email' onChange={(e) => {
+          <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='email' onChange={(e) => {
                 setUsername(e.target.value)
                 }}/>
           <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password'  onChange={(e) => {
