@@ -15,14 +15,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-
+import { useNavigate } from 'react-router-dom'
 
 
 const Annoucement = () => {
+  const navigate = useNavigate();
   const [Title, setTitle] = useState('');
   const [what, setWhat] = useState('');
   const [where, setWhere] = useState('');
-  const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17T15:30'));
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [announcements, setAnnouncements] = useState([]); 
   const [open, setOpen] = useState(false); // Initialize as false
@@ -36,9 +37,14 @@ const Annoucement = () => {
 
   useEffect(() => {
     if(!localStorage.getItem('Username')){
-      window.location.href = '/';
+      navigate('/');
     }
 },[]);
+const formatDateTime = (dateTimeStr) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+  const formattedDateTime = new Date(dateTimeStr).toLocaleString(undefined, options);
+  return formattedDateTime;
+};
 
 const handleClose = () => {
     setOpen(false);
@@ -78,6 +84,8 @@ const handleClose = () => {
             console.log('Server Error');
           } else if (response.data.message === 'Inserted') {
             console.log('Inserted');
+            alert('Announcement Added');
+            window.location.reload();
           }
         })
         .catch((error) => {
@@ -107,11 +115,13 @@ const handleClose = () => {
     Axios.delete(`http://localhost:5000/announcement/${announcementId}`)
       .then((response) => {
         if (response.status === 200) {
-          if (response.data.message === 'Deleted') {
+          if (response.data.message === 'Note deleted') {
             // Remove the deleted announcement from the local state
             setAnnouncements((prevAnnouncements) =>
               prevAnnouncements.filter((announcement) => announcement.id !== announcementId)
             );
+
+            window.location.reload();
           } else {
             console.log('Failed to delete announcement');
           }
@@ -249,7 +259,7 @@ const handleClose = () => {
              <div className="announcementContainer" key={announcement.id}>
              <strong>Title:</strong> {announcement.title}<br />
              <strong>What:</strong> {announcement.what_announce}<br />
-             <strong>When:</strong> {announcement.when_announce}<br />
+             <strong>When:</strong> {formatDateTime(announcement.when_announce)}<br />
              <strong>Where:</strong> {announcement.where_announce}<br />
              <div className="iconContainer">
   <IconButton

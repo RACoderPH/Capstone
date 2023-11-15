@@ -9,16 +9,18 @@ import axios from "axios";
 import {ref,uploadBytesResumable,getDownloadURL} from "firebase/storage"
 import { storage, store } from "../../firebase";
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
 const Profile = () => {
-
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [image, setImage] = useState('');
 
   useEffect(() => {
     if(!localStorage.getItem('Username')){
-      window.location.href = '/';
+      navigate('/');
     }
 },[]);
+;
 
   const input = () => toast.warn('Please Fill-out the Field', {
   });

@@ -23,11 +23,12 @@ import {
 } from 'firebase/firestore';
 import { storage, store } from "../../firebase";
 import addNotification from 'react-push-notification'
-
+import { useNavigate } from 'react-router-dom'
 
 const socket = io.connect("https://mindmatters-ejmd.onrender.com/");
 
 const Chat = () => {
+  const navigate = useNavigate()
   const [userList, setUserList] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
@@ -41,9 +42,10 @@ const Chat = () => {
   const roomRef = useRef(room);
   useEffect(() => {
     if(!localStorage.getItem('Username')){
-      window.location.href = '/';
+      navigate('/');
     }
 },[]);
+
 
   useEffect(()=>{
 
@@ -89,7 +91,7 @@ const Chat = () => {
     // Handle incoming messages
     const handleReceiveMessage = (data) => {
       // Check if the room of the incoming message matches the current room ID
-      if (data.room === roomRef.current) {
+  
         // Access room value from the 
         data.sentByUser = false;
         setMessageList((list) => [...list, data]);
@@ -107,7 +109,7 @@ const Chat = () => {
               fontSize: '16px', // Text size
             },
           });
-      } 
+    
     };
 
     socket.on("receive_message", handleReceiveMessage);
@@ -218,36 +220,45 @@ const Chat = () => {
           />
 
 <div className="messageContainer">
-<div className="scrollableMessages">
-  <div className="messageContainers">
-    {messageList
-      .filter((message) => message.room === room) // Filter messages by room
-      .map((messageContent, index) => {
-        console.log("Message content:", messageContent); // Log message content
-        const isUserMessage = messageContent.user === username;
-        const messageStyle = isUserMessage ? 'userMessage' : 'otherMessage';
+  {room ? (
+    <div className="scrollableMessages">
+      <div className="messageContainers">
+        {messageList
+          .filter((message) => message.room === room)
+          .map((messageContent, index) => {
+            console.log("Message content:", messageContent);
+            const isUserMessage = messageContent.user === username;
+            const messageStyle = isUserMessage
+              ? 'userMessage'
+              : 'otherMessage';
 
-        return (
-          <div
-            key={index}
-            className={`message ${messageStyle}`}
-            style={{ flexWrap: 'wrap' }}
-          >
-            <h3 className="messageText" style={{ fontSize: 25 }}>
-              {messageContent.message}
-            </h3>
-            <div className="message-meta">
-              <p id="time" style={{ fontSize: 20 }}>
-                {messageContent.user}, {messageContent.createdAt}
-              </p>
-            </div>
-          </div>
-        );
-      })}
+            return (
+              <div
+                key={index}
+                className={`message ${messageStyle}`}
+                style={{ flexWrap: 'wrap' }}
+              >
+                <h3 className="messageText" style={{ fontSize: 25 }}>
+                  {messageContent.message}
+                </h3>
+                <div className="message-meta">
+                  <p id="time" style={{ fontSize: 20 }}>
+                    {messageContent.user}, {messageContent.createdAt}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+      </div>
+    </div>
+  ) : (
+    <div className="selectUserMessage" style={{ textAlign: 'center', marginTop: '50px' }}>
+    <p style={{fontSize:30}}>Please select a student to start a conversation.</p>
   </div>
+  
+  )}
 </div>
 
-</div>
 
           <div className="messageInputContainer">
             <input

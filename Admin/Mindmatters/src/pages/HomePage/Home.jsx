@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import { useNavigate } from 'react-router-dom';
 import {
   PieChart,
   Pie,
@@ -26,6 +27,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 function Home() {
+  const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [Stress, setStress] = useState(null);
@@ -50,7 +52,7 @@ function Home() {
 
   useEffect(() => {
       if(!localStorage.getItem('Username')){
-        window.location.href = '/';
+        navigate('/');
       }
   },[]);
 
@@ -61,7 +63,7 @@ function Home() {
   };
 
   useEffect(() => {
-    fetch('https://mindmatters-ejmd.onrender.com/api/getuser')
+    fetch('http://mindmatters-ejmd.onrender.com/api/getuser')
       .then((response) => response.json())
       .then((data) => setUserList(data))
       .catch((error) => console.error('Failed to fetch data:', error));
@@ -441,7 +443,6 @@ function getBackgroundColor(value, type) {
     updateMoodStatus(selectedUserId, newMood);
   
     // Store the selected mood in localStorage
-    localStorage.setItem(`selectedMood-${selectedUserId}`, newMood);
     console.log(`Stored mood for user ${selectedUserId}: ${newMood}`);
 
   

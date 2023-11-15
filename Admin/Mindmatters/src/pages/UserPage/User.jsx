@@ -13,10 +13,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import {useReactToPrint} from 'react-to-print';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-
+import { useNavigate } from 'react-router-dom'
 
 
 const User = () => {
+  const navigate = useNavigate();
   const [localStorageValue, setLocalStorageValue] = useState('');
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -57,7 +58,7 @@ const [selectedUserForModal, setSelectedUserForModal] = React.useState(null);
 
 useEffect(() => {
   if(!localStorage.getItem('Username')){
-    window.location.href = '/';
+    navigate('/');
   }
 },[]);
 

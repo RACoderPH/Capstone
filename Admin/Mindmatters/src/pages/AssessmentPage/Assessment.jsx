@@ -6,9 +6,10 @@ import Navbar from '../../components/Navbar/Navbar';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import axios from "axios";
-
+import { useNavigate } from 'react-router-dom'
 
 const Assessment = () => {
+  const navigate = useNavigate();
   const [Question, setlist] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [assessment, setAssessmentData] = useState({});
@@ -39,11 +40,16 @@ const Assessment = () => {
   const [Option4, setOption4] = useState(' ');
   const [question, setQuestion] = useState(' ');
   const [Category, setCategory] = useState(' ');
+
+
   useEffect(() => {
     if(!localStorage.getItem('Username')){
-      window.location.href = '/';
+      navigate('/');
     }
 },[]);
+
+
+
   useEffect(() => {
     // Fetch user data from the backend API
     fetch('https://mindmatters-ejmd.onrender.com/Questions')
