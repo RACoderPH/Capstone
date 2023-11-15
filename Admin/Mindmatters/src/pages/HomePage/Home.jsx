@@ -64,7 +64,7 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://mindmatters-ejmd.onrender.com/api/getuser');
+        const response = await axios.get('https://mindmatters-ejmd.onrender.com/api/getuser');
         setUserList(response.data);
       } catch (error) {
         console.error('Failed to fetch data:', error);
