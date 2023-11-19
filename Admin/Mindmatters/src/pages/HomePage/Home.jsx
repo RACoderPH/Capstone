@@ -706,8 +706,12 @@ function getBackgroundColor(value, type) {
 
 
           <br/>
+          <div style={{ display: 'flex', flexDirection: 'row',justifyContent:'space-between',alignItems:'center' }}>
           <button onClick={addNote}>Add Note</button>
-          <button onClick={createPdf}>Download PDF</button>
+          <button onClick={createPdf}>Print</button>
+          </div>
+
+        
         </Box>
       </Modal>
     </div>

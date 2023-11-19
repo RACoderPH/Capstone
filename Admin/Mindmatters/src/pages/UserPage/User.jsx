@@ -108,7 +108,6 @@ const handleClose2 = () => {
   const filteredRows = rows.filter((row) =>
   row.stud_no.toLowerCase().includes(searchInput.toLowerCase()) ||
   row.Fullname.toLowerCase().includes(searchInput.toLowerCase()) ||
-  row.grade.toLowerCase().includes(searchInput.toLowerCase()) ||
   (row.Verified === 0 && searchInput.toLowerCase() === 'pending') ||
   (row.Verified === 1 && searchInput.toLowerCase() === 'verified') ||
   (row.Verified === 2 && searchInput.toLowerCase() === 'not verified')
@@ -517,7 +516,9 @@ useEffect(() => {
             />
           </div>
         </div>
-        <button onClick={createPdf}>Download Pdf</button>
+        <button onClick={createPdf} style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer',margin:10 }}>
+        Print
+      </button>
 
         {/* Modals for adding and editing users */}
         <Modal

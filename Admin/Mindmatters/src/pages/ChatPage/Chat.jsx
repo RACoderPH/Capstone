@@ -34,7 +34,11 @@ const Chat = () => {
   const [messageList, setMessageList] = useState([]);
   const [room, setRoom] = useState(''); // Set the default room ID to an empty string
   const username = localStorage.getItem('Username');
-  
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredUsers = userList.filter(user =>
+    user.stud_no.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.Fullname.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const chatsRef = collection(store, "Messages")
 
   
@@ -181,8 +185,15 @@ const Chat = () => {
   return (
     <div className="chat">
       <Sidebar />
+     
       <div className="userOnline">
-        {userList.map((user) => (
+      <input
+        type="text"
+        placeholder="Search using Fullname & Student ID"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+        {filteredUsers.map((user) => (
           <List sx={style} component="nav" aria-label="mailbox folders" key={user.Fullname}>
            <ListItem
               button

@@ -112,10 +112,10 @@ const handleClose = () => {
   };
 
   const handleDeleteAnnouncement = (announcementId) => {
-    Axios.delete(`http://localhost:5000/announcement/${announcementId}`)
+    Axios.delete(`https://mindmatters-ejmd.onrender.com/announcement/${announcementId}`)
       .then((response) => {
         if (response.status === 200) {
-          if (response.data.message === 'Note deleted') {
+          if (response.data.message === 'Deleted') {
             // Remove the deleted announcement from the local state
             setAnnouncements((prevAnnouncements) =>
               prevAnnouncements.filter((announcement) => announcement.id !== announcementId)
@@ -142,7 +142,7 @@ const handleClose = () => {
     const confirmation = window.confirm('Are you sure you want to save the changes?');
   
     if (confirmation) {
-      Axios.put(`http://localhost:5000/announcementEdit/${editAnnouncement.id}`, {
+      Axios.put(`https://mindmatters-ejmd.onrender.com/announcementEdit/${editAnnouncement.id}`, {
         title: editAnnouncement.title,
         what_announce: editAnnouncement.what_announce,
         where_announce: editAnnouncement.where_announce,
@@ -289,64 +289,68 @@ const handleClose = () => {
       </div>
 
       <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Box className="box" style={{ width: '700px', height: '650px' }}>
-            <span className="userUpdateTitle">Edit Announcement</span>
-            <span className="txt">The information can be edited</span>
-         
-            <div className="form-group">
-            <TextField
-              id="outlined-basic"
-              label="Title"
-              variant="outlined"
-              margin="normal"
-              className="txtWidth"
-             onChange={(event) => handleEditChange(event, 'title')}
-            />
-          </div>
-          <div className="form-group">
-            <TextField
-              id="outlined-basic"
-              label="About What?"
-              variant="outlined"
-              margin="normal"
-              className="txtWidth"
-              multiline={true} // Set to true to make it multi-line
-              rows={4} // Specify the number of rows
-              onChange={(event) => handleEditChange(event, 'what_announce')}
-            />
-          </div>
-          <div className="form-group">
-            <TextField
-              id="outlined-basic"
-              label="Where it will be held?"
-              className="txtWidth"
-              variant="outlined"
-              margin="normal"
-              onChange={(event) => handleEditChange(event, 'where_announce')}
-            />
-          </div>
-          <div className="form-group">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Select Date"
-                onChange={(newValue) => handleEditChange(newValue, 'when_announce')}
-                className="txtWidth"
-                margin="normal"
-              />
-            </LocalizationProvider>
-          </div>
-            <br />
-            <Button className="modalBtn" variant="outlined" onClick={() => handleSaveChanges()}>
-              Save
-            </Button>
-          </Box>
-        </Modal>
+  open={open}
+  onClose={handleClose}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+>
+  <Box className="box" style={{ width: '700px', height: '650px' }}>
+    <span className="userUpdateTitle">Edit Announcement</span>
+    <span className="txt">The information can be edited</span>
+
+    <div className="form-group">
+      <TextField
+        id="outlined-basic"
+        label="Title"
+        variant="outlined"
+        margin="normal"
+        className="txtWidth"
+        fullWidth // Set fullWidth to true to make the TextField take up the entire width of its container
+        onChange={(event) => handleEditChange(event, 'title')}
+      />
+    </div>
+    <div className="form-group">
+      <TextField
+        id="outlined-basic"
+        label="About What?"
+        variant="outlined"
+        margin="normal"
+        className="txtWidth"
+        multiline={true}
+        rows={4}
+        fullWidth
+        onChange={(event) => handleEditChange(event, 'what_announce')}
+      />
+    </div>
+    <div className="form-group">
+      <TextField
+        id="outlined-basic"
+        label="Where it will be held?"
+        className="txtWidth"
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        onChange={(event) => handleEditChange(event, 'where_announce')}
+      />
+    </div>
+    <div className="form-group">
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimePicker
+          label="Select Date"
+          onChange={(newValue) => handleEditChange(newValue, 'when_announce')}
+          className="txtWidth"
+          margin="normal"
+        />
+      </LocalizationProvider>
+    </div>
+    <br />
+    <Button className="modalBtn" variant="outlined" onClick={() => handleSaveChanges()}>
+      Save
+    </Button>
+  </Box>
+</Modal>
+
 
     </div>
   );

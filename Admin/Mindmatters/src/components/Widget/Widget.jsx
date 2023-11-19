@@ -130,7 +130,7 @@ function Widget  ({type}){
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box className="box" style={{ maxWidth: 'max-content' }}>
+          <Box className="box" style={{ maxWidth: 'max-content', overflowY: 'auto', maxHeight: '700px' }}>
           <span className="userUpdateTitle">Students Already Taken the Assessment</span>
           
           <div className="listContainer">
@@ -164,11 +164,10 @@ function Widget  ({type}){
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box className="box" style={{ maxWidth: 'max-content' }}>
-          <span className="userUpdateTitle">Students Not yet Taken the Assessment</span>
-          
-          <div className="listContainer">
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <Box className="box" style={{ maxWidth: 'max-content', overflowY: 'auto', maxHeight: '700px' }}>
+  <span className="userUpdateTitle">Students Not yet Taken the Assessment</span>
+  <div className="listContainer">
+    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
       <thead>
         <tr>
           <th>Fullname</th>
@@ -178,18 +177,19 @@ function Widget  ({type}){
         </tr>
       </thead>
       <tbody>
-      {userNotTakenList.map((user) => (
+        {userNotTakenList.map((user) => (
           <tr key={user.id}>
-                  <td>{user.Fullname}</td>
-                  <td>{user.user_name}</td>
-                  <td>{user.Email}</td>
-                  <td>{user.stud_no}</td>
+            <td>{user.Fullname}</td>
+            <td>{user.user_name}</td>
+            <td>{user.Email}</td>
+            <td>{user.stud_no}</td>
           </tr>
-  ))}
+        ))}
       </tbody>
     </table>
-    </div>
-          </Box>
+  </div>
+</Box>
+
         </Modal>
     </div>
     

@@ -175,21 +175,28 @@ const Chart = () => {
             { text: `Average Stress: `, style: 'label' },
             { text: `${averages.avg_stress || 0}`, style: 'dataStress' },
           ],
-          alignment: 'center',
+    
         },
         {
           text: [
             { text: `Average Anxiety: `, style: 'label' },
             { text: `${averages.avg_anxiety || 0}`, style: 'dataAnxiety' },
           ],
-          alignment: 'center',
+    
         },
         {
           text: [
             { text: `Average Depression: `, style: 'label' },
             { text: `${averages.avg_depression || 0}`, style: 'dataDepression' },
           ],
-          alignment: 'center',
+      
+        },
+
+        {
+          text: [
+            { text: `"As of today, based on the assessments conducted, the user is experiencing an average stress level of ${averages.avg_stress},an average depression level of ${averages.avg_depression},  and an average anxiety level of ${averages.avg_anxiety}. These percentages represent the overall assessment scores, indicating the extent of stress, depression, and anxiety the user is currently reporting.`},
+          ],
+          alignment: 'justify',
         },
       ];
   
