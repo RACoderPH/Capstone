@@ -10,7 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import logo from '../../images/sdalogo.png';
+import logo from '../../../public/sdalogo.png';
 
 import {
   doc,

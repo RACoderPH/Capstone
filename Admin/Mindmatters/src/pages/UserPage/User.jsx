@@ -12,7 +12,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ToastContainer, toast } from 'react-toastify';
 import {useReactToPrint} from 'react-to-print';
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { useNavigate } from 'react-router-dom'
 
 
@@ -299,7 +298,7 @@ useEffect(() => {
   const [logoImage, setLogoImage] = useState(null);
   useEffect(() => {
     // Convert the logo image to base64
-    convertImageToBase64('src/images/sdalogo.png', (logoImageDataUrl) => {
+    convertImageToBase64('/sdalogo.png', (logoImageDataUrl) => {
       setLogoImage(logoImageDataUrl);
     });
   }, []); // Use an empty dependency array to ensure it runs only once
@@ -308,10 +307,27 @@ useEffect(() => {
   
   useEffect(() => {
     // Convert the moFrancisca image to base64
-    convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
+    convertImageToBase64('/mofrancisca.png', (moFranciscaImageDataUrl) => {
       setMoFranciscaImage(moFranciscaImageDataUrl);
     });
   }, []);
+
+  
+pdfMake.fonts = {
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf'
+  },
+  LogoImage: {
+    normal: logoImage,
+  },
+  MoFranciscaImage: {
+    normal: moFranciscaImage,
+  },
+}; 
+
 
   const createPdf = () => {
     // Define the table headers
@@ -694,6 +710,7 @@ useEffect(() => {
     {selectedUserForModal ? (selectedUserForModal.Verified === 1 ? "Verified" : (selectedUserForModal.Verified === 0 ? "Pending" : "Not Verified")) : "Pending"}
   </span>
 </span>
+<span className="txt">Click here to see Previous Result</span>
 
 
           </div>
