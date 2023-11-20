@@ -431,8 +431,9 @@ pdfMake.fonts = {
     const docDefinition = {
       content,
       styles,
-      pageSize: 'A4', // Set the paper size (A4 or other standard sizes)
-      pageMargins: [20, 60, 20, 60], // Set page margins [left, top, right, bottom]
+      pageSize: 'A3', // Set the paper size (A4 or other standard sizes)
+      pageMargins: [40, 60, 40, 60], // Adjust these margins
+      
     };
     
   

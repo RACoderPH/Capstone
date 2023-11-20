@@ -133,11 +133,11 @@ function Home() {
     img.src = imageSrc;
   };
 
-  const [logoImage, setLogoImage] = useState(null);
+const [logoImage, setLogoImage] = useState(null);
 
 useEffect(() => {
   // Convert the logo image to base64
-  convertImageToBase64('src/images/sdalogo.png', (logoImageDataUrl) => {
+  convertImageToBase64('/sdalogo.png', (logoImageDataUrl) => {
     setLogoImage(logoImageDataUrl);
   });
 }, []); // Use an empty dependency array to ensure it runs only once
@@ -146,7 +146,7 @@ const [moFranciscaImage, setMoFranciscaImage] = useState(null);
 
 useEffect(() => {
   // Convert the moFrancisca image to base64
-  convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
+  convertImageToBase64('/mofrancisca.png', (moFranciscaImageDataUrl) => {
     setMoFranciscaImage(moFranciscaImageDataUrl);
   });
 }, []);
@@ -261,27 +261,41 @@ const createPdf = () => {
       })),
     },
     {
-      text: 'Results:',
-      style: 'header', // You can define a new style for the header if needed
+      text: ' ', // Add a blank line for margin
     },
-          {
-            ul: [
-              
-              {
-                text: `Stress: ${stressData} : ${getSeverity(stressData, 'stress')}`,
-                style: { background: getBackgroundColor(stressData, 'stress') },
-              },
-              {
-                text: `Anxiety: ${anxietyData} : ${getSeverity(anxietyData, 'anxiety')}`,
-                style: { background: getBackgroundColor(anxietyData, 'anxiety') },
-              },
-              {
-                text: `Depression: ${depressionData} : ${getSeverity(depressionData, 'depression')}`,
-                style: { background: getBackgroundColor(depressionData, 'depression') },
-              },
-            ],
-            style: 'dataList',
-          },
+    {
+      table: {
+        body: [
+          [
+            { text: 'Results', style: 'header', colSpan: 2, alignment: 'center' },
+            {}
+          ],
+          [
+            { text: 'Stress', style: 'dataList' },
+            {
+              text: `${stressData} : ${getSeverity(stressData, 'stress')}`,
+              style: { background: getBackgroundColor(stressData, 'stress') }
+            }
+          ],
+          [
+            { text: 'Anxiety', style: 'dataList' },
+            {
+              text: `${anxietyData} : ${getSeverity(anxietyData, 'anxiety')}`,
+              style: { background: getBackgroundColor(anxietyData, 'anxiety') }
+            }
+          ],
+          [
+            { text: 'Depression', style: 'dataList' },
+            {
+              text: `${depressionData} : ${getSeverity(depressionData, 'depression')}`,
+              style: { background: getBackgroundColor(depressionData, 'depression') }
+            }
+          ]
+        ],
+        widths: ['auto', '*'],
+        alignment: 'center'
+      },
+    }
         ];
           
 

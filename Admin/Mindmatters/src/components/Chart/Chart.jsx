@@ -86,7 +86,7 @@ const Chart = () => {
 
   useEffect(() => {
     // Convert the logo image to base64
-    convertImageToBase64('src/images/sdalogo.png', (logoImageDataUrl) => {
+    convertImageToBase64('/sdalogo.png', (logoImageDataUrl) => {
       setLogoImage(logoImageDataUrl);
     });
   }, []); // Use an empty dependency array to ensure it runs only once
@@ -95,7 +95,7 @@ const Chart = () => {
   
   useEffect(() => {
     // Convert the moFrancisca image to base64
-    convertImageToBase64('src/images/mofrancisca.png', (moFranciscaImageDataUrl) => {
+    convertImageToBase64('/mofrancisca.png', (moFranciscaImageDataUrl) => {
       setMoFranciscaImage(moFranciscaImageDataUrl);
     });
   }, []);
@@ -117,7 +117,10 @@ const Chart = () => {
   }; 
 
   const createPdf = () => {
-    // Capture the BarChart as an image
+    axios.get('https://mindmatters-ejmd.onrender.com/count')
+    .then(response => {
+      const { taken, notTaken } = response.data;
+
   const barChartNode = ReactDOM.findDOMNode(barChartRef.current);
 
   html2canvas(barChartNode).then((barChartCanvas) => {
@@ -170,33 +173,57 @@ const Chart = () => {
         {
           text: ' ',
         },
-        {
-          text: [
-            { text: `Average Stress: `, style: 'label' },
-            { text: `${averages.avg_stress || 0}`, style: 'dataStress' },
-          ],
-    
-        },
-        {
-          text: [
-            { text: `Average Anxiety: `, style: 'label' },
-            { text: `${averages.avg_anxiety || 0}`, style: 'dataAnxiety' },
-          ],
-    
-        },
-        {
-          text: [
-            { text: `Average Depression: `, style: 'label' },
-            { text: `${averages.avg_depression || 0}`, style: 'dataDepression' },
-          ],
-      
-        },
+       // Average Stress
+       {
+        text: [
+          { text: `Average Stress: `, style: 'label' },
+          { text: `${isNaN(averages.avg_stress) ? 'N/A' : (parseFloat(averages.avg_stress) || 0).toFixed(2)}%`, style: 'dataStress' },
+        ],
+      },
+      // Average Anxiety
+      {
+        text: [
+          { text: `Average Anxiety: `, style: 'label' },
+          { text: `${isNaN(averages.avg_anxiety) ? 'N/A' : (parseFloat(averages.avg_anxiety) || 0).toFixed(2)}%`, style: 'dataAnxiety' },
+        ],
+      },
+      // Average Depression
+      {
+        text: [
+          { text: `Average Depression: `, style: 'label' },
+          { text: `${isNaN(averages.avg_depression) ? 'N/A' : (parseFloat(averages.avg_depression) || 0).toFixed(2)}%`, style: 'dataDepression' },
+        ],
+      },
 
         {
+          text: ' ',
+        },
+        {
+          text: ' ',
+        },
+        {
           text: [
-            { text: `"As of today, based on the assessments conducted, the user is experiencing an average stress level of ${averages.avg_stress},an average depression level of ${averages.avg_depression},  and an average anxiety level of ${averages.avg_anxiety}. These percentages represent the overall assessment scores, indicating the extent of stress, depression, and anxiety the user is currently reporting.`},
+            {
+              text: `"As of today, based on the assessments conducted, ${taken} out of ${notTaken} users is experiencing an average stress level of ${(parseFloat(averages.avg_stress) || 0).toFixed(2)}%, an average depression level of ${(parseFloat(averages.avg_depression) || 0).toFixed(2)}%, and an average anxiety level of ${(parseFloat(averages.avg_anxiety) || 0).toFixed(2)}%. These percentages represent the overall assessment scores, indicating the extent of stress, depression, and anxiety the user is currently reporting."`,
+            },
           ],
           alignment: 'justify',
+        },
+        {
+          absolutePosition: { x: 40, y: 750 }, // Adjust the coordinates as needed
+          text: [
+            { text: 'Justine Mark V. Bernabe', decoration: 'underline' },
+            { text: '\nGuidance Counselor', fontSize: 10 },
+          ],
+          style: 'signature',
+        },
+        {
+          absolutePosition: { x: 420, y: 750 }, // Adjust the coordinates as needed
+          text: [
+            { text: 'Sr. Mailyn P. Bolivar, OP\n', fontSize: 12, decoration: 'underline' },
+            { text: 'Director Principal', fontSize: 10 },
+          ],
+          style: 'signature',
         },
       ];
   
@@ -247,10 +274,16 @@ const Chart = () => {
   }).catch(error => {
     console.error('Error capturing BarChart:', error);
   });
-  };
+})
+.catch(error => {
+console.error('Error fetching assessment counts:', error);
+});
+};
 
   const createPieChartPdf = () => {
-    // Capture the PieChart as an image
+    axios.get('https://mindmatters-ejmd.onrender.com/count')
+    .then(response => {
+      const { taken, notTaken } = response.data;
     const pieChartNode = ReactDOM.findDOMNode(pieChartRef.current);
   
     html2canvas(pieChartNode).then((pieChartCanvas) => {
@@ -284,9 +317,6 @@ const Chart = () => {
             alignment: 'right',
           },
         ],
-      },
-      {
-        text: ' ',
       },
       {
         text: 'Student Mental Health Status ',
@@ -360,6 +390,33 @@ const Chart = () => {
         ],
       },
     },
+    {
+      text: ' ',
+    },
+     {
+      text: [
+        { 
+          text: `"As of today, based on the assessments conducted, out of ${taken} students taken the assessment there are ${stressedCount} students with reported stress, ${anxiousCount} students with reported anxiety, and ${depressedCount} students with reported depression. Additionally, there are ${normalCount} students that in normal state and ${notTaken} users still not taken the assessment."`
+        },
+      ],
+      alignment: 'justify',
+    },
+    {
+      absolutePosition: { x: 40, y: 750 }, // Adjust the coordinates as needed
+      text: [
+        { text: 'Justine Mark V. Bernabe', decoration: 'underline' },
+        { text: '\nGuidance Counselor', fontSize: 10 },
+      ],
+      style: 'signature',
+    },
+    {
+      absolutePosition: { x: 420, y: 750 }, // Adjust the coordinates as needed
+      text: [
+        { text: 'Sr. Mailyn P. Bolivar, OP\n', fontSize: 12, decoration: 'underline' },
+        { text: 'Director Principal', fontSize: 10 },
+      ],
+      style: 'signature',
+    },
   ];
 
     const styles = {
@@ -413,8 +470,12 @@ const Chart = () => {
     // Create and download the PDF
     pdfMake.createPdf(docDefinition).download(pdfName);
   }).catch(error => {
-    console.error('Error capturing PieChart:', error);
+    console.error('Error capturing BarChart:', error);
   });
+})
+.catch(error => {
+console.error('Error fetching assessment counts:', error);
+});
 };
 
 
