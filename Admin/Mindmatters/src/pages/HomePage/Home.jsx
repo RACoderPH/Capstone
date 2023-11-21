@@ -593,7 +593,7 @@ function getBackgroundColor(value, type) {
         <Box className="box">
           <div ref={componentRef}>
             <span className="userUpdateTitle">Mental Health Assessment Results</span>
-            <span className="txt">The information can be edited</span>
+            <span className="txt">The information, based on the results of the student taking the DASS-42 Assessment</span>
             <div className="chart" >
               <PieChart ref={chartRef} className="PieChart" width={400} height={320}>
                 <Pie
@@ -611,95 +611,131 @@ function getBackgroundColor(value, type) {
               </PieChart>
             </div>
             <div className="result-placeholder">
-              <h2>Results</h2>
-              <ul>
-                <li>Stress: {stressData} :
-                  <span style={{
-                    fontSize: 22,
-                    borderRadius: 10,
-                    padding: 4,
-                    color: 'black',
-                    backgroundColor: stressData >= 34 ? "#F7A4A4" :
-                      stressData >= 26 ? "#F57328" :
-                        stressData >= 19 ? "#FFE9A0" :
-                          stressData >= 15 ? "#EFF669" :
-                            stressData >= 0 ? "#B6E2A1" :
-                              "white"
-                  }}>
-                    {stressData >= 34 ? "Extreme Severe" :
-                      stressData >= 26 ? "Severe" :
-                        stressData >= 19 ? "Moderate" :
-                          stressData >= 15 ? "Mild" :
-                            stressData >= 0 ? "Normal" :
-                              ''}
-                  </span>
-                </li>
-                <li>Anxiety: {anxietyData} :
-                  <span style={{
-                    fontSize: 22,
-                    borderRadius: 10,
-                    padding: 4,
-                    color: 'black',
-                    backgroundColor: anxietyData >= 20 ? "#F7A4A4" :
-                      anxietyData >= 15 ? "#F57328" :
-                        anxietyData >= 10 ? "#FFE9A0" :
-                          anxietyData >= 8 ? "#EFF669" :
-                            anxietyData >= 0 ? "#B6E2A1" :
-                              "white"
-                  }}>
-                    {anxietyData >= 20 ? "Extreme Severe" :
-                      anxietyData >= 15 ? "Severe" :
-                        anxietyData >= 10 ? "Moderate" :
-                          anxietyData >= 8 ? "Mild" :
-                            anxietyData >= 0 ? "Normal" :
-                              ''}
-                  </span>
-                </li>
-                <li>Depression: {depressionData} :
-                  <span style={{
-                    fontSize: 22,
-                    borderRadius: 10,
-                    padding: 4,
-                    color: 'black',
-                    backgroundColor: depressionData >= 28 ? "#F7A4A4" :
-                      depressionData >= 21 ? "#F57328" :
-                        depressionData >= 14 ? "#FFE9A0" :
-                          depressionData >= 10 ? "#EFF669" :
-                            depressionData >= 0 ? "#B6E2A1" :
-                              "white"
-                  }}>
-                    {depressionData >= 28 ? "Extreme Severe" :
-                      depressionData >= 21 ? "Severe" :
-                        depressionData >= 14 ? "Moderate" :
-                          depressionData >= 10 ? "Mild" :
-                            depressionData >= 0 ? "Normal" :
-                              ''}
-                  </span>
-                </li>
-              </ul>
+              <div style={{flexDirection:'row',justifyContent:'space-between',display:'flex'}}>
+              <h4>Results</h4>
+          <button  style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '5px', borderRadius: '5px', cursor: 'pointer',margin:'10px' }}>
+          previous result
+        </button>
+              </div>
+            
+              <table>
+  <tr>
+    <th>Category</th>
+    <th>Result</th>
+    <th>Severity</th>
+  </tr>
+  <tr>
+    <td>Stress</td>
+    <td>{stressData}</td>
+    <td>
+      <span style={{
+        fontSize: 22,
+        borderRadius: 10,
+        padding: 4,
+        color: 'black',
+        backgroundColor: stressData >= 34 ? "#F7A4A4" :
+          stressData >= 26 ? "#F57328" :
+            stressData >= 19 ? "#FFE9A0" :
+              stressData >= 15 ? "#EFF669" :
+                stressData >= 0 ? "#B6E2A1" :
+                  "white"
+      }}>
+        {stressData >= 34 ? "Extreme Severe" :
+          stressData >= 26 ? "Severe" :
+            stressData >= 19 ? "Moderate" :
+              stressData >= 15 ? "Mild" :
+                stressData >= 0 ? "Normal" :
+                  ''}
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td>Anxiety</td>
+    <td>{anxietyData}</td>
+    <td>
+      <span style={{
+        fontSize: 22,
+        borderRadius: 10,
+        padding: 4,
+        color: 'black',
+        backgroundColor: anxietyData >= 20 ? "#F7A4A4" :
+          anxietyData >= 15 ? "#F57328" :
+            anxietyData >= 10 ? "#FFE9A0" :
+              anxietyData >= 8 ? "#EFF669" :
+                anxietyData >= 0 ? "#B6E2A1" :
+                  "white"
+      }}>
+        {anxietyData >= 20 ? "Extreme Severe" :
+          anxietyData >= 15 ? "Severe" :
+            anxietyData >= 10 ? "Moderate" :
+              anxietyData >= 8 ? "Mild" :
+                anxietyData >= 0 ? "Normal" :
+                  ''}
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td>Depression</td>
+    <td>{depressionData}</td>
+    <td>
+      <span style={{
+        fontSize: 22,
+        borderRadius: 10,
+        padding: 4,
+        color: 'black',
+        backgroundColor: depressionData >= 28 ? "#F7A4A4" :
+          depressionData >= 21 ? "#F57328" :
+            depressionData >= 14 ? "#FFE9A0" :
+              depressionData >= 10 ? "#EFF669" :
+                depressionData >= 0 ? "#B6E2A1" :
+                  "white"
+      }}>
+        {depressionData >= 28 ? "Extreme Severe" :
+          depressionData >= 21 ? "Severe" :
+            depressionData >= 14 ? "Moderate" :
+              depressionData >= 10 ? "Mild" :
+                depressionData >= 0 ? "Normal" :
+                  ''}
+      </span>
+    </td>
+  </tr>
+</table>
+
               <div>
                 <h4>Notes: </h4>
-                   
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
-  {notes.map((note, index) => (
-    <li key={index} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', maxWidth: '100%', marginBottom: '8px', padding: '8px' }}>
-      <span style={{ overflow: 'hidden', fontSize: '24px', wordWrap: 'break-word', flex: 1, paddingLeft: '20px', position: 'relative' }}>
-        <span style={{ position: 'absolute', left: '0', top: '0', fontSize: '24px', lineHeight: '24px' }}>
-          &#8226;
-        </span>
-        {note.notes}
-      </span>
-      <IconButton
-        edge="end"
-        aria-label="delete"
-        onClick={() => handleDeleteNote(note.notes_id)}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </li>
-  ))}
-</ul>
-
+                <div style={{ maxWidth: '100%', overflowX: 'auto' }}>
+  <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+    <thead>
+      <tr>
+        <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Notes</th>
+        <th style={{ textAlign: 'center', padding: '8px', borderBottom: '1px solid #ddd' }}>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {notes.map((note, index) => (
+        <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
+          <td style={{ padding: '8px', wordBreak: 'break-all' }}>
+            <span style={{ fontSize: '24px', display: 'flex', alignItems: 'center' }}>
+              <span style={{ fontSize: '24px', lineHeight: '24px', paddingRight: '8px' }}>
+                &#8226;
+              </span>
+              {note.notes}
+            </span>
+          </td>
+          <td style={{ textAlign: 'center', padding: '8px' }}>
+            <IconButton
+              aria-label="delete"
+              onClick={() => handleDeleteNote(note.notes_id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+        <br />
               </div>
             </div>
           </div>

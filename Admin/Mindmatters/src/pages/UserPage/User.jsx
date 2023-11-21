@@ -328,7 +328,6 @@ pdfMake.fonts = {
   },
 }; 
 
-
   const createPdf = () => {
     // Define the table headers
     const tableHeaders = ['Full Name', 'Username', 'Email', 'Student ID'];
