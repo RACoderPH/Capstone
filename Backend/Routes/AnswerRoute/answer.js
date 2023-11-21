@@ -10,47 +10,66 @@ const db = require('../database');
 //Scheduler to auto delete result 
 cron.schedule('*/30 * * * *', () => {
   const twoWeeksAgo = moment().subtract(2, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+  const twoMinutesAgo = moment().subtract(2, 'minutes').format('YYYY-MM-DD HH:mm:ss');
 
+  // Insert student results into previous_result table
+  const insertResults = "INSERT INTO `previous_result`(`user_id`, `depression`, `anxiety`, `stress`, `created_at`) SELECT `user_id`, `depression`, `anxiety`, `stress`, `created_at` FROM `student_result` WHERE `created_at` < ?";
+  
   // Update IsAnswer in user_info table and delete student results older than 10 minutes ago
   const updateIsAnswer = "UPDATE `user_info` SET `IsAnswer` = 0 WHERE `IsAnswer` = 1 AND `answer_at` < ?";
   const deleteOldResults = "DELETE FROM `student_result` WHERE `created_at` < ?";
-
-  // Perform the update and delete operations within a transaction for consistency
+  
+  // Perform the operations within a transaction for consistency
   db.beginTransaction((transactionErr) => {
     if (transactionErr) {
       console.error('Failed to start a transaction:', transactionErr);
       return;
     }
 
-    db.query(updateIsAnswer, [twoWeeksAgo], (updateErr, updateResult) => {
-      if (updateErr) {
-        console.error('Failed to update IsAnswer in user_info:', updateErr);
+    // Insert student results into previous_result table
+    db.query(insertResults, [twoWeeksAgo ], (insertErr, insertResult) => {
+      if (insertErr) {
+        console.error('Failed to insert into previous_result:', insertErr);
         db.rollback(() => {
           console.error('Transaction rolled back.');
         });
         return;
       }
 
-      db.query(deleteOldResults, [twoWeeksAgo], (deleteErr, deleteResult) => {
-        if (deleteErr) {
-          console.error('Failed to delete old student results:', deleteErr);
+      // Update IsAnswer in user_info table
+      db.query(updateIsAnswer, [twoWeeksAgo ], (updateErr, updateResult) => {
+        if (updateErr) {
+          console.error('Failed to update IsAnswer in user_info:', updateErr);
           db.rollback(() => {
             console.error('Transaction rolled back.');
           });
           return;
         }
 
-        db.commit((commitErr) => {
-          if (commitErr) {
-            console.error('Transaction commit failed:', commitErr);
-          } else {
-            console.log('Transaction committed.');
+        // Delete old student results
+        db.query(deleteOldResults, [twoWeeksAgo ], (deleteErr, deleteResult) => {
+          if (deleteErr) {
+            console.error('Failed to delete old student results:', deleteErr);
+            db.rollback(() => {
+              console.error('Transaction rolled back.');
+            });
+            return;
           }
+
+          // Commit the transaction
+          db.commit((commitErr) => {
+            if (commitErr) {
+              console.error('Transaction commit failed:', commitErr);
+            } else {
+              console.log('Transaction committed.');
+            }
+          });
         });
       });
     });
   });
 });
+
 //end
 
 
@@ -240,7 +259,22 @@ router.get('/count', (req, res) => {
   });
 });
 
+router.get('/previousResult/:id',(req, res) =>{
+  const userId = req.params.id;
 
+  const getData = 'SELECT * FROM `student_result` WHERE `user_id` = ?';
+
+  db.query(getData, userId, (error, result) => {
+    if (error) {
+      console.error('Failed to fetch student data:', error);
+      res.status(500).json({ error: 'Failed to result data' });
+    } else {
+      
+        res.json(result); // Send the JSON data as the response
+    }
+  })
+
+});
 
 
   module.exports = router;
