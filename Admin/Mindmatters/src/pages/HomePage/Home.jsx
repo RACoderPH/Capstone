@@ -519,6 +519,179 @@ function getBackgroundColor(value, type) {
     }
   }, [selectedUserId]);
 
+  const previousPdf = () => {
+    if (selectedUserId !== null) {
+      const selectedUser = userList.find((user) => user.id === selectedUserId);
+  
+      if (selectedUser) {
+        const { Fullname, stud_no } = selectedUser;
+  
+        axios
+          .get(`https://mindmatters-ejmd.onrender.com/previousResult/${selectedUserId}`)
+          .then((response) => {
+            const previousResultData = response.data;
+  
+            const content = [
+              {
+                columns: [
+                  {
+                    image: logoImage,
+                    width: 70,
+                    alignment: 'left',
+                  },
+                  {
+                    stack: [
+                      {
+                        text: 'St. Dominic Academy of Pulilan, Inc.',
+                        style: 'header',
+                        alignment: 'center',
+                      },
+                      {
+                        text: '(PAASCU Accredited - Level II)\nNational Road, Poblacion, Pulilan, Bulacan',
+                        style: 'italicHeader',
+                        alignment: 'center',
+                      },
+                    ],
+                  },
+                  {
+                    image: moFranciscaImage,
+                    width: 80,
+                    alignment: 'right',
+                  },
+                ],
+              },
+              {
+                text: ' ', // Add a blank line for margin
+              },
+              {
+                text: 'Mental Health Assessment Report',
+                style: 'header',
+                alignment: 'center',
+              },
+              {
+                text: 'Mental Health Assessment Report',
+                style: 'italicHeader',
+                alignment: 'center',
+              },
+              {
+                text: ' ', // Add a blank line for margin
+              },
+              {
+                text: `Fullname: ${Fullname}`,
+                style: 'dataList',
+                alignment: 'left',
+              },
+              {
+                text: `Student ID: ${stud_no}`,
+                style: 'dataList',
+                alignment: 'left',
+              },
+              {
+                text: ' ', // Add a blank line for margin
+              },
+              {
+                text: ' ', // Add a blank line for margin
+              },
+              {
+                text: `Previous Assessments:`,
+                style: 'header',
+                alignment: 'center',
+              },
+            ];
+  
+            if (previousResultData.length > 0) {
+              // Table header row
+              const tableHeader = [
+                { text: 'Date Taken', style: 'tableHeader' },
+                { text: 'Stress', style: 'tableHeader' },
+                { text: 'Anxiety', style: 'tableHeader' },
+                { text: 'Depression', style: 'tableHeader' },
+                // Add other column headers if needed
+              ];
+      
+              // Initialize table body with header row
+              const tableBody = [tableHeader];
+      
+              // Populate table body with data
+              previousResultData.forEach((result) => {
+                const { created_at, stress, anxiety, depression } = result;
+                const rowData = [
+                  { text: formatDateTime(created_at), style: 'tableBody' },
+                  { text: stress.toString(), style: 'tableBody' },
+                  { text: anxiety.toString(), style: 'tableBody' },
+                  { text: depression.toString(), style: 'tableBody' },
+                  // Add other columns as needed
+                ];
+                tableBody.push(rowData);
+              });
+      
+              // Construct the table
+              const table = {
+                table: {
+                  widths: ['*', '*', '*', '*'], // Adjust column widths as needed
+                  headerRows: 1,
+                  body: tableBody,
+                  layout: {
+                    fillColor: (rowIndex, node, columnIndex) => {
+                      return rowIndex === 0 ? '#f2f2f2' : null; // Alternate row background color
+                    },
+                    hLineWidth: (i, node) => {
+                      return i === 0 || i === node.table.body.length ? 0 : 0.5; // Horizontal line width
+                    },
+                    vLineWidth: () => 0,
+                    hLineColor: () => '#d9d9d9', // Horizontal line color
+                  },
+                  style: 'tableStyle', // Apply additional table styling
+                  alignment: 'center', // Center-align the table within the PDF
+                },
+              };
+      
+              // Add the table to the content
+              content.push(table);
+            } else {
+              content.push({ text: 'No previous assessment data available', style: 'dataList' });
+            }
+  
+            const styles = {
+              header: {
+                fontSize: 22,
+                bold: true,
+              },
+              italicHeader: {
+                italics: true,
+                alignment: 'center',
+              },
+              data: {
+                fontSize: 16,
+                alignment: 'center',
+              },
+              dataList: {
+                fontSize: 16,
+                alignment: 'left',
+              },
+            };
+  
+            const docDefinition = {
+              content,
+              styles,
+            };
+  
+            const pdfName = `Mind_Matters_Report_${stud_no}.pdf`;
+            // Create and download the PDF
+            pdfMake.createPdf(docDefinition).download(pdfName);
+          })
+          .catch((error) => {
+            console.error('Failed to fetch previous assessment data:', error);
+          });
+      }
+    }
+  };
+  
+  const formatDateTime = (dateTimeStr) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const formattedDateTime = new Date(dateTimeStr).toLocaleString(undefined, options);
+    return formattedDateTime;
+  };
 
   return (
     <div className="home">
@@ -613,7 +786,7 @@ function getBackgroundColor(value, type) {
             <div className="result-placeholder">
               <div style={{flexDirection:'row',justifyContent:'space-between',display:'flex'}}>
               <h4>Results</h4>
-          <button  style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '5px', borderRadius: '5px', cursor: 'pointer',margin:'10px' }}>
+          <button onClick={previousPdf} style={{ backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '5px', borderRadius: '5px', cursor: 'pointer',margin:'10px' }}>
           previous result
         </button>
               </div>

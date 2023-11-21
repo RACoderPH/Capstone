@@ -259,22 +259,27 @@ router.get('/count', (req, res) => {
   });
 });
 
-router.get('/previousResult/:id',(req, res) =>{
+router.get('/previousResult/:id', (req, res) => {
   const userId = req.params.id;
 
-  const getData = 'SELECT * FROM `student_result` WHERE `user_id` = ?';
+  const getData = 'SELECT stress, anxiety, depression, created_at FROM `previous_result` WHERE `user_id` = ? ORDER BY created_at DESC';
 
   db.query(getData, userId, (error, result) => {
     if (error) {
       console.error('Failed to fetch student data:', error);
-      res.status(500).json({ error: 'Failed to result data' });
+      res.status(500).json({ error: 'Failed to fetch student data', message: error.message });
     } else {
-      
-        res.json(result); // Send the JSON data as the response
+      if (result.length > 0) {
+        res.json(result); // Send all previous results for the user
+      } else {
+        res.status(404).json({ message: 'No previous result found for the user' });
+      }
     }
-  })
-
+  });
 });
+
+
+
 
 
   module.exports = router;
